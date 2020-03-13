@@ -15,8 +15,6 @@ $_needed_files[] = CURRENT_SKIN.DS.'css'.DS.'chem.'._MOD_.'.css';
 $_needed_files[] = CURRENT_SKIN.DS.'js'.DS.'chem.'._MOD_.'.js';
 $_needed_files[] = CURRENT_SKIN.DS.'tpl'.DS._MOD_.DS.'main.tpl';
 
-var_export($_needed_files);exit;
-
 foreach( $_needed_files as $_file )
 {
     if( !file_exists( $_file ) )
@@ -27,25 +25,6 @@ foreach( $_needed_files as $_file )
         }
         fclose( fopen( $_file, 'w' ) );
     }
-}
-
-
-if( !file_exists( $load_module ) )
-{
-    if( !is_dir( dirname($load_module) ) )
-    {
-        mkdir( dirname( $load_module ) );
-    }
-    fclose( fopen( $load_module, 'w' ) );
-}
-
-if( !file_exists( $load_module_ajax ) )
-{
-    if( !is_dir( dirname($load_module_ajax) ) )
-    {
-        mkdir( dirname( $load_module_ajax ) );
-    }
-    fclose( fopen( $load_module_ajax, 'w' ) );
 }
 
 require( $load_module );
