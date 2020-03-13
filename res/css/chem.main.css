@@ -1,7 +1,22 @@
 #content{ overflow: auto; }
 
-#main_frame #page_frame #mainlist .element.i01 a img{ width: 100%; height: 100px; background-image: url(../img/icon_01.png); }
-#main_frame #page_frame #mainlist .element.i02 a img{ width: 100%; height: 100px; background-image: url(../img/icon_02.png); }
-#main_frame #page_frame #mainlist .element.i03 a img{ width: 100%; height: 100px; background-image: url(../img/icon_03.png); }
-#main_frame #page_frame #mainlist .element.i04 a img{ width: 100%; height: 100px; background-image: url(../img/icon_04.png); }
-#main_frame #page_frame #mainlist .element.i05 a img{ width: 100%; height: 100px; background-image: url(../img/icon_05.png); }
+#main_frame #page_frame #mainlist .element.i01 a img{ background-image: url(../img/icon_01.png); }
+#main_frame #page_frame #mainlist .element.i02 a img{ background-image: url(../img/icon_02.png); }
+#main_frame #page_frame #mainlist .element.i03 a img{ background-image: url(../img/icon_03.png); }
+#main_frame #page_frame #mainlist .element.i04 a img{ background-image: url(../img/icon_04.png); }
+#main_frame #page_frame #mainlist .element.i05 a img{ background-image: url(../img/icon_05.png); }
+#main_frame #page_frame #mainlist .element.i06 a img{ background-image: url(../img/icon_06.png); }
+#main_frame #page_frame #mainlist .element.i07 a img{ background-image: url(../img/icon_07.png); }
+#main_frame #page_frame #mainlist .element.i08 a img{ background-image: url(../img/icon_08.png); }
+#main_frame #page_frame #mainlist .element.i09 a img{ background-image: url(../img/icon_09.png); }
+#main_frame #page_frame #mainlist .element.i10 a img{ background-image: url(../img/icon_10.png); }
+#main_frame #page_frame #mainlist .element.i11 a img{ background-image: url(../img/icon_11.png); }
+#main_frame #page_frame #mainlist .element.i12 a img{ background-image: url(../img/icon_12.png); }
+#main_frame #page_frame #mainlist .element.i13 a img{ background-image: url(../img/icon_13.png); }
+#main_frame #page_frame #mainlist .element.i14 a img{ background-image: url(../img/icon_14.png); }
+#main_frame #page_frame #mainlist .element.i15 a img{ background-image: url(../img/icon_15.png); }
+#main_frame #page_frame #mainlist .element.i16 a img{ background-image: url(../img/icon_16.png); }
+#main_frame #page_frame #mainlist .element.i17 a img{ background-image: url(../img/icon_17.png); }
+#main_frame #page_frame #mainlist .element.i18 a img{ background-image: url(../img/icon_18.png); }
+#main_frame #page_frame #mainlist .element.i19 a img{ background-image: url(../img/icon_19.png); }
+#main_frame #page_frame #mainlist .element.i20 a img{ background-image: url(../img/icon_20.png); }

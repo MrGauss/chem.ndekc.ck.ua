@@ -17,7 +17,7 @@
     </div>
     <div class="elem units">
         <label class="label">&nbsp;</label>
-        <input class="input" type="text" name="units" value="Ë³òð³â">
+        <input class="input" type="text" name="units" value="{tag:reagent_units}">
     </div>
 
     <div class="elem inc_date">
