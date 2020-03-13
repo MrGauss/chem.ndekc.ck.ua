@@ -1,1 +1,7 @@
-#content{ overflow: auto; }  
+#content{ overflow: auto; }
+
+#main_frame #page_frame #mainlist .element.i01 a img{ width: 100%; height: 100px; background-image: url(../img/icon_01.png); }
+#main_frame #page_frame #mainlist .element.i02 a img{ width: 100%; height: 100px; background-image: url(../img/icon_02.png); }
+#main_frame #page_frame #mainlist .element.i03 a img{ width: 100%; height: 100px; background-image: url(../img/icon_03.png); }
+#main_frame #page_frame #mainlist .element.i04 a img{ width: 100%; height: 100px; background-image: url(../img/icon_04.png); }
+#main_frame #page_frame #mainlist .element.i05 a img{ width: 100%; height: 100px; background-image: url(../img/icon_05.png); }

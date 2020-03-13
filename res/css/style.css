@@ -167,8 +167,6 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #mainlist .element a{ display: block; position: relative; height: 100%; background: none; }
 #main_frame #page_frame #mainlist .element a span{ display: block; position: absolute; bottom: 0px; height: 40px; width: 100%; color: #222222; text-transform: uppercase; font-weight: bold; font-size: 0.85em; }
 #main_frame #page_frame #mainlist .element a img{ width: 100%; height: 100px; background: url(../img/spacer.png) no-repeat 50% 50%; }
-#main_frame #page_frame #mainlist .element.i01 a img{ width: 100%; height: 100px; background-image: url(../img/icon_01.png); }
-#main_frame #page_frame #mainlist .element.i02 a img{ width: 100%; height: 100px; background-image: url(../img/icon_02.png); }
 #main_frame #page_frame #mainlist hr{ height: 1px; border: none; background: none; border-bottom: 1px dashed #555555; margin: 20px; }
 #main_frame #page_frame #mainlist .hr_vertval{ background: transparent; display: inline-block; border-left: 1px dashed #555555; width: 1px; height: 140px; position: relative; }
 

@@ -111,6 +111,11 @@ chem['dispersion'] = new function()
             {
                 $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Облік видачі реактивів і витратних матеріалів: '+(line_id?'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
 
+                if( line_id > 0 )
+                {
+                    $('#'+did+' select[name="stock_id"]').prop( 'readonly', true );
+                }
+
                 $('#'+did+' select[name="stock_id"]').on( "change", function()
                 {
                     var opt = $(this).find('option:selected');

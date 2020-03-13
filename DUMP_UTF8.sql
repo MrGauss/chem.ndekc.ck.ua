@@ -342,7 +342,8 @@ CREATE TABLE "public"."dispersion" (
     "region_id" integer DEFAULT 0 NOT NULL,
     "group_id" integer DEFAULT 0 NOT NULL,
     "inc_date" "date" DEFAULT '1970-01-01'::"date" NOT NULL,
-    "comment" "text" DEFAULT ''::"text" NOT NULL
+    "comment" "text" DEFAULT ''::"text" NOT NULL,
+    "created_ts" timestamp(6) with time zone DEFAULT ("now"())::timestamp without time zone NOT NULL
 );
 
 
@@ -905,10 +906,8 @@ INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (2, 'Ст�
 -- Data for Name: dispersion; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment") VALUES (4, 3, '2020-01-02 15:44:29.526382', 1, 1, 20, 19.3000000000000007, 1, 1, '2020-03-11', '');
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment") VALUES (0, 0, '2020-01-02 15:37:24.48078', 0, 0, 0, 0, 0, 0, '1970-01-01', '');
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment") VALUES (6, 7, '2020-03-12 17:40:41.234179', 1, 1, 3, 3, 1, 1, '2020-03-12', '');
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment") VALUES (5, 3, '2020-03-12 16:44:11.514084', 1, 1, 90, 90, 1, 1, '2020-03-12', 'gsdgsdfg sfdgdf gsd');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment", "created_ts") VALUES (0, 0, '2020-01-02 15:37:24.48078', 0, 0, 0, 0, 0, 0, '1970-01-01', '', '2020-03-13 11:54:36.766118+02');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment", "created_ts") VALUES (4, 3, '2020-01-02 15:44:29.526382', 1, 1, 20, 19.3000000000000007, 1, 1, '2020-03-11', '', '2020-03-13 11:54:36.766118+02');
 
 
 --
@@ -1058,8 +1057,8 @@ INSERT INTO "public"."region" ("id", "ts", "name") VALUES (1, '2019-12-29 23:22:
 --
 
 INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (0, '2020-01-02 15:37:14.580544', 0, 0, 0, '2020-01-01', 0, 0, 0, 0, '1970-01-01', '1970-01-01', 0, '', 0, 0, 0, '', '', '', '2020-03-12 09:48:19.879959');
-INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (7, '2020-03-12 17:40:18.36426', 1, 22, 10, '2020-01-01', 1, 1, 7, 2, '2019-07-10', '2021-05-13', 0, 'Самжене', 1, 1, 0, '', 'В пляшках', 'Шоб холодненька була', '2020-03-12 17:40:18.36426');
-INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (3, '2020-01-02 15:40:23.725801', 1, 10, 200, '2020-01-01', 1, 1, 90, 2, '2019-01-01', '2023-01-01', 1, 'Юрія-фарм', 2, 2, 1, 'хуйня', 'тестове місце', 'тестові умови', '2020-03-12 09:48:19.879959');
+INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (7, '2020-03-12 17:40:18.36426', 1, 22, 10, '2020-01-01', 1, 1, 10, 2, '2019-07-10', '2021-05-13', 0, 'Самжене', 1, 1, 0, '', 'В пляшках', 'Шоб холодненька була', '2020-03-12 17:40:18.36426');
+INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (3, '2020-01-02 15:40:23.725801', 1, 10, 200, '2020-01-01', 1, 1, 180, 2, '2019-01-01', '2023-01-01', 1, 'Юрія-фарм', 2, 2, 1, 'хуйня', 'тестове місце', 'тестові умови', '2020-03-12 09:48:19.879959');
 
 
 --
@@ -1087,7 +1086,7 @@ SELECT pg_catalog.setval('"public"."danger_class_id_seq"', 2, true);
 -- Name: dispersion_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."dispersion_id_seq"', 6, true);
+SELECT pg_catalog.setval('"public"."dispersion_id_seq"', 7, true);
 
 
 --

@@ -14,6 +14,38 @@ class dispersion
 {
     use basic, spr, db_connect;
 
+    public final function remove( $ID = 0 )
+    {
+        $ID = common::integer( $ID );
+        $error = '';
+
+        if( !$error && !$ID ){ $error = 'Ідентифікатор не визначено!'; }
+
+        ////////////////////////////////////
+
+        $data = array();
+        if( !$error && $ID ){ $data = $ID?$this->get_raw(array('id'=>$ID))[$ID] : array(); }
+
+        if( !$error && ( !is_array($data) || !count($data) ) )                                  { $error = 'Помилка отримання даних!'; }
+        if( !$error && common::strtotime( $data['created_ts'] ) < ( time() - (60*60*24*14) ) )  { $error = 'Заборонено видаляти записи, створені пізні ніж 14 днів тому!'; }
+        if( !$error && $data['quantity_left'] != $data['quantity_inc'] )                        { $error = 'Неможливо видалити реактив, який вже почали використовувати!';  }
+
+        ////////////////////////////////////
+
+        if( $error != false )
+        {
+            if( _AJAX_ ){ ajax::set_error( rand(10,99), $error ); return false; }
+            else        { common::err( $error ); return false; }
+        }
+
+        $SQL = 'DELETE FROM dispersion WHERE id='.$ID.' AND region_id='.CURRENT_REGION_ID.' AND group_id='.CURRENT_GROUP_ID.';';
+        $this->db->query( $SQL );
+
+        cache::clean();
+
+        return $ID;
+    }
+
     static public final function check_data_before_save( $data4save = array(), $original_data = array() )
     {
         if( !is_array($data4save) ){ return false; }
@@ -245,14 +277,21 @@ class dispersion
                 dispersion.*,
                 reagent.name as reagent_name,
                 reagent.units as reagent_units,
+
                 out_expert.name as out_expert_name,
                 out_expert.phname as out_expert_phname,
-                out_expert.surname as out_expert_surname
+                out_expert.surname as out_expert_surname,
+
+                inc_expert.name as inc_expert_name,
+                inc_expert.phname as inc_expert_phname,
+                inc_expert.surname as inc_expert_surname
+
             FROM
                 dispersion
                     LEFT JOIN stock     ON( dispersion.stock_id = stock.id AND dispersion.region_id = stock.region_id AND dispersion.group_id = stock.group_id )
                     LEFT JOIN reagent   ON( reagent.id = stock.reagent_id )
                     LEFT JOIN expert  as out_expert ON( out_expert.id = dispersion.out_expert_id )
+                    LEFT JOIN expert  as inc_expert ON( inc_expert.id = dispersion.inc_expert_id )
             WHERE
                 '.(isset($filters['id'])                            ? 'dispersion.id = '.$filters['id'].'' :   'dispersion.id > 0').'
                 '.(( isset($filters['id']) && $filters['id'] == 0 ) ? ''    :'AND dispersion.region_id = '.CURRENT_REGION_ID.'').'
