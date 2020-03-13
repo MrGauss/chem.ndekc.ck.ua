@@ -1,0 +1,26 @@
+<div id="list_frame" class="dispersion">
+    <div id="filters" class="filters">
+        <button id="create" type="button" data-id="0">Створити</button>
+        <button id="search" type="button">Шукати</button>
+    </div>
+
+    <div id="list" class="list">
+        <div class="line header">
+            <table>
+                <tr>
+                    <td class="numi">&nbsp;</td>
+                    <td class="reagent">Назва</td>
+                    <td class="inc_date">Дата видачі</td>
+                    <td class="quantity_inc">Видано</td>
+                    <td class="quantity_left">Залишилось</td>
+                    <td class="out_expert">Отримав</td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+
+
+        {list}
+    </div>
+</div>
+

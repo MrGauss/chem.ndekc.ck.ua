@@ -1,0 +1,52 @@
+@charset "windows-1251";
+
+#main_frame #page_frame #list_frame.stock #list .line table td.numi{ width: 60px; text-align: center; }
+#main_frame #page_frame #list_frame.stock #list .line table td.reagent{ width: 300px; text-align: left; }
+#main_frame #page_frame #list_frame.stock #list .line table td.quantity_inc{ width: 100px; text-align: center; }
+#main_frame #page_frame #list_frame.stock #list .line table td.quantity_left{ width: 100px; text-align: center; }
+#main_frame #page_frame #list_frame.stock #list .line table td.quantity_dispersed{ width: 100px; text-align: center; }
+#main_frame #page_frame #list_frame.stock #list .line table td.quantity_not_used{ width: 100px; text-align: center; }
+#main_frame #page_frame #list_frame.stock #list .line table td.inc_date{ width: 150px; text-align: center; }
+
+.default_editor .elem.reagent       { width: 75%;  }
+.default_editor .elem.quantity      { width: 15%;  }
+.default_editor .elem.units         { width: 10%;  }
+.default_editor .elem.units input   { border: none; text-align: left; background: none; }
+
+.default_editor .elem.create_date   { width: 33%;  }
+.default_editor .elem.inc_date      { width: 33%;  }
+.default_editor .elem.dead_date     { width: 34%;  }
+
+.default_editor .elem.clearence     { width: 20%;  }
+.default_editor .elem.reagent_state { width: 30%;  }
+.default_editor .elem.certif        { width: 20%;  }
+.default_editor .elem.is_suitability{ width: 30%;  }
+
+.default_editor .elem.danger_class  { width: 30%;  }
+.default_editor .elem.safe_needs    { width: 40%;  }
+.default_editor .elem.safe_place    { width: 30%;  }
+
+.default_editor .elem.creator       { width: 100%; }
+.default_editor .elem.comment       { width: 100%; }
+.default_editor .elem.expert        { width: 100%; }
+
+
+.default_editor .elem.reagent,
+.default_editor .elem.quantity,
+.default_editor .elem.reagent_state,
+.default_editor .elem.clearence,
+.default_editor .elem.inc_date,
+.default_editor .elem.units{ background: #D6FFD1 }
+.default_editor .elem.dead_date{ background: #FFE5E0 }
+.default_editor .elem.create_date,
+.default_editor .elem.creator{ background: #E5F0FF }
+.default_editor .elem.certif,
+.default_editor .elem.is_suitability{ background: #F8E5FF }
+
+.default_editor .elem.danger_class{ background: #FFD3D1 }
+.default_editor .elem.safe_needs{ background: #FFDDDB }
+.default_editor .elem.safe_place{ background: #FFE7E5 }
+
+
+
+
