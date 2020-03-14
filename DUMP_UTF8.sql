@@ -915,7 +915,7 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 --
 
 INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, 0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
-INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '8b8c7e06faa20ce6b07f7c6dde169b42', 1, '88.155.24.228');
+INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', 'e5df8bbbd7a834e9161dcd703ba3cd39', 1, '46.255.34.197');
 
 
 --
