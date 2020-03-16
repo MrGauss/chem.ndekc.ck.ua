@@ -561,7 +561,8 @@ ALTER SEQUENCE "public"."reactiv_id_seq" OWNED BY "public"."reactiv"."hash";
 
 CREATE TABLE "public"."reactiv_menu" (
     "id" bigint NOT NULL,
-    "name" character varying(255) DEFAULT 0 NOT NULL
+    "name" character varying(255) DEFAULT 0 NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -665,7 +666,8 @@ ALTER SEQUENCE "public"."reagent_state_id_seq" OWNED BY "public"."reagent_state"
 CREATE TABLE "public"."region" (
     "id" integer NOT NULL,
     "ts" timestamp(6) without time zone DEFAULT ("now"())::timestamp without time zone NOT NULL,
-    "name" character varying(255) DEFAULT ''::character varying NOT NULL
+    "name" character varying(255) DEFAULT ''::character varying NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -915,7 +917,7 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 --
 
 INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, 0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
-INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', 'be78131ce13590fac62763ca4d999fe3', 1, '192.168.2.127');
+INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', 'cba49a132db20a820aa40ef921e500bf', 1, '192.168.137.168');
 
 
 --
@@ -968,8 +970,8 @@ INSERT INTO "public"."purpose" ("id", "name", "ts") VALUES (0, '--', '2019-12-28
 -- Data for Name: reagent; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (2, '2020-01-02 15:39:01.529732', 'Літри', '+++++1,3 - динітробензол', 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (0, '2019-12-28 11:10:26.287818', 'Літри', '--', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (2, '2020-01-02 15:39:01.529732', 'Літри', '1,3 - динітробензол', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (3, '2020-01-02 15:39:01.529732', 'Літри', '1,4-Диоксан', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (4, '2020-01-02 15:39:01.529732', 'Літри', 'N, N - диметилформамід', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (5, '2020-01-02 15:39:01.529732', 'Літри', 'Азотна кислота', 0);
@@ -1048,8 +1050,8 @@ INSERT INTO "public"."reagent_state" ("id", "name", "position") VALUES (2, 'Тв
 -- Data for Name: region; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."region" ("id", "ts", "name") VALUES (0, '2019-12-28 11:09:22.894212', '--');
-INSERT INTO "public"."region" ("id", "ts", "name") VALUES (1, '2019-12-29 23:22:02.645034', 'Черкаська область');
+INSERT INTO "public"."region" ("id", "ts", "name", "position") VALUES (0, '2019-12-28 11:09:22.894212', '--', 0);
+INSERT INTO "public"."region" ("id", "ts", "name", "position") VALUES (1, '2019-12-29 23:22:02.645034', 'Черкаська область', 0);
 
 
 --
