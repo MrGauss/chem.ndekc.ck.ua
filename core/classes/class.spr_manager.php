@@ -14,6 +14,8 @@ class spr_manager
 {
     use basic, spr, db_connect;
 
+    const CACHE_CONST = 'spr';
+
     private $table = false;
     private $table_info = array();
 
@@ -49,6 +51,8 @@ class spr_manager
     public final function editor( $line_id = 0, $skin = false )
     {
         $line_id = common::integer( $line_id );
+
+        cache::clean( self::CACHE_CONST.'-'.$this->table );
 
         $data = $this->get_raw( array( 'id' => $line_id ) );
         $data = isset( $data[$line_id] ) ? $data[$line_id] : false;
@@ -140,7 +144,8 @@ class spr_manager
         $data = array();
         if( !$error && $ID ){ $data = $ID?$this->get_raw(array('id'=>$ID))[$ID] : array(); }
 
-        if( !$error && ( !is_array($data) || !count($data) ) )                                  { $error = 'Помилка отримання даних!'; }
+        if( !$error && ( !is_array($data) || !count($data) ) ){ $error = 'Помилка отримання даних!'; }
+        if( $this->check_usage( $ID ) ){ $error = 'Запис використовується! В видаленні відмовлено!'; }
 
         ////////////////////////////////////
 
@@ -150,15 +155,18 @@ class spr_manager
             else        { common::err( $error ); return false; }
         }
 
-        $SQL = 'DELETE FROM '.$this->table.' WHERE id='.$ID.' AND region_id='.CURRENT_REGION_ID.' AND group_id='.CURRENT_GROUP_ID.';';
-        $this->db->query( $SQL );
+        if( !$error )
+        {
+            $SQL = 'DELETE FROM '.$this->table.' WHERE id='.$ID.';';
+            $this->db->query( $SQL );
+        }
 
         cache::clean();
 
         return $ID;
     }
 
-    static public final function check_data_before_save( $data4save = array(), $original_data = array() )
+    public final function check_data_before_save( $data4save = array(), $original_data = array() )
     {
         if( !is_array($data4save) ){ return false; }
         if( !is_array($original_data) ){ return false; }
@@ -181,6 +189,13 @@ class spr_manager
         if( !$error && !isset($data4save['name']) && isset($original_data['name']) )                { $error = 'Назва не визначена!'; $error_area = 'name'; }
         if( !$error && !isset($data4save['full_name']) && isset($original_data['full_name']) )      { $error = 'Повна назва не визначена!'; $error_area = 'full_name'; }
         if( !$error && !isset($data4save['units']) && isset($original_data['units']) )              { $error = 'Одиниця виміру не визначена!'; $error_area = 'units'; }
+
+        ///////////
+        $SQL = 'SELECT count(id) as count FROM '.$this->table.' WHERE lower("name") = lower(\''.$this->db->safesql($data4save['name']).'\'::text) '. ( isset($original_data['id']) ? ' AND id != '.common::integer($original_data['id']) : ''  ) .';';
+        if( $this->db->super_query( $SQL )['count'] > 0 )
+        {
+            $error = 'Такий запис вже існує!'; $error_area = 'name';
+        }
         ///////////
 
         if( $error != false )
@@ -223,7 +238,7 @@ class spr_manager
 
         ///////////////////////////////////////////////////
 
-        if( !self::check_data_before_save( $SQL, $ID?$this->get_raw(array('id'=>$ID))[$ID] : array() ) ){ return false; }
+        if( !$this->check_data_before_save( $SQL, $ID?$this->get_raw(array('id'=>$ID))[$ID] : array() ) ){ return false; }
 
         ///////////////////////////////////////////////////
 
@@ -241,20 +256,22 @@ class spr_manager
             {
                 $SQL[$k] =  '\''.$v.'\'::'.$this->table_info[$k]['data_type'];
             }
-            $SQL = 'INSERT INTO '.$this->table.' ("'.implode('", "', array_keys($SQL) ).'") VALUES ( \''.implode('\', \'', array_values($SQL)).'\' ) RETURNING id;';
+            $SQL = 'INSERT INTO '.$this->table.' ("'.implode('", "', array_keys($SQL) ).'") VALUES ( '.implode(', ', array_values($SQL)).' ) RETURNING id;';
         }
 
 
-        $this->db->query( 'BEGIN;' );
+        //$this->db->query( 'BEGIN;' );
         $SQL = $this->db->query( $SQL );
         $ID = $this->db->get_row( $SQL );
         $ID = isset($ID['id']) ? $ID['id'] : false;
 
-        if( $ID ){ $this->db->query( 'COMMIT;' ); }
-             else{ $this->db->query( 'ROLLBACK;' ); }
+        //if( $ID ){ $this->db->query( 'COMMIT;' ); }
+        //     else{ $this->db->query( 'ROLLBACK;' ); }
 
         $this->db->free();
 
+        cache::clean( self::CACHE_CONST.'-'.$this->table );
+        cache::clean( self::CACHE_CONST );
         cache::clean();
 
         return $ID;
@@ -271,7 +288,21 @@ class spr_manager
 
         $WHERE = array();
 
-        if( isset($filters['id']) )     { $WHERE['id'] = 'id = \''.common::integer( $filters['id'] ).'\'::INTEGER'; }
+        if( isset($filters['id']) )
+        {
+            if( is_array($filters['id']) )
+            {
+                if( count($filters['id']) )
+                {
+                    $WHERE['id'] = 'id IN( '.implode(',', common::integer( $filters['id'] )).' )';
+                }
+            }
+            else
+            {
+                $WHERE['id'] = 'id = \''.common::integer( $filters['id'] ).'\'::INTEGER';
+            }
+
+        }
         if( !isset($filters['id']) )    { $WHERE['id'] = 'id > 0'; }
 
         $WHERE = implode( ' AND ', $WHERE );
@@ -295,14 +326,10 @@ class spr_manager
                     '.$WHERE.'
                     '.$ORDER.'; '.db::CACHED;
 
-        $cache_var = 'spr-'.$this->table.'-raw-'.md5($SQL);
+        $cache_var = self::CACHE_CONST.'-'.$this->table.'-'.crc32($SQL);
 
-        //echo $SQL."\n";
-
+        $data = false;
         $data = cache::get( $cache_var );
-
-        //var_export($data);echo "\n";
-
         if( $data && is_array($data) && count($data) ){ return $data; }
 
         $SQL = $this->db->query( $SQL );
@@ -319,6 +346,32 @@ class spr_manager
 
         cache::set( $cache_var, $data );
         return $data;
+    }
+
+    private final function check_usage( $element_id = 0 )
+    {
+        $element_id = common::integer( $element_id );
+
+        if( !$element_id ){ return false; }
+
+        if( !is_array($this->table_info) || !count($this->table_info) || !isset($this->table_info['foreign']) || !is_array($this->table_info['foreign']) || !count($this->table_info['foreign']) )
+        {
+            return false;
+        }
+
+        foreach( $this->table_info['foreign'] as $fk )
+        {
+            $query = 'SELECT count(*) as count FROM '.$fk['table_name'].' WHERE "'.$fk['column_name'].'" = '.$element_id.';';
+
+            $count = $this->db->super_query( $query );
+            $count = common::integer( $count['count'] );
+
+            //echo $query.' -- '.$count."\n";
+
+            if( $count > 0 ){ return $count; }
+        }
+
+        return false;
     }
 
     private final function get_table_info()
@@ -344,6 +397,32 @@ class spr_manager
             $row['character_maximum_length'] = common::integer( $row['character_maximum_length'] );
             $data[$row['column_name']] = $row;
         }
+
+        $SQL = '
+            SELECT
+                    tc.table_name,
+                    kcu.column_name,
+                    ccu.table_schema AS foreign_table_schema,
+                    ccu.table_name AS foreign_table_name,
+                    ccu.column_name AS foreign_column_name
+            FROM
+                    information_schema.table_constraints AS tc
+                    JOIN information_schema.key_column_usage AS kcu
+                        ON tc.constraint_name = kcu.constraint_name
+                        AND tc.table_schema = kcu.table_schema
+                    JOIN information_schema.constraint_column_usage AS ccu
+                        ON ccu.constraint_name = tc.constraint_name
+                        AND ccu.table_schema = tc.table_schema
+            WHERE tc.constraint_type = \'FOREIGN KEY\' AND ccu.table_name=\''.$this->db->safesql($this->table).'\';
+        ';
+        $SQL = $this->db->query( $SQL );
+        $data['foreign'] = array();
+        while( ( $row = $this->db->get_row($SQL) ) != false )
+        {
+            $data['foreign'][] = $row;
+        }
+
+        // var_export($data);exit;
 
         $this->db->free();
 

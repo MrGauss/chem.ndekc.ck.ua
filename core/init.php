@@ -6,7 +6,7 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 
 require( CLASSES_DIR.DS.'class.common.php' );
 
-if( strpos( USER_IP, '192.168.137.' ) === false ){ echo 'Ресурс в розробці!'; exit; }
+//if( strpos( USER_IP, '192.168.137.' ) === false ){ echo 'Ресурс в розробці!'; exit; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +33,7 @@ require( CLASSES_DIR.DS.'class.user.php' );
 require( CLASSES_DIR.DS.'class.spr_manager.php' );
 require( CLASSES_DIR.DS.'class.stock.php' );
 require( CLASSES_DIR.DS.'class.dispersion.php' );
+require( CLASSES_DIR.DS.'class.recipes.php' );
 require( CLASSES_DIR.DS.'class.consume.php' );
 
 //////////////////////////////////////////////////////////////////////////////////////////

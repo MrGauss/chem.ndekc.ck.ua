@@ -21,6 +21,7 @@ if( defined( 'CURRENT_USER_ID' ) && CURRENT_USER_ID )
     {
         $_REQUEST = common::utf2win( $_REQUEST );
         $_POST    = common::utf2win( $_POST );
+
         require( $rfile );
     }
 }

@@ -5,7 +5,7 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-define( 'TABLE_AREA', 'reagent' );
+define( 'TABLE_AREA', 'clearence' );
 
 switch ( _ACTION_ )
 {

@@ -23,6 +23,15 @@ var chem = new function()
 $('.ui-dialog-content').dialog("option", "position", {my: "center", at: "center", of: window});
 */
 
+    this.single_open = function( obj )
+    {
+        if( obj.hasClass('dialog_action') ){ return false; }
+        else
+        {
+            obj.addClass('dialog_action');
+            setTimeout( function(){ obj.removeClass('dialog_action');  } , 300 );
+        }
+    }
     this.txt2json = function( _r )
     {
         try{ _r = jQuery.parseJSON( _r ); }catch(err){ chem.err( 'ERROR: '+err+"\n\n"+_r ); return false; }

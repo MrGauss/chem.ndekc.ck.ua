@@ -6,7 +6,7 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-$spr = new spr_manager('reagent_state');
+$spr = new spr_manager('danger_class');
 
 $tpl->load( _MOD_.'/main' );
 

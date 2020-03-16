@@ -10,7 +10,7 @@
                 <tr>
                     <td class="numi">&nbsp;</td>
                     <td class="name">Назва</td>
-                    <td class="units">Одиниця виміру</td>
+                    <td class="ingredients_html">Склад</td>
                     <td></td>
                 </tr>
             </table>

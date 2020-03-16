@@ -1,4 +1,4 @@
-chem['dispersion'] = new function()
+chem['spr_recipes'] = new function()
 {
     this.check_before_save = function( obj )
     {
@@ -22,6 +22,13 @@ chem['dispersion'] = new function()
                 err = 1;
             }
         } );
+
+        if( $('#'+did).find('.ingredient[data-reagent_id]').not('.ingredient[data-reagent_id="0"]').length < 1 )
+        {
+            chem.BL( $('#'+did).find('select[name="reagent_id"]'), 5, 'blred' );
+            chem.BL( $('#'+did).find('.ingredients'), 5, 'blred' );
+            err = 1;
+        }
 
         if( err ){ return false; }
         else{ return true; }
@@ -59,7 +66,7 @@ chem['dispersion'] = new function()
                         .replaceWith( _r['lines'] );
 
                     $('#content #list_frame .list .line[data-id="'+line_id+'"]')
-                        .on( "click", function(){ chem.dispersion.editor( $(this) ); })
+                        .on( "click", function(){ chem.spr_recipes.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
                         {
@@ -70,10 +77,13 @@ chem['dispersion'] = new function()
                 }
                 else
                 {
-                    $('#content #list_frame .list .line[data-id]').off().remove();
+                    $('#content #list_frame .list .line[data-id]')
+                        .off()
+                        .remove();
+
                     $('#content #list_frame .list').append( _r['lines'] );
                     $('#content #list_frame [data-id]')
-                        .on( "click", function(){ chem.dispersion.editor( $(this) ); })
+                        .on( "click", function(){ chem.spr_recipes.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
                         {
@@ -87,12 +97,36 @@ chem['dispersion'] = new function()
 
     }
 
+    this.init_ingredient = function( obj )
+    {
+        obj.on( "click", function(){ $(this).off().remove(); });
+    }
+
+    this.init_ingredient_select = function( obj )
+    {
+        obj.on( "change", function()
+        {
+           var list = $(this).parents('.default_editor').find('.ingredients');
+           var empty = list.find('.ingredient[data-reagent_id="0"]');
+
+           empty
+            .clone()
+            .appendTo( list )
+            .prop( 'data-reagent_id', obj.val() )
+            .attr( 'data-reagent_id', obj.val() )
+            .html( obj.find('option:selected').text() )
+            .on( "click", function(){ $(this).off().remove(); });
+
+           obj.val( '0' );
+        });
+    }
+
     this.editor = function( obj )
     {
         chem.single_open( obj );
-        
+
         var line_id = parseInt( obj.attr('data-id') );
-        var did_pref = 'dispersion-edit-form';
+        var did_pref = 'spr_recipes-edit-form';
         var did = did_pref + '-' + line_id + '-' + Math.floor((Math.random() * 1000000) + 1);
 
         chem.close_it( $('[id*="'+did_pref+'"]') );
@@ -103,6 +137,7 @@ chem['dispersion'] = new function()
             post['subaction'] = 1;
             post['mod'] = $('body').attr('data-mod');
             post['id'] = line_id;
+            post['rand'] = Math.floor((Math.random() * 1000000) + 1);
 
         $.ajax({ data: post }).done(function( _r )
         {
@@ -111,7 +146,7 @@ chem['dispersion'] = new function()
 
             if( _r['form'] )
             {
-                $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Облік видачі реактивів і витратних матеріалів: '+(line_id?'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
+                $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Довідник">'+_r['form']+'</div>' );
 
                 if( line_id > 0 )
                 {
@@ -124,8 +159,9 @@ chem['dispersion'] = new function()
                     $('#'+did+'  [name="reagent_quantity_left"]').val( opt.attr('data-quantity_left') );
                 });
 
-
                 $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ).trigger( "change" ); });
+                $('#'+did+'').find('.ingredients .ingredient').each(function(){ chem.spr_recipes.init_ingredient( $(this) ); });
+                $('#'+did+'').find('select[name="reagent_id"]').each(function(){ chem.spr_recipes.init_ingredient_select( $(this) ); });
 
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
@@ -152,7 +188,7 @@ chem['dispersion'] = new function()
                     {
                         if( !$('#'+did+' .error_area').hasClass('dnone') ){ $('#'+did+' .error_area').addClass('dnone'); }
 
-                        if( chem.dispersion.check_before_save( $('#'+did) ) )
+                        if( chem.spr_recipes.check_before_save( $('#'+did) ) )
                         {
                             var save_post = {};
                                 save_post['ajax'] = 1;
@@ -166,6 +202,18 @@ chem['dispersion'] = new function()
                             $('#'+did).find('[data-save="1"]').each( function()
                             {
                                 save_post['save'][$(this).attr('name').toString()] = $(this).val().toString();
+                            } );
+
+                            save_post['save']['ingredients'] = new Array;
+
+                            $('#'+did).find('.ingredient[data-reagent_id]').each( function()
+                            {
+                                var reagent_id = parseInt( $(this).attr( 'data-reagent_id' ) );
+
+                                if( reagent_id > 0 )
+                                {
+                                    save_post['save']['ingredients'].push( reagent_id );
+                                }
                             } );
 
                             $.ajax({ data: save_post }).done(function( _r )
@@ -194,17 +242,15 @@ chem['dispersion'] = new function()
                                     if( !line_id || line_id != _r['id'] )
                                     {
                                         chem.close_it( $('#'+did) );
-                                        chem.dispersion.reload();
+                                        setTimeout( function(){ chem.spr_recipes.reload(); } , 100 );
                                     }
                                     else
                                     {
                                         if( _r['id'] > 0 )
                                         {
-                                            // chem.animate_opacity( $('#'+did+' .good_area'), 'Дані успішно збережено!' );
-                                            chem.dispersion.reload( _r['id'] );
                                             chem.close_it( $('#'+did) );
-
-                                            $('#content #list_frame [data-id="'+_r['id']+'"]').trigger( "click" );
+                                            setTimeout( function(){ chem.spr_recipes.reload( _r['id'] ); } , 100 );
+                                            //setTimeout( function(){ $('#content #list_frame [data-id="'+_r['id']+'"]').trigger( "click" ); } , 600 );
                                         }
                                     }
                                 }
@@ -217,35 +263,39 @@ chem['dispersion'] = new function()
                     dialog["buttons"][bi]["data-role"] = "close_button";
                     bi++;
 
-                    dialog["buttons"][bi] = {};
-                    dialog["buttons"][bi]["text"]  = "Видалити";
-                    dialog["buttons"][bi]["click"] = function()
+                    if( line_id > 0 )
                     {
-                        var save_post = {};
-                            save_post['ajax'] = 1;
-                            save_post['action'] = 3;
-                            save_post['subaction'] = 1;
-                            save_post['mod'] = $('body').attr('data-mod');
-                            save_post['id']  = $('#'+did).find('input[name="id"]').val();
-                            save_post['key'] = $('#'+did).find('input[name="key"]').val();
-
-                        $.ajax({ data: save_post }).done(function( _r )
+                        dialog["buttons"][bi] = {};
+                        dialog["buttons"][bi]["text"]  = "Видалити";
+                        dialog["buttons"][bi]["click"] = function()
                         {
-                            _r = chem.txt2json( _r );
-                            _r['id'] = parseInt(_r['id']);
+                            var save_post = {};
+                                save_post['ajax']       = 1;
+                                save_post['action']     = 3;
+                                save_post['subaction']  = 1;
+                                save_post['mod']        = $('body').attr('data-mod');
+                                save_post['id']         = $('#'+did).find('input[name="id"]').val();
+                                save_post['key']        = $('#'+did).find('input[name="key"]').val();
 
-                            if( _r['id'] > 0 )
+                            $.ajax({ data: save_post }).done(function( _r )
                             {
-                                $('#list .line[data-id="'+_r['id']+'"]').remove();
-                                chem.close_it( $('#'+did) );
+                                _r = chem.txt2json( _r );
+                                _r['id'] = parseInt(_r['id']);
 
-                                chem.dispersion.reload();
-                            }
-                        });
-                    };
-                    dialog["buttons"][bi]["class"] = "type5 right";
-                    dialog["buttons"][bi]["data-role"] = "delete_button";
-                    bi++;
+                                if( _r['id'] > 0 )
+                                {
+                                    $('#list .line[data-id="'+_r['id']+'"]').remove();
+                                    chem.close_it( $('#'+did) );
+
+                                    // chem.spr_recipes.reload();
+                                }
+                            });
+                        };
+                        dialog["buttons"][bi]["class"] = "type5 right";
+                        dialog["buttons"][bi]["data-role"] = "delete_button";
+                        bi++;
+                    }
+
 
                 $('#'+did).dialog( dialog );
             }
@@ -254,19 +304,24 @@ chem['dispersion'] = new function()
 
     this.init = function()
     {
-        $('#content #list_frame [data-id]').on( "click", function()
+        $('#content #list_frame [data-id][type="button"]').on( "click", function()
         {
-            chem.dispersion.editor( $(this) );
+            chem.spr_recipes.editor( $(this) );
+        });
+
+        $('#content #list_frame .list .line[data-id]').on( "click", function()
+        {
+            chem.spr_recipes.editor( $(this) );
         });
 
         $('#content #list_frame #filters #search').on( "click", function()
         {
-            chem.dispersion.reload();
+            chem.spr_recipes.reload();
         });
     }
 }
 
 $(document).ready( function()
 {
-    chem.dispersion.init();
+    chem.spr_recipes.init();
 });

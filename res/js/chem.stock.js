@@ -89,6 +89,8 @@ chem['stock'] = new function()
 
     this.editor = function( obj )
     {
+        chem.single_open( obj );
+
         var line_id = parseInt( obj.attr('data-id') );
         var did_pref = 'stock-edit-form';
         var did = did_pref + '-' + line_id + '-' + Math.floor((Math.random() * 1000000) + 1);
