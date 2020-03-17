@@ -591,8 +591,7 @@ ALTER SEQUENCE "public"."reactiv_menu_id_seq" OWNED BY "public"."reactiv_menu"."
 
 CREATE TABLE "public"."reactiv_menu_ingredients" (
     "reagent_id" bigint NOT NULL,
-    "reactiv_menu_id" bigint DEFAULT 0 NOT NULL,
-    "quantity" double precision DEFAULT 0 NOT NULL
+    "reactiv_menu_id" bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -880,6 +879,7 @@ INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (0, '--', 0);
 INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (1, 'Хуйова', 0);
 INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (2, 'Хароша', 0);
 INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (4, 'Мутняк', 0);
+INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (5, 'Срань Господня', 0);
 
 
 --
@@ -904,6 +904,7 @@ INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (0, '--', 
 INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (2, 'Страшне', 0);
 INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (1, 'Піздєц яке страшне', 0);
 INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (3, 'Хуйня', 0);
+INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (4, 'Дєцкій лєпєт', 0);
 
 
 --
@@ -919,7 +920,7 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 --
 
 INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, 0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
-INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', 'bdd722eae62e2a9681d345e946e5db4e', 1, '192.168.2.127');
+INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '712456135642b3dc9919b575e4d84346', 1, '46.255.34.197');
 
 
 --
@@ -961,16 +962,31 @@ INSERT INTO "public"."purpose" ("id", "name", "ts") VALUES (0, '--', '2019-12-28
 --
 
 INSERT INTO "public"."reactiv_menu" ("id", "name", "position") VALUES (0, '--', 0);
-INSERT INTO "public"."reactiv_menu" ("id", "name", "position") VALUES (1, 'Бухло', 0);
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position") VALUES (5, 'ЗеКОманда', 0);
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position") VALUES (4, 'Тест 01', 0);
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position") VALUES (1, 'Тест 02', 0);
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position") VALUES (2, 'Тест 03', 0);
 
 
 --
 -- Data for Name: reactiv_menu_ingredients; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id", "quantity") VALUES (22, 1, 0);
-INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id", "quantity") VALUES (64, 1, 0);
-INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id", "quantity") VALUES (16, 1, 0);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (22, 5);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (81, 5);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (27, 4);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (62, 4);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (64, 4);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (6, 1);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (8, 1);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (22, 1);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (29, 1);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (30, 1);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (54, 1);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (58, 1);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (64, 1);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (2, 2);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (59, 2);
 
 
 --
@@ -981,6 +997,7 @@ INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (2, '2020-01-02 15:39:01.529732', 'Літри', '1,3 - Динітробензол', 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (8, '2020-01-02 15:39:01.529732', 'Літри', 'Амоній молібденовокислий', 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (0, '2019-12-28 11:10:26.287818', 'Літри', '--', 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (81, '2020-03-16 22:23:10.617711', 'Голови', 'Їблани', 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (4, '2020-01-02 15:39:01.529732', 'Літри', 'N, N - диметилформамід', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (5, '2020-01-02 15:39:01.529732', 'Літри', 'Азотна кислота', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (6, '2020-01-02 15:39:01.529732', 'Літри', 'Альдегід оцтовий', 0);
@@ -1051,6 +1068,7 @@ INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_
 INSERT INTO "public"."reagent_state" ("id", "name", "position") VALUES (0, '--', 0);
 INSERT INTO "public"."reagent_state" ("id", "name", "position") VALUES (1, 'Рідка', 0);
 INSERT INTO "public"."reagent_state" ("id", "name", "position") VALUES (2, 'Тверда', 0);
+INSERT INTO "public"."reagent_state" ("id", "name", "position") VALUES (3, 'Гівноподібна', 0);
 
 
 --
@@ -1074,7 +1092,7 @@ INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_i
 -- Name: clearence_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."clearence_id_seq"', 4, true);
+SELECT pg_catalog.setval('"public"."clearence_id_seq"', 5, true);
 
 
 --
@@ -1088,7 +1106,7 @@ SELECT pg_catalog.setval('"public"."consume_id_seq"', 8, true);
 -- Name: danger_class_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."danger_class_id_seq"', 3, true);
+SELECT pg_catalog.setval('"public"."danger_class_id_seq"', 4, true);
 
 
 --
@@ -1137,21 +1155,21 @@ SELECT pg_catalog.setval('"public"."reactiv_id_seq"', 1, false);
 -- Name: reactiv_menu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."reactiv_menu_id_seq"', 1, true);
+SELECT pg_catalog.setval('"public"."reactiv_menu_id_seq"', 5, true);
 
 
 --
 -- Name: reagent_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."reagent_id_seq"', 80, true);
+SELECT pg_catalog.setval('"public"."reagent_id_seq"', 81, true);
 
 
 --
 -- Name: reagent_state_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."reagent_state_id_seq"', 2, true);
+SELECT pg_catalog.setval('"public"."reagent_state_id_seq"', 3, true);
 
 
 --
@@ -1238,14 +1256,6 @@ ALTER TABLE ONLY "public"."purpose"
 
 ALTER TABLE ONLY "public"."reactiv_consume"
     ADD CONSTRAINT "reactiv_consume_pkey" PRIMARY KEY ("hash");
-
-
---
--- Name: reactiv_menu_ingredients reactiv_menu_ingredients_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY "public"."reactiv_menu_ingredients"
-    ADD CONSTRAINT "reactiv_menu_ingredients_pkey" PRIMARY KEY ("reagent_id");
 
 
 --

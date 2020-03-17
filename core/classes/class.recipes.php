@@ -17,7 +17,121 @@ class recipes
     use basic, spr, db_connect;
 
     const DB_MAIN_TABLE = 'reactiv_menu';
+    const CACHE_CONST   = 'spr';
 
+    public final function check_data_before_save( $data4save = array(), $original_data = array() )
+    {
+        if( !is_array($data4save) ){ return false; }
+        if( !is_array($original_data) ){ return false; }
+
+        $ID = common::integer( isset($original_data['id']) ? $original_data['id'] : false );
+
+        $error = false;
+        $error_area = false;
+
+        ///////////
+        if( !$error && isset($data4save['name']) && common::strlen( $data4save['name'] ) > 64 )     { $error = 'Назва занадто довга!'; $error_area = 'name'; }
+        if( !$error && isset($data4save['name']) && common::strlen( $data4save['name'] ) < 3 )      { $error = 'Назва занадто коротка!'; $error_area = 'name'; }
+
+        ///////////
+        $SQL = 'SELECT count(id) as count FROM reactiv_menu WHERE lower("name") = lower(\''.$this->db->safesql($data4save['name']).'\'::text) '. ( isset($original_data['id']) ? ' AND id != '.common::integer($original_data['id']) : ''  ) .';';
+        if( $this->db->super_query( $SQL )['count'] > 0 )
+        {
+            $error = 'Такий запис вже існує!'; $error_area = 'name';
+        }
+        ///////////
+
+        if( $error != false )
+        {
+            if( _AJAX_ )
+            {
+                ajax::set_error( rand(10,99), $error );
+                ajax::set_data( 'err_area', $error_area );
+                return false;
+            }
+            else
+            {
+                common::err( $error );
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public final function save( $ID = 0, $data = array() )
+    {
+        $ID = common::integer( $ID );
+
+        if( !is_array($data) ){ return false; }
+
+
+        $data['name'] = common::filter( isset($data['name'])?$data['name']:'' );
+
+        $data['ingredients'] = common::filter( isset($data['ingredients'])?$data['ingredients']:'' );
+        $data['ingredients'] = is_array( $data['ingredients'] ) ? $data['ingredients'] : array( $data['ingredients'] );
+        $data['ingredients'] = common::trim( $data['ingredients'] );
+        $data['ingredients'] = common::integer( $data['ingredients'] );
+        $data['ingredients'] = array_unique( $data['ingredients'] );
+
+        ///////////////////////////////////////////////////
+
+        $SQL = array();
+        $SQL['name'] = $this->db->safesql( $data['name'] );
+
+        ///////////////////////////////////////////////////
+
+        if( !$this->check_data_before_save( $SQL, $ID?$this->get_raw(array('id'=>$ID))[$ID] : array() ) ){ return false; }
+
+        ///////////////////////////////////////////////////
+
+        if( $ID > 0 )
+        {
+            foreach( $SQL as $k => $v )
+            {
+                $SQL[$k] =  '"'.$k.'"= \''.$v.'\'';
+            }
+            $SQL = 'UPDATE reactiv_menu SET '.implode( ', ', $SQL ).' WHERE id = '.$ID.' RETURNING id;';
+        }
+        else
+        {
+            $SQL = 'INSERT INTO reactiv_menu ("'.implode('", "', array_keys($SQL) ).'") VALUES ( \''.implode('\', \'', array_values($SQL)).'\' ) RETURNING id;';
+        }
+
+        $this->db->query( 'BEGIN;' );
+        $SQL = $this->db->query( $SQL );
+        $ID = $this->db->get_row( $SQL );
+        $ID = isset($ID['id']) ? $ID['id'] : false;
+
+        if( $ID > 0 )
+        {
+            $ingrSQL = array();
+            foreach( $data['ingredients'] as $ingr_id )
+            {
+                if( $ingr_id < 1 ){ continue; }
+
+                $ingrSQL[] = '( '.$ID.', '.$ingr_id.' )';
+            }
+
+            if( is_array($ingrSQL) )
+            {
+                $ingrSQL = 'INSERT INTO reactiv_menu_ingredients ( reactiv_menu_id, reagent_id ) VALUES '.implode( ', ', $ingrSQL ).';';
+
+                $this->db->query( 'DELETE FROM reactiv_menu_ingredients WHERE reactiv_menu_id = '.$ID.';' );
+                $this->db->query( $ingrSQL );
+            }
+        }
+
+        if( $ID ){ $this->db->query( 'COMMIT;' ); }
+             else{ $this->db->query( 'ROLLBACK;' ); }
+
+        $this->db->free();
+
+        cache::clean( self::CACHE_CONST );
+        cache::clean();
+
+        return $ID;
+    }
 
     public final function get_html( $filters = array(), $skin = false )
     {
