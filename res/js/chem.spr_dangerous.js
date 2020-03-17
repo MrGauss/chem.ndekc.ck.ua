@@ -117,6 +117,8 @@ chem['spr_manager'] = new function()
             {
                 $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Довідник">'+_r['form']+'</div>' );
 
+                autocomplete.init( $('#'+did+'') );
+
                 if( line_id > 0 )
                 {
                     $('#'+did+' select[name="stock_id"]').prop( 'readonly', true );

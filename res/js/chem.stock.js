@@ -113,6 +113,8 @@ chem['stock'] = new function()
             {
                 $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Облік надходжень реактивів і витратних матеріалів: '+(line_id?'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
 
+                autocomplete.init( $('#'+did+'') );
+
                 $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ); });
 
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });

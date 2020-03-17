@@ -90,7 +90,7 @@ chem['dispersion'] = new function()
     this.editor = function( obj )
     {
         chem.single_open( obj );
-        
+
         var line_id = parseInt( obj.attr('data-id') );
         var did_pref = 'dispersion-edit-form';
         var did = did_pref + '-' + line_id + '-' + Math.floor((Math.random() * 1000000) + 1);
@@ -112,6 +112,8 @@ chem['dispersion'] = new function()
             if( _r['form'] )
             {
                 $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Облік видачі реактивів і витратних матеріалів: '+(line_id?'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
+
+                autocomplete.init( $('#'+did+'') );    
 
                 if( line_id > 0 )
                 {

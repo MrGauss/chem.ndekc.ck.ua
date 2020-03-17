@@ -70,7 +70,10 @@ class spr_manager
             if( is_array($v) ){ continue; }
 
             $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
+            $tpl->set( '{autocomplete:'.$k.':key}', autocomplete::key( $this->table, $k ) );
         }
+
+        $tpl->set( '{autocomplete:table}', $this->table );
 
         $tpl->compile( $skin );
 

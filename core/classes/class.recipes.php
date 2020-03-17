@@ -19,6 +19,42 @@ class recipes
     const DB_MAIN_TABLE = 'reactiv_menu';
     const CACHE_CONST   = 'spr';
 
+    public final function remove( $ID = 0 )
+    {
+        $ID = common::integer( $ID );
+        $error = '';
+
+        if( !$error && !$ID ){ $error = 'Ідентифікатор не визначено!'; }
+
+        ////////////////////////////////////
+        if( !$error && $ID )
+        {
+            $count = $this->db->super_query( 'SELECT count(hash) as count FROM reactiv WHERE reactiv_menu_id = '.$ID.';' )['count'];
+            if( $count > 0 ){ $error = 'Запис використовується! В видаленні відмовлено!'; }
+        }
+
+        ////////////////////////////////////
+
+        if( $error != false )
+        {
+            if( _AJAX_ ){ ajax::set_error( rand(10,99), $error ); return false; }
+            else        { common::err( $error ); return false; }
+        }
+
+        if( !$error )
+        {
+            $this->db->query( 'BEGIN;' );
+            $this->db->query( 'DELETE FROM '.self::DB_MAIN_TABLE.' WHERE id='.$ID.';' );
+            $this->db->query( 'DELETE FROM reactiv_menu_ingredients WHERE reactiv_menu_id='.$ID.';' );
+            $this->db->query( 'COMMIT;' );  
+        }
+
+        cache::clean( self::CACHE_CONST );
+        cache::clean();
+
+        return $ID;
+    }
+
     public final function check_data_before_save( $data4save = array(), $original_data = array() )
     {
         if( !is_array($data4save) ){ return false; }

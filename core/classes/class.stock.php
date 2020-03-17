@@ -233,7 +233,10 @@ class stock
             if( is_array($v) ){ continue; }
 
             $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
+            $tpl->set( '{autocomplete:'.$k.':key}', autocomplete::key( 'stock', $k ) );
         }
+
+        $tpl->set( '{autocomplete:table}', 'stock' );
 
         $tpl->compile( $skin );
 

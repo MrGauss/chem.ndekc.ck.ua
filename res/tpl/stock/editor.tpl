@@ -62,7 +62,7 @@
 
     <div class="elem creator">
         <label class="label">Виробник</label>
-        <input data-important="1" class="input" type="text" name="creator" value="{tag:creator}" data-save="1">
+        <input data-important="1" class="input" type="text" name="creator" value="{tag:creator}" data-save="1" data-autocomplete="1" data-key="{autocomplete:creator:key}" data-table="{autocomplete:table}" data-column="creator">
     </div>
 
     <div class="clear"></div>
@@ -74,12 +74,12 @@
 
     <div class="elem safe_needs">
         <label class="label">Умови зберігання</label>
-        <input data-important="1" class="input" type="text" name="safe_needs" value="{tag:safe_needs}" data-save="1">
+        <input data-important="1" class="input" type="text" name="safe_needs" value="{tag:safe_needs}" data-save="1" data-autocomplete="1" data-key="{autocomplete:safe_needs:key}" data-table="{autocomplete:table}" data-column="safe_needs">
     </div>
 
     <div class="elem safe_place">
         <label class="label">Місце зберігання</label>
-        <input data-important="1" class="input" type="text" name="safe_place" value="{tag:safe_place}" data-save="1">
+        <input data-important="1" class="input" type="text" name="safe_place" value="{tag:safe_place}" data-save="1" data-autocomplete="1" data-key="{autocomplete:safe_place:key}" data-table="{autocomplete:table}" data-column="safe_place">
     </div>
 
     <div class="clear"></div>
