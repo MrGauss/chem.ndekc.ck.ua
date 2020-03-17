@@ -516,7 +516,8 @@ CREATE TABLE "public"."reactiv" (
     "quantity_inc" double precision DEFAULT 0 NOT NULL,
     "quantity_left" double precision DEFAULT 0 NOT NULL,
     "inc_expert_id" bigint DEFAULT 0 NOT NULL,
-    "region_id" integer DEFAULT 0 NOT NULL
+    "region_id" integer DEFAULT 0 NOT NULL,
+    "group_id" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -785,6 +786,37 @@ ALTER SEQUENCE "public"."stock_id_seq" OWNED BY "public"."stock"."id";
 
 
 --
+-- Name: units; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE "public"."units" (
+    "id" integer NOT NULL,
+    "name" character varying(255) DEFAULT ''::character varying NOT NULL,
+    "position" integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: units_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE "public"."units_id_seq"
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: units_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE "public"."units_id_seq" OWNED BY "public"."units"."id";
+
+
+--
 -- Name: using; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -879,15 +911,22 @@ ALTER TABLE ONLY "public"."stock" ALTER COLUMN "id" SET DEFAULT "nextval"('"publ
 
 
 --
+-- Name: units id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."units" ALTER COLUMN "id" SET DEFAULT "nextval"('"public"."units_id_seq"'::"regclass");
+
+
+--
 -- Data for Name: clearence; Type: TABLE DATA; Schema: public; Owner: -
 --
 
 INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (0, '--', 0);
 INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (1, 'Технічний (тех.)', 0);
-INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (2, 'Чистий (ч.)', 0);
-INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (7, 'Чистий для аналізу (ч.д.а)', 0);
-INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (8, 'Хімічно чистий (х.ч)', 0);
 INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (9, 'Особливо чистий (ос.ч)', 0);
+INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (2, 'Чистий (ч.)', 0);
+INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (8, 'Хімічно чистий (х.ч)', 0);
+INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (7, 'Чистий для аналізу (ч.д.а)', 0);
 INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (10, 'Для хроматографії', 0);
 
 
@@ -910,10 +949,10 @@ INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", 
 --
 
 INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (0, '--', 0);
-INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (2, 'Страшне', 0);
-INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (1, 'Піздєц яке страшне', 0);
-INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (3, 'Хуйня', 0);
-INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (4, 'Дєцкій лєпєт', 0);
+INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (3, 'Перший (І)', 0);
+INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (2, 'Другий (ІІ)', 0);
+INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (1, 'Третій (ІІІ)', 0);
+INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (4, 'Четвертий (IV)', 0);
 
 
 --
@@ -929,7 +968,7 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 --
 
 INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, 0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
-INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '452223f31050867728a382b66837b5a1', 1, '192.168.137.168');
+INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '932e142807b50af2fcac4003493a65b7', 1, '46.255.34.197');
 
 
 --
@@ -952,13 +991,15 @@ INSERT INTO "public"."groups" ("id", "ts", "name", "full_name") VALUES (1, '2019
 --
 
 INSERT INTO "public"."purpose" ("id", "name", "ts") VALUES (0, '--', '2019-12-28 11:09:37.583434');
+INSERT INTO "public"."purpose" ("id", "name", "ts") VALUES (1, 'Проведення дослідження (експертизи)', '2020-03-17 14:02:01.806052');
+INSERT INTO "public"."purpose" ("id", "name", "ts") VALUES (2, 'Технічне обслуговування обладнання', '2020-03-17 14:06:40.671071');
 
 
 --
 -- Data for Name: reactiv; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "region_id") VALUES ('0', 0, 0, 0, 0, 0);
+INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "region_id", "group_id") VALUES ('0', 0, 0, 0, 0, 0, 0);
 
 
 --
@@ -990,15 +1031,16 @@ INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id"
 -- Data for Name: reagent; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (10, '2020-01-02 15:39:01.529732', 'Літри', 'Ацетон', 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (2, '2020-01-02 15:39:01.529732', 'Літри', '1,3 - Динітробензол', 1);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (9, '2020-01-02 15:39:01.529732', 'Грами', 'Аргентум нітрат', 1);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (24, '2020-01-02 15:39:01.529732', 'Літри', 'Ефір диізопропіловий', 1);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (10, '2020-01-02 15:39:01.529732', 'Літри', 'Ацетон', 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (8, '2020-01-02 15:39:01.529732', 'Літри', 'Амоній молібденовокислий', 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (0, '2019-12-28 11:10:26.287818', 'Літри', '--', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (4, '2020-01-02 15:39:01.529732', 'Літри', 'N, N - диметилформамід', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (5, '2020-01-02 15:39:01.529732', 'Літри', 'Азотна кислота', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (6, '2020-01-02 15:39:01.529732', 'Літри', 'Альдегід оцтовий', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (7, '2020-01-02 15:39:01.529732', 'Літри', 'Аміак 25%', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (9, '2020-01-02 15:39:01.529732', 'Літри', 'Аргентум нітрат', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (11, '2020-01-02 15:39:01.529732', 'Літри', 'Ацетонітрил', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (12, '2020-01-02 15:39:01.529732', 'Літри', 'Барій сульфат', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (13, '2020-01-02 15:39:01.529732', 'Літри', 'Барію хлорид', 0);
@@ -1012,7 +1054,6 @@ INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (21, '2020-01-02 15:39:01.529732', 'Літри', 'Діетиловий ефір', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (22, '2020-01-02 15:39:01.529732', 'Літри', 'Етанол', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (23, '2020-01-02 15:39:01.529732', 'Літри', 'Етилацетат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (24, '2020-01-02 15:39:01.529732', 'Літри', 'Ефір діізопропіловий', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (25, '2020-01-02 15:39:01.529732', 'Літри', 'Ізопропанол', 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (3, '2020-01-02 15:39:01.529732', 'Літри', '1,4-Диоксан', 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (81, '2020-03-16 22:23:10.617711', 'Штука', 'Їблани', 1);
@@ -1087,6 +1128,16 @@ INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_i
 
 
 --
+-- Data for Name: units; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO "public"."units" ("id", "name", "position") VALUES (0, '--', 0);
+INSERT INTO "public"."units" ("id", "name", "position") VALUES (2, 'Грам', 0);
+INSERT INTO "public"."units" ("id", "name", "position") VALUES (1, 'Літр', 0);
+INSERT INTO "public"."units" ("id", "name", "position") VALUES (3, 'Метр', 0);
+
+
+--
 -- Data for Name: using; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -1146,7 +1197,7 @@ SELECT pg_catalog.setval('"public"."groups_id_seq"', 1, true);
 -- Name: purpose_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."purpose_id_seq"', 1, false);
+SELECT pg_catalog.setval('"public"."purpose_id_seq"', 2, true);
 
 
 --
@@ -1189,6 +1240,13 @@ SELECT pg_catalog.setval('"public"."region_id_seq"', 1, true);
 --
 
 SELECT pg_catalog.setval('"public"."stock_id_seq"', 7, true);
+
+
+--
+-- Name: units_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('"public"."units_id_seq"', 3, true);
 
 
 --
@@ -1309,6 +1367,14 @@ ALTER TABLE ONLY "public"."region"
 
 ALTER TABLE ONLY "public"."stock"
     ADD CONSTRAINT "stock_pkey" PRIMARY KEY ("id");
+
+
+--
+-- Name: units units_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."units"
+    ADD CONSTRAINT "units_pkey" PRIMARY KEY ("id");
 
 
 --
@@ -1468,6 +1534,14 @@ ALTER TABLE ONLY "public"."reactiv_consume"
 
 
 --
+-- Name: reactiv reactiv_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."reactiv"
+    ADD CONSTRAINT "reactiv_group_id_fkey" FOREIGN KEY ("group_id") REFERENCES "public"."groups"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: reactiv reactiv_inc_expert_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1569,6 +1643,14 @@ ALTER TABLE ONLY "public"."stock"
 
 ALTER TABLE ONLY "public"."stock"
     ADD CONSTRAINT "stock_region_id_fkey" FOREIGN KEY ("region_id") REFERENCES "public"."region"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: using using_purpose_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."using"
+    ADD CONSTRAINT "using_purpose_id_fkey" FOREIGN KEY ("purpose_id") REFERENCES "public"."purpose"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

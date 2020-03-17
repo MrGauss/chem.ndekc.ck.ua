@@ -46,7 +46,7 @@ class recipes
             $this->db->query( 'BEGIN;' );
             $this->db->query( 'DELETE FROM '.self::DB_MAIN_TABLE.' WHERE id='.$ID.';' );
             $this->db->query( 'DELETE FROM reactiv_menu_ingredients WHERE reactiv_menu_id='.$ID.';' );
-            $this->db->query( 'COMMIT;' );  
+            $this->db->query( 'COMMIT;' );
         }
 
         cache::clean( self::CACHE_CONST );

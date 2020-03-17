@@ -22,5 +22,8 @@
     <div class="element i09"><a href="/index.php?mod=spr_recipes"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Довідник<br>рецептів</span></a></div>
     <div class="element i10"><a href="/index.php?mod=spr_dangerous"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Класи<br>небезпечності</span></a></div>
     <div class="element i11"><a href="/index.php?mod=spr_clearence"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Ступені<br>чистоти</span></a></div>
+    <br>
     <div class="element i12"><a href="/index.php?mod=spr_states"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Форми<br>реагентів</span></a></div>
+    <div class="element i14"><a href="/index.php?mod=spr_purpose"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Довідник<br>призначень</span></a></div>
+    <div class="element i15"><a href="/index.php?mod=spr_units"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Одиниці<br>вимірювання</span></a></div>
 </div>

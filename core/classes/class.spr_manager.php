@@ -26,6 +26,8 @@ class spr_manager
                                 'clearence',
                                 'region',
                                 'reagent',
+                                'purpose',
+                                'units',
                             );
 
     public static $_columns_not_allowed_to_save =

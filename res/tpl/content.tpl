@@ -28,7 +28,15 @@
         <script src="{SKINDIR}/js/window_resize.js" type="text/javascript"></script>
         [login]<script src="{SKINDIR}/js/main.js" type="text/javascript"></script>[/login]
         [login]<script src="{SKINDIR}/js/autocomplete.js" type="text/javascript"></script>[/login]
-        [login][mod:{MOD}]<script src="{SKINDIR}/js/chem.{MOD}.js" type="text/javascript"></script>[/mod][/login]
+        [login][mod:{MOD}]<script src="{SKINDIR}/js/chem.{MOD}.js?rand={RAND}" type="text/javascript"></script>[/mod][/login]
+
+        [login][mod:spr_clearence]<script src="{SKINDIR}/js/chem.spr_manager.js?rand={RAND}" type="text/javascript"></script>[/mod][/login]
+        [login][mod:spr_dangerous]<script src="{SKINDIR}/js/chem.spr_manager.js?rand={RAND}" type="text/javascript"></script>[/mod][/login]
+        [login][mod:spr_reactives]<script src="{SKINDIR}/js/chem.spr_manager.js?rand={RAND}" type="text/javascript"></script>[/mod][/login]
+        [login][mod:spr_states]<script src="{SKINDIR}/js/chem.spr_manager.js?rand={RAND}" type="text/javascript"></script>[/mod][/login]
+        [login][mod:spr_purpose]<script src="{SKINDIR}/js/chem.spr_manager.js?rand={RAND}" type="text/javascript"></script>[/mod][/login]
+        [login][mod:spr_units]<script src="{SKINDIR}/js/chem.spr_manager.js?rand={RAND}" type="text/javascript"></script>[/mod][/login]
+
     </head>
     <body class="[nologin]nologin[/nologin] [login]w_600_min bg_noimage[/login]" data-mod="{MOD}" data-rand="{RAND}" data-region_id="{CURRENT_REGION_ID}" data-user="{CURRENT_USER_LOGIN}">
 

@@ -10,7 +10,6 @@
                 <tr>
                     <td class="numi">&nbsp;</td>
                     <td class="name">Ќазва</td>
-                    <td class="units">ќдиниц€ вим≥ру</td>
                     <td></td>
                 </tr>
             </table>
