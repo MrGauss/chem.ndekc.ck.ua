@@ -34,6 +34,8 @@
 .default_editor .elem.danger_class{ background: #FFD3D1 }
 .default_editor .elem.safe_needs{ background: #FFDDDB }
 .default_editor .elem.safe_place{ background: #FFE7E5 }
+.default_editor .elem option[data-quantity_left="0"]{ display: none; }
+.default_editor .elem option[data-quantity_left="0"][seleted]{ display: default; }
 
 
 

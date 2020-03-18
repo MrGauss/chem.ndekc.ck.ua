@@ -259,7 +259,8 @@ CREATE TABLE "public"."consume" (
     "dispersion_id" bigint DEFAULT 0 NOT NULL,
     "inc_expert_id" bigint DEFAULT 0 NOT NULL,
     "quantity" double precision DEFAULT 0 NOT NULL,
-    "using_hash" character varying(32) DEFAULT ''::character varying NOT NULL
+    "using_hash" character varying(32) DEFAULT ''::character varying NOT NULL,
+    "consume_ts" timestamp without time zone DEFAULT ("now"())::timestamp without time zone NOT NULL
 );
 
 
@@ -482,7 +483,8 @@ ALTER SEQUENCE "public"."groups_id_seq" OWNED BY "public"."groups"."id";
 CREATE TABLE "public"."purpose" (
     "id" integer NOT NULL,
     "name" character varying(255) DEFAULT ''::character varying NOT NULL,
-    "ts" timestamp(6) without time zone DEFAULT ("now"())::timestamp without time zone NOT NULL
+    "ts" timestamp(6) without time zone DEFAULT ("now"())::timestamp without time zone NOT NULL,
+    "attr" character varying(32) DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -529,7 +531,7 @@ CREATE TABLE "public"."reactiv_consume" (
     "hash" character varying(32) DEFAULT "public"."generate_hash"('reactiv_consume'::"text") NOT NULL,
     "reactive_hash" character varying(32) DEFAULT ''::character varying NOT NULL,
     "quantity" double precision DEFAULT 0 NOT NULL,
-    "expert_id" bigint DEFAULT 0 NOT NULL,
+    "inc_expert_id" bigint DEFAULT 0 NOT NULL,
     "using_hash" character varying(32) DEFAULT ''::character varying NOT NULL
 );
 
@@ -561,7 +563,8 @@ CREATE TABLE "public"."reactiv_menu" (
     "id" bigint NOT NULL,
     "name" character varying(255) DEFAULT 0 NOT NULL,
     "position" integer DEFAULT 0 NOT NULL,
-    "units_id" integer DEFAULT 0 NOT NULL
+    "units_id" integer DEFAULT 0 NOT NULL,
+    "comment" "text" DEFAULT ''::"text" NOT NULL
 );
 
 
@@ -937,15 +940,15 @@ INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (10, 'Для 
 -- Data for Name: composition; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."composition" ("consume_hash", "reactiv_hash") VALUES ('e237637c008f2af947fa174c4ea86f8d', '0');
+INSERT INTO "public"."composition" ("consume_hash", "reactiv_hash") VALUES ('e237637c008f2af947fa174c4ea86f8d', '');
 
 
 --
 -- Data for Name: consume; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash") VALUES ('0', '2020-01-02 15:37:30.168681', 0, 0, 0, '');
-INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash") VALUES ('e237637c008f2af947fa174c4ea86f8d', '2020-03-11 11:25:43.954161', 4, 1, 0.699999999999999956, '');
+INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts") VALUES ('0', '2020-01-02 15:37:30.168681', 0, 0, 0, '', '2020-03-18 16:07:51.03563');
+INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts") VALUES ('e237637c008f2af947fa174c4ea86f8d', '2020-03-11 11:25:43.954161', 4, 1, 0.699999999999999956, '', '2020-03-18 16:07:51.03563');
 
 
 --
@@ -964,7 +967,9 @@ INSERT INTO "public"."danger_class" ("id", "name", "position") VALUES (4, 'Че�
 --
 
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment", "created_ts") VALUES (0, 0, '2020-01-02 15:37:24.48078', 0, 0, 0, 0, 0, 0, '1970-01-01', '', '2020-03-13 11:54:36.766118+02');
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment", "created_ts") VALUES (4, 3, '2020-01-02 15:44:29.526382', 1, 1, 20, 19.3000000000000007, 1, 1, '2020-03-11', '', '2020-03-13 11:54:36.766118+02');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment", "created_ts") VALUES (8, 7, '2020-03-18 15:15:09.442415', 1, 1, 5, 5, 1, 1, '2020-03-17', '', '2020-03-18 15:15:09.442415+02');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment", "created_ts") VALUES (9, 7, '2020-03-18 15:15:44.4977', 1, 1, 5, 5, 1, 1, '2020-03-05', '', '2020-03-18 15:15:44.4977+02');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "region_id", "group_id", "inc_date", "comment", "created_ts") VALUES (4, 3, '2020-01-02 15:44:29.526382', 2, 1, 20, 19.3000000000000007, 1, 1, '2020-03-11', '', '2020-03-13 11:54:36.766118+02');
 
 
 --
@@ -972,7 +977,8 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 --
 
 INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, 0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
-INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', 'f37350fbeeda922658c76f6da24f3c8d', 1, '192.168.2.118');
+INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', 'c48ee977dc312d17ce07fb7c9c77ae44', 1, '192.168.137.168');
+INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (2, 1, 'Шкурдота', 'Сергій', 'Вікторович', 1, '2020-03-18 15:24:55.417367', 'shkurdoda', 'd80daf84242523a7c25c1162a314d3d3', 'ec6228e14b62b8a2bca014c2bb5289fe', 1, '192.168.2.118');
 
 
 --
@@ -994,16 +1000,18 @@ INSERT INTO "public"."groups" ("id", "ts", "name", "full_name") VALUES (1, '2019
 -- Data for Name: purpose; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."purpose" ("id", "name", "ts") VALUES (0, '--', '2019-12-28 11:09:37.583434');
-INSERT INTO "public"."purpose" ("id", "name", "ts") VALUES (1, 'Проведення дослідження (експертизи)', '2020-03-17 14:02:01.806052');
-INSERT INTO "public"."purpose" ("id", "name", "ts") VALUES (2, 'Технічне обслуговування обладнання', '2020-03-17 14:06:40.671071');
+INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (0, '--', '2019-12-28 11:09:37.583434', '');
+INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (1, 'Проведення дослідження (експертизи)', '2020-03-17 14:02:01.806052', '');
+INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (2, 'Технічне обслуговування обладнання', '2020-03-17 14:06:40.671071', '');
+INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (3, 'Приготування робочого реактиву', '2020-03-18 16:12:38.948107', 'reactiv');
 
 
 --
 -- Data for Name: reactiv; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "region_id", "group_id") VALUES ('0', 0, 0, 0, 0, 0, 0);
+INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "region_id", "group_id") VALUES ('8026054b688345622f4c0c7dcb2e9d1d', 8, 10, 0, 1, 1, 1);
+INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "region_id", "group_id") VALUES ('', 0, 0, 0, 0, 0, 0);
 
 
 --
@@ -1016,24 +1024,53 @@ INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quan
 -- Data for Name: reactiv_menu; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id") VALUES (0, '--', 0, 0);
-INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id") VALUES (9, 'Тест з сульфатом заліза (ІІІ)', 0, 1);
-INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id") VALUES (7, 'Реактив Маркі', 0, 1);
-INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id") VALUES (8, 'Тест Мекке', 0, 1);
-INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id") VALUES (10, 'Тест з азотною кислотою', 0, 1);
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (0, '--', 0, 0, '');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (9, 'Реагент 2. 5% розчин сульфата заліза (ІІІ)', 0, 6, 'PT13T3lGR2N5WnlPNU4yYTFsa0o3azNZclZYU21zVGVqdFdkSlp5T3lGR2NzWkNJN2szWWhaeU81Tm1lbXNUZWp0V2RwWnlPNU5HYm1zVGVqRm1KN2szWTZaQ0k3azNZMVp5TzVOR2Rtc1RlakZtSjdrM1ltWnlPNU5HZG05MmNtc1RlanhtSjdrM1kxWnlPNU4yY21BeU81TjJabUFTTmdzVGVqbG1KN2szWTBaeU81TldhbXNUZWo1bUo3azNZcFp5TzVOR2FqWnlPNU5tZW1zVGVqOW1KN2szWXlaQ0k3azNZcFp5TzVOR1ptc1RlajltSjdrM1kyWkNJN2szWXBsbko3azNZdlp5TzVObWJtc1RlakZtSjdrM1kyWnlPNU4yYm1zVGVqcG5KN2szWXJWWGFtc1RlajVtSjdrM1l2WnlPNU5tYW1zVGVqVldhbXNUZWpSbUpnc1RlanhtSjdrM1l0WkNJd0FUTWdzVGVqWmxKN2tXYmxObkp3RXpPdFZuYm1zVGF0VjJjbWd6TTcwV2R1WnlPdzFXWW1zamNoQm5jbXNUZWp0V2RKWnlPNU4yYTFsa0o3azNZclZYU21zamNoQkhibUF5TzVOV1ltc1RlanBuSjdrM1lyVlhhbXNUZWp4bUo3azNZaFp5TzVObWVtQXlPNU5XYm1zVGVqOW1KN2szWTBaeU81TldZbXNUZWpabUo3azNZMFoyYnpaeU81TkdibXNUZWpWbko3azNZelpDSTdrM1k2WkNJN2szWTBaeU81TjJjbXNUZWpWV2Ftc1RlalJsSg%3D%3D');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (8, 'Реагент 3. Тест Мекке', 0, 6, 'PT13TzVOV2Ftc1RlalJuSjdrM1l2WnlPNU5HYm1zVGVqTm5KN2szWXBaeU81TjJhbUF5TzVOV2E1WnlPNU4yYm1zVGVqUm5KN2szWXpaeU81TldhbXNUZWo1bUo3azNZbGxtSjdrM1lzWnlPNU5XWnBaeU81TjJjbUF5TzVOMlptQVNNZ3NUZWpsbUo3azNZMFp5TzVOV2Ftc1RlajVtSjdrM1lwWnlPNU5HYWpaeU81Tm1lbXNUZWo5bUo3azNZeVpDSTdrM1lwWnlPNU5HZG1zVGVqOW1KN2szWXNaeU81TjJjbXNUZWpsbUo3azNZclpDSTdrM1lwbG5KN2szWXZaeU81Tm1ibXNUZWpSbko3azNZaFp5TzVObVptc1RlalJuWnZObko3azNZc1p5TzVOV2Rtc1Rlak5uSmdzVGVqbFdlbXNUZWo5bUo3azNZdVp5TzVOV1ltc1RlalpuSjdrM1l2WnlPNU5tY21zVGVqUm5KN2szWXVaeU81TldacFp5TzVOMmMwWnlPNU5tYm1zVGVqOW1KN2szWXJaQ0lnc1RlanhtSjdrM1l0WkNJd0FUTWdzVGVqWmxK');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (7, 'Реактив Маркі', 0, 6, 'PXNUZWpWbko3azNZdVp5TzVOMmExbG1KN2szWXNaeU81TldZbXNUZWoxbUo3azNZeVp5TzVOMmJtc1RlalptSmdzVGVqVm5KN2szWXVaeU81TldhbXNUZWpoMlltc1RlajltSjdrM1l5WkNJN1FuYmpKWFp3WnlOekF5TzVOR2Jtc1RlajFtSmdFREk3azNZcFp5TzVOR2Rtc1RlakZtSjdrM1lrWnlPNU4yYm1zVGVqUm1KZ3NUZWpsbUo3azNZMFp5TzVOMmJtc1RlanhtSjdrM1l6WnlPNU5XYW1zVGVqdG1KZ3NUZWpsV2Vtc1RlajltSjdrM1l1WnlPNU5HZG1zVGVqRm1KN2szWW1aeU81TkdkbTkyY21zVGVqeG1KN2szWTFaeU81TjJjbUF5TzVOV2E1WnlPNU4yYm1zVGVqNW1KN2szWWhaeU81Tm1kbXNUZWo5bUo3azNZeVp5TzVOR2Rtc1RlajVtSjdrM1lsbG1KN2szWXpSbko3azNZdVp5TzVOMmJtc1RlanRtSmdzVGVqeG1KN2szWXRaQ0k1QXlPNU4yYm1zVGVqUmtK');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (16, 'Реагент 12А. Тест Саймона', 0, 6, 'PXNqYnZ4MmJqWnlPNU5HZG1zVGVqTm5KN2szWWxsbUo3azNZVVp5T3AxV1p6WkNNeHNUYjE1bUo3a1dibE5uSjRNek90Vm5ibXNEY3RGbUo3UTJicEpYWndaeU81TldhbXNUZWpSbUo3azNZdlp5TzVObWRtQXlPNU5HYm1zVGVqMW1KZ0FETXhBeU81Tm1kbUF5TzVOV2Rtc1RlalJuSjdrM1loWnlPNU5tYm1zVGVqOW1KN2szWWlaeU81Tm1jbXNUZWpGbUo3azNZclpDSTdrM1lxWnlPNU4yYTFsbUo3azNZeVp5TzVOR2Rtc1RlakZtSjdrM1l1WkNJN2szWW5aQ0l5QXlPNU5XYW1zVGVqUm5KN2szWXBaeU81Tm1ibXNUZWpsbUo3azNZb05tSjdrM1k2WnlPNU4yYm1zVGVqSmxKZ3NqYnZ4MmJqWnlPNU5tVm1JVE1nc1RlalJuSjdrM1l1WnlPNU5XWnBaeU81TjJabXNUZWpGbUo3azNZbGxtSjdrM1lTWnlPcDFXWnpaQ014c1RiMTVtSjdrV2JsTm5KNE16T3RWbmJtc0RjdEZtSjdRMmJwSlhad1p5TzVOV2Rtc1RlalJtSjdrM1lyVlhhbXNUZWpkbUo3azNZbGxtSjdrM1lrWnlPNU5HZG05MmNtc1RlanhtSjdrM1loWnlPNU5HZG1zVGVqVldhbXNUZWpOSGRtc1RlakZtSmdzVGVqeG1KN2szWXRaQ0l3RURJN2szWXBaeU81TkdkbXNUZWpGbUo3azNZa1p5TzVOMmJtc1RlalJtSmdzVGVqMW1KN2szWXJWWGFtc1RlalJuSjdrM1l2WnlPNU5HY21BeU9oMVdidk5tSjdrM1lwWnlPNU5HWm1zVGVqOW1KN2szWTJaQ0k3azNZcGxuSjdrM1l2WnlPNU5tYm1zVGVqRm1KN2szWTJaeU81TjJibXNUZWpwbko3azNZclZYYW1zVGVqNW1KN2szWXZaeU81Tm1hbXNUZWpWV2Ftc1RlalJtSmdzVGVqeG1KN2szWXRaQ0l3a0RJN2szWTJaQ0k3azNZaGxuSjdrM1lyVlhhbXNUZWpKbko3azNZMFp5TzVOV1ltc1RlajVtSmdzVGVqVm5KN2szWWtaeU81TldhbXNUZWpObko3azNZMVp5TzVObWNtc1RlakJuSjdrM1l2WnlPNU5tY21zVGVqUm5KN2szWXJWWGFtc1RlajVtSmdzVGVqZG1KZ2t6T2gxV2J2Tm1Kd0F5TzVOV2Ftc1RlalJuSjdrM1lwWnlPNU5tYm1zVGVqbG1KN2szWW9ObUo3azNZNlp5TzVOMmJtc1RlakpsSmdzamJ2eDJialp5TzVOV1FtSVRNZ3NUZWpSbko3azNZdVp5TzVOV1pwWnlPNU4yWm1zVGVqRm1KN2szWWxsbUo3azNZU1p5T3AxV1p6WkNNeHNUYjE1bUo3a1dibE5uSjRNek90Vm5ibXNEY3RGbUo3azNZaFp5TzVObWJtc1RlajltSjdrM1l0WnlPNU5tYW1zVGVqRm1KN2szWVRaQ0k3azNZMFp5TzVOMmNtc1RlalZXYW1zVGVqUmxK');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (13, 'Реагент 7А 16% розчин хлоридної кислоти', 0, 6, 'N2szWTFaeU81TkdkbXNUZWpSblp2Tm5KN2szWXNaeU81TldZbXNUZWpKbUo3azNZdlp5TzVOMmFtQXlPNU5XYm1zVGVqOW1KN2szWTBaeU81TldZbXNUZWo1bUo3azNZdlp5TzVOMmExbG1KN2szWXpSbko3azNZdlp5TzVOMmExbG1KN2szWTBaQ0k3azNZNlpDSTdrM1kwWnlPNU4yY21zVGVqVldhbXNUZWpSbEo%3D');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (12, 'Реагент 7В 2,5% розчин тіоціонату кобальту', 0, 6, 'PT13T3AxV1p6WkNNeHNUYjE1bUo3a1dibE5uSjRNek90Vm5ibXNEY3RGbUo3a1dibE5uSndFek90Vm5ibXNUYXRWMmNtZ3pNNzBXZHVaeU93MVdZbXNUYXRWMmNtQVRNNzBXZHVaeU9wMVdaelpDT3pzVGIxNW1KN0FYYmhaeU9rOVdheVZHY21zVGVqVm5KN2szWXVaeU81TldhNVp5TzVOV1ltc1RlanRtSjdrM1l2WnlPNU4yYW1BeU81TkdkbTkyY21zVGVqUm5KN2szWXpaeU81TjJhMWxtSjdrM1l1WnlPNU5HZG1zVGVqVm5KN2szWXpaeU81TldhbXNUZWpKbko3azNZd1pDSTdrM1kxWnlPNU5tZG1zVGVqbG1KN2szWXNaeU81TkdhNlp5TzVOMmJtc1RlajFtSmdzVGVqRm1KN2szWXVaQ0k3azNZclZuYW1zVGVqVm5KN2szWTZaeU81TldZbXNUZWp0bUo3azNZMlpDSTdrM1lobG5KN2szWXVaeU81Tm1ibXNUZWpWV2Ftc1RlanhtSjdrM1kyWnlPNU5tY21zVGVqRm1KN2szWWlaeU81TldZbXNUZWpwbkpnc1RlanRXZHFaeU81Tm1ibXNUZWpsbUo3azNZVFp5T2s5V2F5VkdjbXNUZWpSbko3azNZaFp5TzVOR2Rtc1RlalJuWnZObko3azNZc1p5TzVOV2Rtc1RlanBuSjdrM1lsbG1KN2szWVNaeU9wMVdaelpDTXhzVGIxNW1KN2tXYmxObko0TXpPdFZuYm1zRGN0Rm1KN2tXYmxObkp3RXpPdFZuYm1zVGF0VjJjbWd6TTcwV2R1WnlPdzFXWW1zRFp2bG1jbEJuSjdrM1kxWnlPNU4yYW1zVGVqSm5KN2szWXJWWGFtc1RlakptSjdrM1l2WnlPNU5tY21zVGVqQm5KZ3NUZWpsbUo3azNZMFp5TzVOV2Ftc1Rlak5uSjdrM1kxWnlPNU5tY21zVGVqUm5KN2szWTZaQ0k3azNZaFp5TzVOR2RtQXlPNU5tVm1jREk3azNZaFp5TzVOR2Rtc1RlajVtSjdrM1lsbG1KN2szWW5aeU81TldZbXNUZWpWV2Ftc1RlakpuSmdzVGVqVlhlbXNUZWp4bUo3azNZd1p5TzVOV1ltc1RlakpuSjdrM1lyWkNJeEF5TzVOV2Ftc1RlalJuSjdrM1loWnlPNU5HWm1zVGVqOW1KN2szWUVaQ0k3UTJicEpYWndaeU03a1dibE5uSndFek90Vm5ibXNUYXRWMmNtZ3pNNzBXZHVaeU93MVdZbXNEWnZsbWNsQm5KN2szWWtaeU81Tm1ibXNUZWpWbko3azNZclp5TzVOV1pwWnlPNU4yY21BeU81Tkdhclp5TzVOMmJtc1RlanRtSjdrM1kwWjJielp5TzVOR2Jtc1RlanRXZHBaeU81TjJhbXNUZWpWV2Ftc1RlalJtSmdzVGVqMW1KN2szWXZaeU81TjJabXNUZWpGV2Vtc1RlalJuSjdrM1l2WnlPNU5tY21zVGVqQm5KZ3NUZWpWbko3azNZclp5TzVObWNtc1RlanRXZHBaeU81Tm1ZbXNUZWo5bUo3azNZeVp5TzVOR2NtQXlPNU5XYW1zVGVqUm5KN2szWXBaeU81TjJjbXNUZWpWbko3azNZeVp5TzVOR2Rtc1RlanBuSmdzVGVqRm1KN2szWTBaQ0k3azNZQlp5TmdzVGVqVm5KN2szWTBaeU81Tm1ibXNUZWpWV2Ftc1RlamRtSjdrM1loWnlPNU5XWnBaeU81Tm1jbUF5TzVOV2Q1WnlPNU5HYm1zVGVqQm5KN2szWWhaeU81Tm1jbXNUZWp0bUpnRURJN2szWXBaeU81TkdkbXNUZWpGbUo3azNZa1p5TzVOMmJtc1RlalJrSmdzRFp2bG1jbEJuSnlzVGF0VjJjbUFUTTcwV2R1WnlPcDFXWnpaQ096c1RiMTVtSjdBWGJoWnlPazlXYXlWR2Ntc1RlamxtSjdrM1lyWnlPNU5tY21zVGVqdFdkcFp5TzVObVltc1RlajltSjdrM1l5WnlPNU5HY21BeU81TjJibXNUZWpSbUpnc1RlamxtSjdrM1kwWnlPNU5XYW1zVGVqUm5KN2szWXpaeU81TjJhMWxtSjdrM1l0WnlPNU4yYm1zVGVqQm5KZ3NUZWpWbko3azNZc1p5TzVOV1ltc1RlanRXZHBaeU81Tm1jbXNUZWpWV2Ftc1RlalJuSjdrM1loWnlPNU5XYm1BeU81TkdkbTkyY21zVGVqUm5KN2szWXpaeU81TjJhMWxtSjdrM1lyWnlPNU5HZG05MmNtc1RlanhtSjdrM1lyVlhhbXNUZWp0bUpnc1RlalZuSjdrM1lyWnlPNU5XYW1zVGVqeG1KN2szWWxsbUo3azNZMlp5TzVOV1pwWnlPNU5tVG1BeU9rOVdheVZHY21Fek9wMVdaelpDTXhzVGIxNW1KN2tXYmxObko0TXpPdFZuYm1zRGN0Rm1KNzQyYnM5Mlltc1RlalJuSjdrM1l6WnlPNU5XWnBaeU81TkdWbXNUYXRWMmNtQVRNNzBXZHVaeU9wMVdaelpDT3pzVGIxNW1KN0FYYmhaeU9wMVdaelpDTXhzVGIxNW1KN2tXYmxObko0TXpPdFZuYm1zRGN0Rm1KN1EyYnBKWFp3WnlPNU5XYW1zVGVqUm1KN2szWXZaeU81Tm1kbUF5TzVOV2E1WnlPNU4yYm1zVGVqNW1KN2szWWhaeU81Tm1kbXNUZWo5bUo3azNZNlp5TzVOMmExbG1KN2szWXVaeU81TjJibXNUZWpwbUo3azNZbGxtSjdrM1lrWkNJN2szWXNaeU81TldibUFDTXdFREk3azNZMlpDSTdJWFl3Sm5KN2szWXJWWFNtc1RlanRXZEpaeU95Rkdjc1pDSTdrM1loWnlPNU5HZG1zVGVqeG1KN2szWWhaeU81Tm1ZbXNUZWo5bUo3azNZclpDSTdrM1kxWnlPNU5HZG1zVGVqRm1KN2szWXVaeU81TjJibXNUZWp0V2RwWnlPNU4yYzBaeU81TjJibXNUZWp0V2RwWnlPNU5HZG1BeU81TjJabUFTTjdFV2J0OTJZbUlESTdrM1lwWnlPNU5HZG1zVGVqbG1KN2szWXVaeU81TldhbXNUZWpoMlltc1RlanBuSjdrM1l2WnlPNU5tVW1BeU91OUdidk5tSjdrM1lXWnlOZ3NUZWpSbko3azNZdVp5TzVOV1pwWnlPNU4yWm1zVGVqRm1KN2szWWxsbUo3azNZU1p5T3AxV1p6WkNNeHNUYjE1bUo3a1dibE5uSjRNek90Vm5ibXNEY3RGbUo3azNZcFp5TzVOR2Rtc1RlajltSjdrM1lzWnlPNU4yY21zVGVqbG1KN2szWXJaQ0k3azNZcGxuSjdrM1l2WnlPNU5tYm1zVGVqUm1KN2szWXBaeU81Tm1jbXNUZWo5bUo3azNZc1p5TzVOR2FyWkNJN2szWXVaeU81TldhbXNUZWpoMlltc1RlanBuSjdrM1l2WnlPNU5tY21BeU81Tm1hbXNUZWpsbUo3azNZdVp5TzVOR1ptc1RlajltSjdrM1kyWkNJN1FuYmpKWFp3WmlOeEF5T3U5R2J2Tm1KN2szWWhaeU5nc1RlalJuSjdrM1l1WnlPNU5XWnBaeU81TjJabXNUZWpGbUo3azNZbGxtSjdrM1lTWnlPcDFXWnpaQ014c1RiMTVtSjdrV2JsTm5KNE16T3RWbmJtc0RjdEZtSjdrM1kxWnlPNU5HZG1zVGVqUm5adk5uSjdrM1lzWnlPNU5XWW1zVGVqSm1KN2szWXZaeU81TjJhbUF5TzVOV2Jtc1RlajltSjdrM1kwWnlPNU5XWW1zVGVqNW1KN2szWXZaeU81TjJhMWxtSjdrM1l6Um5KN2szWXZaeU81TjJhMWxtSjdrM1kwWkNJN2szWTZaQ0k3azNZMFp5TzVOMmNtc1RlalZXYW1zVGVqUmxK');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (20, 'Реагент 15А. Тест Цімермана', 0, 6, 'PT13T2s5V2F5VkdjbXNUZWpsbUo3azNZa1p5TzVOMmJtc1RlalpuSmdzVGVqbFdlbXNUZWo5bUo3azNZdVp5TzVOV1ltc1RlalpuSjdrM1l2WnlPNU5tZW1zVGVqdFdkcFp5TzVObWJtc1RlajltSjdrM1lxWnlPNU5XWnBaeU81TkdabUF5TzVOR2Jtc1RlajFtSmdBRE14QXlPNU5tZG1BeU81TldkbXNUZWpSbUo3azNZcFp5TzVOMmNtc1RlanRtSjdrM1l2WnlPNU5tY21zVGVqUm1KN2szWXJWWGFtc1RlamRtSmdzVGVqcG1KN2szWXJWWGFtc1RlanhtSjdrM1loWnlPNU4yYW1BeU81TjJabUFTTnhBeU81TldhbXNUZWpSbko3azNZcFp5TzVObWJtc1RlamxtSjdrM1lvTm1KN2szWTZaeU81TjJibXNUZWpKbEpnc2pidngyYmpaeU81Tm1WbVVUTWdzVGVqUm5KN2szWXVaeU81TldacFp5TzVOMlptc1RlakZtSjdrM1lsbG1KN2szWVNaeU9wMVdaelpDTXhzVGIxNW1KN2tXYmxObko0TXpPdFZuYm1zRGN0Rm1KN1EyYnBKWFp3WnlPNU5XZG1zVGVqeG1KN2szWXZaeU81Tm1ibXNUZWpGbUo3azNZMFp5TzVOV1pwWnlPNU5XYm1BeU81TkdibXNUZWoxbUpnQURNeEF5TzVObWRtQXlPNU5XZG1zVGVqeG1KN2szWXZaeU81Tm1lbXNUZWo1bUo3azNZbGxtSjdrM1lpWnlPNU4yYm1zVGVqSm5KN2szWTBaeU81TjJhMWxtSjdrM1l1WnlPNU5XYW1zVGVqUm1KZ016T2gxV2J2Tm1KeEF5TzVOMlptQVNNZ3NUZWpsbUo3azNZMFp5TzVOV2Ftc1RlajVtSjdrM1lwWnlPNU5HYWpaeU81Tm1lbXNUZWo5bUo3azNZU1pDSTc0MmJzOTJZbXNUZWpGa0oxRURJN2szWTBaeU81Tm1ibXNUZWpWV2Ftc1RlamRtSjdrM1loWnlPNU5XWnBaeU81Tm1VbXNUYXRWMmNtQVRNNzBXZHVaeU9wMVdaelpDT3pzVGIxNW1KN0FYYmhaeU9rOVdheVZHY21zVGVqRm1KN2szWXVaeU81TldZbXNUZWoxbUo3azNZeVp5TzVOV1pwWnlPNU5XYm1zVGVqdFdkcFp5TzVOMlVVWkNJN2szWTBaeU81TjJjbXNUZWpWV2Ftc1RlalJsSg%3D%3D');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (14, 'Реагент 9. Тест з метилбензоатом', 0, 6, 'N1EyYnBKWFp3WnlPNU5XZG1zVGVqeG1KN2szWXZaeU81Tm1ibXNUZWpGbUo3azNZMFp5TzVOV1pwWnlPNU5XYm1BeU81TjJibXNUZWpkbUo3azNZdlp5TzVObWJtc1RlalJuSjdrM1kxbG5KN2szWXNaeU81TjJibXNUZWpObko3azNZaVp5TzVOV1ltQXlPNU5HYm1zVGVqMW1KZ0FETXhBeU81Tm1kbUF5TzVOV2Rtc1RlalJtSjdrM1lwWnlPNU4yY21zVGVqdG1KN2szWXZaeU81Tm1jbXNUZWpSbUo3azNZclZYYW1zVGVqZG1KZ3NUZWpwbUo3azNZclZYYW1zVGVqeG1KN2szWWhaeU81TjJhbUF5TzVOMlptQVNOZ3NUZWpsbUo3azNZMFp5TzVOV2Ftc1RlajVtSjdrM1lwWnlPNU5HYWpaeU81Tm1lbXNUZWo5bUo3azNZU1p5T3AxV1p6WkNNeHNUYjE1bUo3a1dibE5uSjRNek90Vm5ibXNEY3RGbUo3UTJicEpYWndaeU81TldibXNUZWo5bUo3azNZMFp5TzVOV1ltc1RlajltSjdrM1k2WnlPNU5tYm1zVGVqVldhbXNUZWpKbUo3azNZc1p5TzVOV2Ftc1RlalJuSjdrM1lsbG1KN2szWXRaQ0k3azNZNlpDSTdrM1kwWnlPNU4yY21zVGVqVldhbXNUZWpSbEo%3D');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (15, 'Реагент 10. Тест Вагнера', 0, 6, 'PXNEWnZsbWNsQm5KN2szWXBaeU81TkdabXNUZWo5bUo3azNZMlpDSTdrM1lzWnlPNU5XYm1BQ013RURJN2szWTJaQ0k3azNZcFp5TzVOR2Rtc1RlamxtSjdrM1l1WnlPNU5XYW1zVGVqaDJZbXNUZWpwbko3azNZdlp5TzVObWNtQXlPNU5HYXpaeU81TjJhMWxtSjdrM1l0WnlPNU5XZG1zVGVqTm5KZ3NUZWoxbUo3azNZclZYYW1zVGVqUm5KN2szWXZaeU81TkdjbUF5T2gxV2J2Tm1KN2szWTFaeU81TkdabXNUZWpsbUo3azNZa1p5TzVOMmJtc1RlanBtSmdzVGVqcG1KN2szWXJWWGFtc1RlanhtSjdrM1loWnlPNU4yYW1BeU81TjJabUFpTWdzVGVqRm1KN2szWTBaQ0k3azNZMVp5TzVOR1ptc1RlajltSjdrM1lxWkNJN2szWW5aQ0kzSXpPaDFXYnZObUp4QXlPNU5XYW1zVGVqUm5KN2szWWhaeU81Tkdhelp5TzVOMmExbG1KN2szWXRaeU81Tm1XbXNUYXRWMmNtQVRNNzBXZHVaeU9wMVdaelpDT3pzVGIxNW1KN0FYYmhaeU81TldZbXNUZWpKbko3azNZbGxtSjdrM1l1WnlPNU4yWm1zVGVqRm1KN2szWVdaQ0k3azNZMFp5TzVOMmNtc1RlalZXYW1zVGVqUmxK');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (17, 'Реагент 12В. 2% розчин натрій карбонату (Тест Саймона)', 0, 6, 'N1EyYnBKWFp3WnlPNU5XYW1zVGVqUm1KN2szWXZaeU81Tm1kbUF5TzVOR2Jtc1RlajFtSmdBRE14QXlPNU5tZG1BeU81TldkbXNUZWpSbko3azNZaFp5TzVObWJtc1RlajltSjdrM1lpWnlPNU5tY21zVGVqRm1KN2szWXJaQ0k3azNZcVp5TzVOMmExbG1KN2szWXlaeU81TkdkbXNUZWpGbUo3azNZdVpDSTdrM1luWkNJeUF5TzVOV2Ftc1RlalJuSjdrM1lwWnlPNU5tYm1zVGVqbG1KN2szWW9ObUo3azNZNlp5TzVOMmJtc1RlakpsSmdzamJ2eDJialp5TzVObVZtSVRNZ3NUZWpSbko3azNZdVp5TzVOV1pwWnlPNU4yWm1zVGVqRm1KN2szWWxsbUo3azNZU1p5T3AxV1p6WkNNeHNUYjE1bUo3a1dibE5uSjRNek90Vm5ibXNEY3RGbUpnc0RadmxtY2xCbko3azNZaFp5TzVObWJtc1RlajltSjdrM1l0WnlPNU5tYW1zVGVqRm1KN2szWVRaQ0k3azNZMFp5TzVOMmNtc1RlalZXYW1zVGVqUmxK');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (18, 'Реагент 13А. Тест Саймона з ацетоном', 0, 6, 'PXNEWnZsbWNsQm5KN2szWXBaeU81TkdabXNUZWo5bUo3azNZMlpDSTdrM1lzWnlPNU5XYm1BQ013RURJN2szWTJaQ0k3azNZMVp5TzVOR2Rtc1RlakZtSjdrM1l1WnlPNU4yYm1zVGVqSm1KN2szWXlaeU81TldZbXNUZWp0bUpnc1RlanBtSjdrM1lyVlhhbXNUZWpKbko3azNZMFp5TzVOV1ltc1RlajVtSmdzVGVqZG1KZ0lESTdrM1lwWnlPNU5HZG1zVGVqbG1KN2szWXVaeU81TldhbXNUZWpoMlltc1RlanBuSjdrM1l2WnlPNU5tY21BeU95RkdjeVp5TzVObVZtSVRNZ3NUZWpSbko3azNZdVp5TzVOV1pwWnlPNU4yWm1zVGVqRm1KN2szWWxsbUo3azNZU1p5T3lGR2NzWkNJN2szWVdaeU14QXlPNU5HZG1zVGVqNW1KN2szWWxsbUo3azNZblp5TzVOV1ltc1RlalZXYW1zVGVqSmxKN2tXYmxObkp3RXpPdFZuYm1zVGF0VjJjbWd6TTcwV2R1WnlPdzFXWW1zRFp2bG1jbEJuSjdrM1kxWnlPNU5tYm1zVGVqOW1KN2szWTBaeU81TldacFp5TzVOMmMwWnlPNU5XWW1BeU81TldkbXNUZWo1bUo3azNZcFp5TzVOR2FqWnlPNU5tZW1zVGVqOW1KN2szWXlaQ0k3azNZdlp5TzVOMlptc1RlajltSjdrM1l1WnlPNU5HWm1zVGVqOW1KN2szWTJaQ0k3SVhZd0puSjdrM1l0WnlPNU4yYTFwbUo3azNZaVp5TzVOMmJtc0Ridk5uSjdrM1l0WnlPNU4yYTFwbUo3azNZaVp5TzVOMmJtQXlPNU4yYTFsbUo3azNZdVp5TzVObWJtc1RlalZXYW1zVGVqaDJjbXNUZWo5bUo3azNZdVp5TzVOR1ptc1RlanRXZHBaeU81Tm1kbUF5TzVOV2Rtc2pjaEJIYm1BeU8wNTJZeVZHY21VREk3azNZc1p5TzVOV2JtQUNNd0VESTdrM1kyWkNJN2szWTFsbko3azNZclZYYW1zVGVqSm5KN2szWTBaeU81TldZbXNUZWo1bUpnc1RlalZuSjdrM1lrWnlPNU5XYW1zVGVqTm5KN2szWTFaeU81Tm1jbXNUZWpCbko3azNZdlp5TzVObWNtc1RlalJuSjdrM1lyVlhhbXNUZWo1bUpnc1RlamRtSmdFREk3azNZcFp5TzVOR2Rtc1RlamxtSjdrM1l1WnlPNU5XYW1zVGVqaDJZbXNUZWpwbko3azNZdlp5TzVObVVtc2pidngyYmpaeU81TldRbU1UTWdzVGVqUm5KN2szWXVaeU81TldacFp5TzVOMlptc1RlakZtSjdrM1lsbG1KN2szWVNaeU9wMVdaelpDTXhzVGIxNW1KN2tXYmxObko0TXpPdFZuYm1zRGN0Rm1KN1EyYnBKWFp3WnlPNU5XYm1zVGVqOW1KN2szWXVaeU81TjJibXNUZWpSbko3azNZbGxtSjdrM1l6Um5KN2szWWhaQ0k3azNZNlpDSTdrM1loWnlPNU5tYm1zVGVqOW1KN2szWXRaeU81Tm1hbXNUZWpGbUo3azNZVFpDSTdrM1kwWnlPNU4yY21zVGVqVldhbXNUZWpSbEo%3D');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (11, 'Реагент 6А. Тест Дюкенуа-Левіна', 0, 6, 'PT13T2s5V2F5VkdjbXNUZWpabko3azNZclZYYW1zVGVqUm1KN2szWXBsbko3azNZdlp5TzVObWJtc1RlanRXZHBaeU81Tm1ZbXNUZWpGbUo3azNZdVp5TzVObWJtc1RlakZtSjdrM1lyWkNJN2szWTBaMmJ6WnlPNU5HZG1zVGVqTm5KN2szWXJWWGFtc1RlajVtSjdrM1kwWnlPNU5XZG1zVGVqTm5KN2szWXBaeU81Tm1jbXNUZWpCbkpnc1RlalZuSjdrM1kyWnlPNU5XYW1zVGVqeG1KN2szWW9wbko3azNZdlp5TzVOV2JtQXlPNU5XWW1zVGVqNW1KZ3NUZWp0V2RxWnlPNU5XZG1zVGVqcG5KN2szWWhaeU81TjJhbXNUZWpabkpnc1RlalZuSjdrM1l5WnlPNU5XWW1zVGVqaDJjbUF5TzVOMmJtc1RlamRtSjdrM1l2WnlPNU5tYm1zVGVqMW1KN2szWXlaeU81TjJibXNUZWpabUo3azNZdlp5TzVObWNtc1RlajltSjdrM1lzWnlPNU5HYXJaQ0k3azNZdlp5TzVOMlptc1RlajltSjdrM1kwWjJielp5TzVObWJtc1RlamhtZW1zVGVqbG1KN2szWXVaQ0k3azNZaGxuSjdrM1l1WnlPNU5tYm1zVGVqVldhbXNUZWp4bUo3azNZMlp5TzVObWNtc1RlakZtSjdrM1lpWnlPNU5XWW1zVGVqcG5KZ3NUZWpWV2Ftc1RlalpuSjdrM1l2WnlPNU5HZG1zVGVqVldhbXNUZWp4bUo3azNZdlp5TzVOMmExbG1KN2szWUdaQ0k3UTJicEpYWndaeU81TkdkbXNUZWpGbUo3azNZMFp5TzVOR2RtOTJjbXNUZWp4bUo3azNZMVp5TzVObWVtc1RlalZXYW1zVGVqSmxKN2tXYmxObkp3RXpPdFZuYm1zVGF0VjJjbWd6TTcwV2R1WnlPdzFXWW1zVGF0VjJjbUFUTTcwV2R1WnlPcDFXWnpaQ096c1RiMTVtSjdBWGJoWnlPMDlXZHhaeU81TldRbVlESTdrM1kwWnlPNU5tYm1zVGVqVldhbXNUZWpkbUo3azNZaFp5TzVOV1pwWnlPNU5tY21BeU81TldacFp5TzVOR2F6WnlPNU5XYW1zVGVqeG1KZ3NUZWpGV2Vtc1Rlak5uSjdrM1kwWjJielp5TzVOR2Rtc1RlanRXZHFaeU81TldZbXNUZWpSbUo3azNZaGxuSjdrM1lzWnlPNU4yWm1zVGVqcG5KN2szWXZaeU81Tm1VbXNEZHZWWGNtc1RhdFYyY21BVE03MFdkdVp5T3AxV1p6WkNPenNUYjE1bUo3QVhiaFp5T3AxV1p6WkNNeHNUYjE1bUo3a1dibE5uSjRNek90Vm5ibXNEY3RGbUo3UTJicEpYWndaeU81TldkbXNUZWp0bUo3azNZeVp5TzVOMmExbG1KN2szWWlaeU81TjJibXNUZWpKbko3azNZd1pDSTdrM1lwWnlPNU5HZG1zVGVqbG1KN2szWXpaeU81TldkbXNUZWpKbko3azNZMFp5TzVObWVtQXlPNU4yYm1zVGVqNW1KN2szWW9wbko3azNZbGxtSjdrM1l5WnlPNU5XWnBaeU81Tm1ZbXNUZWo5bUpnc1RlakZtSjdrM1kwWkNJN2szWXpaaU5nc1RlalZuSjdrM1kwWnlPNU5tYm1zVGVqVldhbXNUZWpkbUo3azNZaFp5TzVOV1pwWnlPNU5tY21BeU81TkdibXNUZWoxbUpnSURJN2szWXBaeU81TkdkbXNUZWpGbUo3azNZa1p5TzVOMmJtc1RlalJtSmdzVFl0MTJialp5TzVOV1k1WnlPNU5tYm1zVGVqNW1KN2szWWxsbUo3azNZc1p5TzVObWRtc1RlakpuSjdrM1loWnlPNU5tWW1zVGVqRm1KN2szWTZaQ0k3azNZaGxuSjdrM1l6WnlPNU5HZG05MmNtc1RlalJuSjdrM1lwWnlPNU5tY21zVGVqOW1KN2szWTJaeU81TkdkbXNUZWpWbkpnc1RlamxtSjdrM1l1WnlPNU5XYW1zVGVqeG1KN2szWXBaeU81Tm1kbXNUZWpoMmFtQXlNdElESTdrM1loWnlPNU5tZW1BeU81TjJibXNUZWpoMllvTm5KN2szWXJaeU81TldRWlpDSTdRMmJwSlhad1pDTjdrV2JsTm5Kd0V6T3RWbmJtc1RhdFYyY21nek03MFdkdVp5T3cxV1ltc0RadmxtY2xCbko3azNZdVp5TzVOV2Ftc1RlanhtSjdrM1lwWnlPNU5tZG1zVGVqaDJhbUF5TzVOR2FyWnlPNU4yYm1zVGVqdG1KN2szWTBaMmJ6WnlPNU5HYm1zVGVqdFdkcFp5TzVOMmFtc1RlalZXYW1zVGVqUm1KZ3NUZWoxbUo3azNZdlp5TzVOMlptc1RlakZXZW1zVGVqUm5KN2szWXZaeU81Tm1jbXNUZWpCbkpnc1RlamxtSjdrM1kwWnlPNU5XYW1zVGVqTm5KN2szWTFaeU81Tm1jbXNUZWpSbko3azNZNlpDSTdrM1loWnlPNU5HZG1BeU81Tm1WbVlESTdrM1kxWnlPNU5HZG1zVGVqNW1KN2szWWxsbUo3azNZblp5TzVOV1ltc1RlalZXYW1zVGVqSm5KZ3NUZWp4bUo3azNZdFpDSXlBeU81TldhbXNUZWpSbko3azNZaFp5TzVOR1ptc1RlajltSjdrM1lFWkNJN1EyYnBKWFp3WnlNN2tXYmxObkp3RXpPdFZuYm1zVGF0VjJjbWd6TTcwV2R1WnlPdzFXWW1zRFp2bG1jbEJuSjdrM1lwWnlPNU5tYm1zVGVqbG1KN2szWXNaeU81TldhbXNUZWpabko3azNZb3RtSmdFREk3azNZdFp5TzVOMmJtc1RlamRtSjdrM1lobG5KN2szWTBaeU81TjJibXNUZWpKbko3azNZd1pDSTdrM1kxWnlPNU4yYW1zVGVqSm5KN2szWXJWWGFtc1RlakptSjdrM1l2WnlPNU5tY21zVGVqQm5KZ3NUZWpsbUo3azNZMFp5TzVOV2Ftc1Rlak5uSjdrM1kxWnlPNU5tY21zVGVqUm5KN2szWTZaQ0k3azNZaFp5TzVOR2RtQXlPNU5XUW1ZREk3azNZMVp5TzVOR2Rtc1RlajVtSjdrM1lsbG1KN2szWW5aeU81TldZbXNUZWpWV2Ftc1RlakpuSmdzVGVqeG1KN2szWXRaQ0l5QXlPNU5XYW1zVGVqUm5KN2szWWhaeU81TkdabXNUZWo5bUo3azNZRVpDSTdRMmJwSlhad1ppTTdrV2JsTm5Kd0V6T3RWbmJtc1RhdFYyY21nek03MFdkdVp5T3cxV1ltc0RadmxtY2xCbko3azNZcFp5TzVOMmFtc1RlakpuSjdrM1lyVlhhbXNUZWpKbUo3azNZdlp5TzVObWNtc1RlakJuSmdzVGVqOW1KN2szWWtaQ0k3azNZcFp5TzVOR2Rtc1RlamxtSjdrM1kwWnlPNU4yY21zVGVqdFdkcFp5TzVOV2Jtc1RlajltSjdrM1l3WkNJN2szWXBaeU81Tm1ibXNUZWpsbUo3azNZMlp5TzVOMmJtc1RlamgyWW1zVGVqVldhbXNUZWpKbkpnc1RlalJuWnZObko3azNZMFp5TzVOMmNtc1RlanRXZHBaeU81TjJhbXNUZWpSblp2Tm5KN2szWXNaeU81TjJhMWxtSjdrM1lyWkNJN2szWTFaeU81TjJhbXNUZWpsbUo3azNZc1p5TzVOV1pwWnlPNU5tZG1zVGVqVldhbXNUZWo1a0pnc0RadmxtY2xCbkp4c1RhdFYyY21BVE03MFdkdVp5T3AxV1p6WkNPenNUYjE1bUo3QVhiaFp5T3U5R2J2Tm1KN2szWTFaeU81TkdkbXNUZWpObko3azNZbGxtSjdrM1kwWkNJN2szWWhsbko3azNZdVp5TzVObWJtc1RlakZtSjdrM1l1WnlPNU4yYm1zVGVqdG1KN2szWXBaeU81Tm1WbXNUYXRWMmNtQVRNNzBXZHVaeU9wMVdaelpDT3pzVGIxNW1KN0FYYmhaeU9wMVdaelpDTXhzVGIxNW1KN2tXYmxObko0TXpPdFZuYm1zRGN0Rm1KN1EyYnBKWFp3WnlPNU5XYm1zVGVqSm5KN2szWXZaeU81Tm1abXNUZWo5bUo3azNZeVp5TzVOMmJtc1RlanhtSjdrM1lJdGtKZ3NUZWpObkoyQXlPNU5HZG1zVGVqNW1KN2szWWxsbUo3azNZblp5TzVOV1ltc1RlalZXYW1zVGVqSmxKN2tXYmxObkp3RXpPdFZuYm1zVGF0VjJjbWd6TTcwV2R1WnlPdzFXWW1zVGVqRm1KN2szWTBaeU81TjJibXNUZWp4bUo3azNZelp5TzVOV2Ftc1RlanRtSmdzVGVqRm1KN2szWXVaeU81TkdabXNUZWpsbUo3azNZeVp5TzVOMmJtc1RlanhtSjdrM1lvdG1KZ3NUZWpGbUo3azNZdVp5TzVOV1ltc1RlalpuSjdrM1l2WnlPNU5tY21zVGVqUm5KN2szWXVaeU81TldacFp5TzVOMmMwWnlPNU5tYm1zVGVqOW1KN2szWXJaQ0k3azNZV1ppTmdzVGVqUm5KN2szWXVaeU81TldacFp5TzVOMlptc1RlakZtSjdrM1lsbG1KN2szWVNaeU9wMVdaelpDTXhzVGIxNW1KN2tXYmxObko0TXpPdFZuYm1zRGN0Rm1KN2tXYmxObkp3RXpPdFZuYm1zVGF0VjJjbWd6TTcwV2R1WnlPdzFXWW1zRFp2bG1jbEJuSjdrM1kxWnlPNU5HWm1zVGVqdFdkcFp5TzVOMlptc1RlalZXYW1zVGVqUm1KN2szWTBaMmJ6WnlPNU5HYm1zVGVqRm1KN2szWTBaeU81TldacFp5TzVOMmMwWnlPNU5XWW1BeU81TkdibXNUZWoxbUpnVXpPaDFXYnZObUp5QXlPNU5XYW1zVGVqUm5KN2szWWhaeU81TkdabXNUZWo5bUo3azNZa1pDSTdrM1l0WnlPNU4yYTFsbUo3azNZMFp5TzVOMmJtc1RlakJuSmdzVFl0MTJialp5TzVOV2Rtc1RlanhtSjdrM1l2WnlPNU5tYm1zVGVqRm1KN2szWTBaeU81TldacFpDSTdRbmJqSlhad1pTTjVBeU81TkdibXNUZWoxbUpnQURNeEF5TzVObWRtQXlPNU5XZG1zVGVqNW1KN2szWXJWWGFtc1RlanhtSjdrM1lyVlhhbXNUZWo1bUo3azNZaFp5TzVObWRtQXlPNU4yWm1BaU1nc1RlamxtSjdrM1kwWnlPNU5XYW1zVGVqNW1KN2szWXBaeU81Tkdhalp5TzVObWVtc1RlajltSjdrM1lTWkNJNzQyYnM5Mlltc1RlakZrSjJBeU81TkdkbXNUZWo1bUo3azNZbGxtSjdrM1luWnlPNU5XWW1zVGVqVldhbXNUZWpKbEo%3D');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (10, 'Реагент 8А. Модифікований тест з тіоціонатом кобальту (ІІ)', 0, 6, 'PXNUZWoxbUo3azNZeVp5TzVOMmJtc1RlalptSjdrM1l2WnlPNU5tY21zVGVqOW1KN2szWXNaeU81TkdTTFpDSTdrM1l6WkNPZ3NUZWpSbko3azNZdVp5TzVOV1pwWnlPNU4yWm1zVGVqRm1KN2szWWxsbUo3azNZU1p5T3AxV1p6WkNNeHNUYjE1bUo3a1dibE5uSjRNek90Vm5ibXNEY3RGbUo3azNZaFp5TzVOR2Rtc1RlajltSjdrM1lzWnlPNU4yY21zVGVqbG1KN2szWXJaQ0k3azNZaFp5TzVObWJtc1RlalJtSjdrM1lwWnlPNU5tY21zVGVqOW1KN2szWXNaeU81TkdhclpDSTdrM1loWnlPNU5tYm1zVGVqRm1KN2szWTJaeU81TjJibXNUZWpKbko3azNZMFp5TzVObWJtc1RlalZXYW1zVGVqTkhkbXNUZWo1bUo3azNZdlp5TzVOMmFtQXlPNU5tVm1nREk3azNZMFp5TzVObWJtc1RlalZXYW1zVGVqZG1KN2szWWhaeU81TldacFp5TzVObVVtc1RhdFYyY21BVE03MFdkdVp5T3AxV1p6WkNPenNUYjE1bUo3QVhiaFp5T2s5V2F5VkdjbXNUZWpWbko3azNZdVp5TzVOV2Ftc1RlakpuSjdrM1lsbG1KN2szWXpSbko3azNZclZYYW1zVGVqeG1KN2szWW5aQ0k3azNZc1p5TzVOV2JtQUNNMUF5TzVOV2Ftc1RlalJuSjdrM1loWnlPNU5HWm1zVGVqOW1KN2szWWtaQ0k3azNZdFp5TzVOMmExbG1KN2szWTBaeU81TjJibXNUZWpCbkpnc1RZdDEyYmpaeU81TldhbXNUZWpSbko3azNZdlp5TzVOR2Jtc1Rlak5uSjdrM1lwWnlPNU4yYW1BeU81TldhNVp5TzVOMmJtc1RlalpuSjdrM1l2WnlPNU5HZG1zVGVqTkhkbXNUZWo5bUo3SVhZd0puSjdrM1l0WnlPNU4yYTFwbUo3azNZaVp5TzVOMmJtc0Ridk5uSjdrM1l0WnlPNU4yYTFwbUo3azNZaVp5TzVOMmJtQXlPNU4yYTFsbUo3azNZdVp5TzVOV1pwWnlPNU5HYXpaeU81TjJibXNUZWo1bUo3azNZa1p5TzVOMmExbG1KN2szWTJaQ0k3azNZMVp5T3lGR2NzWkNJN1FuYmpKWFp3WkNNeEFDSTdrM1lzWnlPNU5XYm1BQ00xQXlPNU5tZG1BeU95RkdjeVp5TzVOMmExbGtKN2szWXJWWFNtc2pjaEJIYm1BeU81TldZbXNUZWpSbko3azNZMFoyYnpaeU81TkdibXNUZWpGbUo3azNZaVp5TzVOMmJtc1RlanRtSmdzVGVqVm5KN2szWTBaeU81TldZbXNUZWo1bUo3azNZdlp5TzVOMmExbG1KN2szWXpSbko3azNZdlp5TzVOMmExbG1KN2szWTBaQ0k3azNZblpDSXhBeU81TldhbXNUZWpSbko3azNZcFp5TzVObWJtc1RlamxtSjdrM1lvTm1KN2szWTZaeU81TjJibXNUZWpKbEpnc0RadmxtY2xCbko3azNZQlpDT2dzVGVqUm5KN2szWXVaeU81TldacFp5TzVOMlptc1RlakZtSjdrM1lsbG1KN2szWVNaeU9wMVdaelpDTXhzVGIxNW1KN2tXYmxObko0TXpPdFZuYm1zRGN0Rm1KN1EyYnBKWFp3WnlPNU5XWW1zVGVqUm5KN2szWTBaeU81TjJibXNUZWp0bUo3azNZVFpDSTdrM1kwWnlPNU4yY21zVGVqVldhbXNUZWpSbEo%3D');
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id", "comment") VALUES (19, 'Реагент. 14. Тест з галовою кислотою.', 0, 6, 'PT13T2s5V2F5VkdjbXNUZWpsbUo3azNZMFp5TzVOMmJtc1RlanhtSjdrM1l6WnlPNU5XYW1zVGVqdG1KZ3NUZWpsV2Vtc1RlajltSjdrM1l1WnlPNU5HZG1zVGVqRm1KN2szWW1aeU81TkdkbTkyY21zVGVqeG1KN2szWTFaeU81TjJjbUF5TzVOV2E1WnlPNU4yYm1zVGVqNW1KN2szWWhaeU81Tm1kbXNUZWo5bUo3azNZeVp5TzVOR2Rtc1RlajVtSjdrM1lsbG1KN2szWXpSbko3azNZdVp5TzVOMmJtc1RlanRtSmdzVGVqZG1KZ0FETXhBeU81Tm1kbUF5TzVOV2Ftc1RlalJuSjdrM1l2WnlPNU5HYm1zVGVqTm5KN2szWXBaeU81TjJhbUF5TzVOV2E1WnlPNU4yYm1zVGVqWm5KN2szWXZaeU81TkdibXNUZWpGbUo3azNZblpDSTdrM1luWkNJMXNUWXQxMmJqWkNNZ3NUZWpsbUo3azNZMFp5TzVOV2Ftc1RlajVtSjdrM1lwWnlPNU5HYWpaeU81Tm1lbXNUZWo5bUo3azNZU1pDSTc0MmJzOTJZbVFUTWdzVGVqUm5KN2szWXVaeU81TldacFp5TzVOMlptc1RlakZtSjdrM1lsbG1KN2szWVNaeU9wMVdaelpDTXhzVGIxNW1KN2tXYmxObko0TXpPdFZuYm1zRGN0Rm1KN1EyYnBKWFp3WnlPNU5XZDVaeU81TjJibXNUZWpSbko3azNZdlp5TzVOR2Jtc1Rlak5uSjdrM1lwWnlPNU4yYW1BeU81TldkNVp5TzVOMmJtc1RlalpuSjdrM1l2WnlPNU5HYm1zVGVqRm1KN2szWW5aQ0k3azNZNlpDSTdrM1kwWnlPNU4yY21zVGVqVldhbXNUZWpSbEo%3D');
 
 
 --
 -- Data for Name: reactiv_menu_ingredients; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (27, 15);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (86, 15);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (6, 16);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (43, 16);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (40, 17);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (10, 18);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (43, 18);
 INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (84, 9);
-INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (83, 9);
-INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (57, 7);
-INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (62, 7);
 INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (57, 8);
 INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (82, 8);
-INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (5, 10);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (6, 11);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (16, 11);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (22, 11);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (63, 13);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (29, 12);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (18, 10);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (29, 10);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (51, 10);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (26, 14);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (32, 14);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (57, 7);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (62, 7);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (87, 19);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (57, 19);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (2, 20);
+INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id") VALUES (32, 20);
 
 
 --
@@ -1043,10 +1080,13 @@ INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id"
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (9, '2020-01-02 15:39:01.529732', 'Грами', 'Аргентум нітрат', 1, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (24, '2020-01-02 15:39:01.529732', 'Літри', 'Ефір диізопропіловий', 1, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (2, '2020-01-02 15:39:01.529732', 'Літри', '1,3 - Динітробензол', 1, 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (81, '2020-03-16 22:23:10.617711', 'Штука', 'Їблани', 1, 4);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (10, '2020-01-02 15:39:01.529732', 'Літри', 'Ацетон', 1, 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (22, '2020-01-02 15:39:01.529732', 'Літри', 'Етанол', 1, 1);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (84, '2020-03-18 12:58:32.313461', '', 'Сульфат заліза (ІІІ)', 1, 2);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (85, '2020-03-18 15:48:39.161596', '', 'Хлоридна кислота розбавлена (Реагент)', 2, 1);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (86, '2020-03-18 17:58:42.08735', '', 'Йод кристалічний', 2, 2);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (81, '2020-03-16 22:23:10.617711', 'Штука', '1,2 динітробензол', 2, 2);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (87, '2020-03-18 18:20:35.233556', '', 'Галова кислота', 2, 2);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (8, '2020-01-02 15:39:01.529732', 'Літри', 'Амоній молібденовокислий', 1, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (0, '2019-12-28 11:10:26.287818', 'Літри', '--', 0, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (4, '2020-01-02 15:39:01.529732', 'Літри', 'N, N - диметилформамід', 0, 0);
@@ -1102,13 +1142,13 @@ INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (56, '2020-01-02 15:39:01.529732', 'Літри', 'Сульфанілова кислота', 0, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (57, '2020-01-02 15:39:01.529732', 'Літри', 'Сульфатна кислота концентрована', 0, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (58, '2020-01-02 15:39:01.529732', 'Літри', 'Толуол', 0, 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (59, '2020-01-02 15:39:01.529732', 'Літри', 'Тривкий синій Б', 0, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (60, '2020-01-02 15:39:01.529732', 'Літри', 'Фенолфталеїн', 0, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (61, '2020-01-02 15:39:01.529732', 'Літри', 'Ферум (ІІІ) хлорид', 0, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (62, '2020-01-02 15:39:01.529732', 'Літри', 'Формальдегід', 0, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (63, '2020-01-02 15:39:01.529732', 'Літри', 'Хлоридна кислота концентрована', 0, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (64, '2020-01-02 15:39:01.529732', 'Літри', 'Хлороформ', 0, 0);
 INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (65, '2020-01-02 15:39:01.529732', 'Літри', 'Циклогексан', 1, 1);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (59, '2020-01-02 15:39:01.529732', 'Літри', 'Тривкий синій Б', 2, 2);
 
 
 --
@@ -1133,7 +1173,8 @@ INSERT INTO "public"."region" ("id", "ts", "name", "position") VALUES (1, '2019-
 --
 
 INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (0, '2020-01-02 15:37:14.580544', 0, 0, 0, '2020-01-01', 0, 0, 0, 0, '1970-01-01', '1970-01-01', 0, '', 0, 0, 0, '', '', '', '2020-03-12 09:48:19.879959');
-INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (7, '2020-03-12 17:40:18.36426', 1, 22, 10, '2020-01-01', 1, 1, 10, 2, '2019-07-10', '2021-05-13', 0, 'Самжене', 1, 1, 0, '', 'В пляшках', 'Шоб холодненька була', '2020-03-12 17:40:18.36426');
+INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (8, '2020-03-18 15:17:21.966453', 1, 22, 50, '2020-03-16', 1, 1, 50, 9, '2020-03-03', '2020-03-31', 1, 'Юрія-фарм', 2, 2, 1, 'іфвіфв аіфва іаві', 'тестове місце', 'тестові умови', '2020-03-18 15:17:21.966453');
+INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (7, '2020-03-12 17:40:18.36426', 1, 22, 10, '2020-01-01', 1, 1, 0, 2, '2019-07-10', '2021-05-13', 0, 'Самжене', 1, 1, 0, '', 'В пляшках', 'Шоб холодненька була', '2020-03-12 17:40:18.36426');
 INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts") VALUES (3, '2020-01-02 15:40:23.725801', 1, 10, 200, '2020-01-01', 1, 1, 180, 2, '2019-01-01', '2023-01-01', 1, 'Юрія-фарм', 2, 2, 1, 'хуйня', 'тестове місце', 'тестові умови', '2020-03-12 09:48:19.879959');
 
 
@@ -1144,8 +1185,10 @@ INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_i
 INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (0, '--', 0, '');
 INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (1, 'Літр', 0, 'л');
 INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (2, 'Грам', 0, 'гр');
-INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (3, 'Метр', 0, 'м');
 INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (4, 'Штук', 0, 'шт');
+INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (3, 'Упаковка', 0, 'уп');
+INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (5, 'Кілограм', 0, 'кг');
+INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (6, 'Мілілітр', 0, 'мл');
 
 
 --
@@ -1180,14 +1223,14 @@ SELECT pg_catalog.setval('"public"."danger_class_id_seq"', 4, true);
 -- Name: dispersion_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."dispersion_id_seq"', 7, true);
+SELECT pg_catalog.setval('"public"."dispersion_id_seq"', 9, true);
 
 
 --
 -- Name: expert_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."expert_id_seq"', 1, true);
+SELECT pg_catalog.setval('"public"."expert_id_seq"', 2, true);
 
 
 --
@@ -1208,7 +1251,7 @@ SELECT pg_catalog.setval('"public"."groups_id_seq"', 1, true);
 -- Name: purpose_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."purpose_id_seq"', 2, true);
+SELECT pg_catalog.setval('"public"."purpose_id_seq"', 3, true);
 
 
 --
@@ -1222,14 +1265,14 @@ SELECT pg_catalog.setval('"public"."reactiv_id_seq"', 1, false);
 -- Name: reactiv_menu_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."reactiv_menu_id_seq"', 10, true);
+SELECT pg_catalog.setval('"public"."reactiv_menu_id_seq"', 20, true);
 
 
 --
 -- Name: reagent_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."reagent_id_seq"', 84, true);
+SELECT pg_catalog.setval('"public"."reagent_id_seq"', 87, true);
 
 
 --
@@ -1250,14 +1293,14 @@ SELECT pg_catalog.setval('"public"."region_id_seq"', 1, true);
 -- Name: stock_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."stock_id_seq"', 7, true);
+SELECT pg_catalog.setval('"public"."stock_id_seq"', 8, true);
 
 
 --
 -- Name: units_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."units_id_seq"', 4, true);
+SELECT pg_catalog.setval('"public"."units_id_seq"', 6, true);
 
 
 --
@@ -1541,7 +1584,7 @@ ALTER TABLE ONLY "public"."expert"
 --
 
 ALTER TABLE ONLY "public"."reactiv_consume"
-    ADD CONSTRAINT "reactiv_consume_expert_id_fkey" FOREIGN KEY ("expert_id") REFERENCES "public"."expert"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT "reactiv_consume_expert_id_fkey" FOREIGN KEY ("inc_expert_id") REFERENCES "public"."expert"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

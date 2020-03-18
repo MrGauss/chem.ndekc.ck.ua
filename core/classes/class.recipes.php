@@ -101,8 +101,8 @@ class recipes
 
         if( !is_array($data) ){ return false; }
 
-
         $data['name']        = common::filter( isset($data['name'])?$data['name']:'' );
+        $data['comment']     = common::filter( isset($data['comment'])?$data['comment']:'' );
         $data['units_id']    = common::integer( isset($data['units_id'])?$data['units_id']:0 );
 
         $data['ingredients'] = common::filter( isset($data['ingredients'])?$data['ingredients']:'' );
@@ -114,8 +114,9 @@ class recipes
         ///////////////////////////////////////////////////
 
         $SQL = array();
-        $SQL['name'] = $this->db->safesql( $data['name'] );
-        $SQL['units_id'] = $this->db->safesql( $data['units_id'] );
+        $SQL['name']        = $this->db->safesql( $data['name'] );
+        $SQL['comment']     = $this->db->safesql( common::encode_string( common::htmlentities( $data['comment'] ) ) );
+        $SQL['units_id']    = $this->db->safesql( $data['units_id'] );
 
         ///////////////////////////////////////////////////
 
@@ -307,6 +308,10 @@ class recipes
         {
             $data[$row['id']] = $row;
             $data[$row['id']]['ingredients'] = array();
+            $data[$row['id']]['comment'] = common::decode_string( $data[$row['id']]['comment'] );
+            $data[$row['id']]['comment'] = common::stripslashes( $data[$row['id']]['comment'] );
+            $data[$row['id']]['comment'] = common::html_entity_decode( $data[$row['id']]['comment'] );
+            $data[$row['id']]['comment'] = common::htmlspecialchars_decode( $data[$row['id']]['comment'] );
         }
 
         if( count($data) )
@@ -328,6 +333,8 @@ class recipes
             {
                 if( !isset($data[$row['reactiv_menu_id']]['ingredients']) ){ $data[$row['reactiv_menu_id']]['ingredients'] = array(); }
                 $data[$row['reactiv_menu_id']]['ingredients'][$row['reagent_id']] = $row;
+
+
             }
         }
 

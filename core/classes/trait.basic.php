@@ -77,6 +77,13 @@ trait basic
         return $data;
     }
 
+    static public final function filter_hash( $data )
+    {
+        if( !is_scalar( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( is_array($data) ){ return array_map( 'self::filter_hash', $data ); }
+        return preg_replace( '!(\W+)!is', '', $data );
+    }
+
     static public final function filter( $data )
     {
         if( !is_scalar( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }

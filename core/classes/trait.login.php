@@ -164,6 +164,8 @@ trait login
 		$login = $this->strtolower( $this->db->safesql( $login ) );
 		$pass  = $this->db->safesql( $pass );
 
+        // echo '<!-- '.$login.':'.$pass.' -->';
+
 		$SQL = 'SELECT id, login, region_id, group_id FROM expert WHERE login=\''.$login.'\' and password=\''.$pass.'\' LIMIT 1 OFFSET 0;';
         $id = $this->db->super_query( $SQL );
 

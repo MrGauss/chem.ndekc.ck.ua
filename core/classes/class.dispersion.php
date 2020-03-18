@@ -301,12 +301,9 @@ class dispersion
             ORDER by
                 reagent_name ASC; '.db::CACHED;
 
-        // echo $SQL;exit;
-
         $cache_var = 'spr-dispersion-'.md5( $SQL ).'-raw';
-        $data = cache::get( $cache_var );
-
         $data = false;
+        $data = cache::get( $cache_var );
 
         if( $data && is_array($data) && count($data) ){ return $data; }
         $data = array();
@@ -317,8 +314,6 @@ class dispersion
         {
             $data[$row['id']] = $row;
         }
-
-        // var_export($data);exit;
 
         cache::set( $cache_var, $data );
         return $data;

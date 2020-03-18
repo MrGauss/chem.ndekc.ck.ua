@@ -136,12 +136,16 @@ chem['spr_manager'] = new function()
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
 
+                var width = 413;
+
+        
+
                 var bi = 0;
                 var dialog = {};
                     dialog["zIndex"]  = 2001;
                     dialog["modal"]   = true;
                     dialog["autoOpen"]   = true;
-                    dialog["width"]   = '413';
+                    dialog["width"]   = width;
                     dialog["resizable"]   = false;
                     dialog["buttons"] = {};
 

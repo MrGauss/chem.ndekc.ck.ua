@@ -150,6 +150,8 @@ chem['spr_recipes'] = new function()
 
                 autocomplete.init( $('#'+did+'') );
 
+
+
                 if( line_id > 0 )
                 {
                     $('#'+did+' select[name="stock_id"]').prop( 'readonly', true );
@@ -167,13 +169,17 @@ chem['spr_recipes'] = new function()
 
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
+                $('#'+did ).on( "dialogopen", function( event, ui )
+                {
+                    $('#'+did+'').find('.rightside').height( $('#'+did+'').find('.leftside').height() - $('#'+did+'').find('.rightside .label').height() );
+                } );
 
                 var bi = 0;
                 var dialog = {};
                     dialog["zIndex"]  = 2001;
                     dialog["modal"]   = true;
                     dialog["autoOpen"]   = true;
-                    dialog["width"]   = '413';
+                    dialog["width"]   = '800';
                     dialog["resizable"]   = false;
                     dialog["buttons"] = {};
 

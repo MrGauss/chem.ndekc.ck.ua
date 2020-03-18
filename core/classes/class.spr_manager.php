@@ -61,6 +61,12 @@ class spr_manager
 
         if( !is_array($data) ){ return false; }
 
+        if( isset($data['attr']) && $data['attr'] != false )
+        {
+            if( _AJAX_ ){ ajax::set_error( rand(10,99), 'Даний запис є службовим та не редагується!' ); return false; }
+            else        { common::err( 'Даний запис є службовим та не редагується!' ); return false; }
+        }
+
         $tpl = new tpl;
 
         $tpl->load( $skin );
