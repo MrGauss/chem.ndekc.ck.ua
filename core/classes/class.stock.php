@@ -31,9 +31,9 @@ class stock
 
         ///////////
 
-        if( !$error && $ID && $data4save['region_id'] != $original_data['region_id'] )      { $error = 'Ви не можете редагувати записи з іншого регіону!'; $error_area = ''; }
-        if( !$error && $ID && $data4save['group_id']  != $original_data['group_id'] )       { $error = 'Ви не можете редагувати записи з іншого відділу!'; $error_area = ''; }
-        if( !$error && $ID && $data4save['reagent_id'] != $original_data['reagent_id'] )    { $error = 'Заборонено редагувати реагент!'; $error_area = 'reagent_id'; }
+        if( !$error && $ID &&  $data4save['region_id']  != $original_data['region_id'] )      { $error = 'Ви не можете редагувати записи з іншого регіону!'; $error_area = ''; }
+        if( !$error && $ID &&  $data4save['group_id']   != $original_data['group_id'] )       { $error = 'Ви не можете редагувати записи з іншого відділу!'; $error_area = ''; }
+        if( !$error && $ID &&  $data4save['reagent_id'] != $original_data['reagent_id'] )    { $error = 'Заборонено редагувати реагент!'; $error_area = 'reagent_id'; }
         if( !$error && $ID && !$data4save['reagent_id'] )                                   { $error = 'Вкажіть реагент!'; $error_area = 'reagent_id'; }
 
         ///////////
@@ -315,17 +315,20 @@ class stock
         $SQL = '
             SELECT
                 stock.*,
-                reagent.name as reagent_name,
-                reagent.units as reagent_units,
-                expert.name as expert_name,
+                reagent.name    as reagent_name,
+                units.name      as reagent_units,
+                units.short_name   as reagent_units_short,
+
+                expert.name     as expert_name,
                 expert.surname as expert_surname,
                 expert.phname as expert_phname,
                 COALESCE( (SELECT SUM(dispersion.quantity_inc)  FROM dispersion WHERE dispersion.stock_id = stock.id), 0 ) as quantity_dispersed,
                 COALESCE( (SELECT SUM(dispersion.quantity_left) FROM dispersion WHERE dispersion.stock_id = stock.id), 0 ) as quantity_not_used
             FROM
                 stock
-                LEFT JOIN reagent ON ( reagent.id = stock.reagent_id )
-                LEFT JOIN expert ON  ( expert.id = stock.inc_expert_id )
+                LEFT JOIN reagent   ON ( reagent.id = stock.reagent_id )
+                LEFT JOIN units     ON ( units.id = reagent.units_id )
+                LEFT JOIN expert    ON  ( expert.id = stock.inc_expert_id )
             WHERE
                 '.(isset($filters['id'])?'stock.id = \''.$filters['id'].'\'::INTEGER':'stock.id > 0').'
                 '.(( isset($filters['id']) && $filters['id'] == 0 )?'':'AND stock.region_id = '.CURRENT_REGION_ID.'').'

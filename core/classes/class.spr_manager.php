@@ -188,12 +188,10 @@ class spr_manager
         if( !$error && isset($data4save['full_name']) && common::strlen( $data4save['full_name'] ) > 250 )    { $error = 'ѕовна назва занадто довга!'; $error_area = 'full_name'; }
         if( !$error && isset($data4save['full_name']) && common::strlen( $data4save['full_name'] ) < 3 )      { $error = 'ѕовна назва занадто коротка!'; $error_area = 'full_name'; }
 
-        if( !$error && isset($data4save['units']) && common::strlen( $data4save['units'] ) < 3 )    { $error = 'ќдиниц€ вим≥ру коротка!'; $error_area = 'units'; }
-        if( !$error && isset($data4save['units']) && common::strlen( $data4save['units'] ) > 12 )   { $error = 'ќдиниц€ вим≥ру довга!'; $error_area = 'units'; }
 
         if( !$error && !isset($data4save['name']) && isset($original_data['name']) )                { $error = 'Ќазва не визначена!'; $error_area = 'name'; }
         if( !$error && !isset($data4save['full_name']) && isset($original_data['full_name']) )      { $error = 'ѕовна назва не визначена!'; $error_area = 'full_name'; }
-        if( !$error && !isset($data4save['units']) && isset($original_data['units']) )              { $error = 'ќдиниц€ вим≥ру не визначена!'; $error_area = 'units'; }
+        if( !$error && !isset($data4save['units_id']) && isset($original_data['units_id']) )        { $error = 'ќдиниц€ вим≥ру не визначена!'; $error_area = 'units'; }
 
         ///////////
         $SQL = 'SELECT count(id) as count FROM '.$this->table.' WHERE lower("name") = lower(\''.$this->db->safesql($data4save['name']).'\'::text) '. ( isset($original_data['id']) ? ' AND id != '.common::integer($original_data['id']) : ''  ) .';';
@@ -299,16 +297,16 @@ class spr_manager
             {
                 if( count($filters['id']) )
                 {
-                    $WHERE['id'] = 'id IN( '.implode(',', common::integer( $filters['id'] )).' )';
+                    $WHERE['id'] = '"'.$this->table.'"."id" IN( '.implode(',', common::integer( $filters['id'] )).' )';
                 }
             }
             else
             {
-                $WHERE['id'] = 'id = \''.common::integer( $filters['id'] ).'\'::INTEGER';
+                $WHERE['id'] = '"'.$this->table.'"."id" = \''.common::integer( $filters['id'] ).'\'::INTEGER';
             }
 
         }
-        if( !isset($filters['id']) )    { $WHERE['id'] = 'id > 0'; }
+        if( !isset($filters['id']) )    { $WHERE['id'] = '"'.$this->table.'"."id" > 0'; }
 
         $WHERE = implode( ' AND ', $WHERE );
         $WHERE = common::trim( $WHERE );
@@ -316,8 +314,8 @@ class spr_manager
 
         $ORDER = array();
 
-        if( array_key_exists( 'position', $this->table_info ) ){ $ORDER[] = 'position DESC'; }
-        if( array_key_exists( 'name', $this->table_info ) ){ $ORDER[] = 'name ASC'; }
+        if( array_key_exists( 'position', $this->table_info ) ){ $ORDER[] = '"'.$this->table.'"."position" DESC'; }
+        if( array_key_exists( 'name', $this->table_info ) ){ $ORDER[] = '"'.$this->table.'"."name" ASC'; }
 
         $ORDER = implode( ', ', $ORDER );
         $ORDER = common::trim( $ORDER );
@@ -325,9 +323,11 @@ class spr_manager
 
         $SQL = '
                     SELECT
-                        *
+                        "'.$this->table.'".*
+                        '.(($this->table=='reagent')?', "units"."name" as units_name':'').'
                     FROM
-                        '.$this->table.'
+                        "'.$this->table.'"
+                        '.(($this->table=='reagent')?'LEFT JOIN units ON( units.id = reagent.units_id )':'').'
                     '.$WHERE.'
                     '.$ORDER.'; '.db::CACHED;
 

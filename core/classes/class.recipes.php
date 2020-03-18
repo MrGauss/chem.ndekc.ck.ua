@@ -102,7 +102,8 @@ class recipes
         if( !is_array($data) ){ return false; }
 
 
-        $data['name'] = common::filter( isset($data['name'])?$data['name']:'' );
+        $data['name']        = common::filter( isset($data['name'])?$data['name']:'' );
+        $data['units_id']    = common::integer( isset($data['units_id'])?$data['units_id']:0 );
 
         $data['ingredients'] = common::filter( isset($data['ingredients'])?$data['ingredients']:'' );
         $data['ingredients'] = is_array( $data['ingredients'] ) ? $data['ingredients'] : array( $data['ingredients'] );
@@ -114,6 +115,7 @@ class recipes
 
         $SQL = array();
         $SQL['name'] = $this->db->safesql( $data['name'] );
+        $SQL['units_id'] = $this->db->safesql( $data['units_id'] );
 
         ///////////////////////////////////////////////////
 
@@ -263,16 +265,16 @@ class recipes
             {
                 if( count($filters['id']) )
                 {
-                    $WHERE['id'] = 'id IN( '.implode(',', common::integer( $filters['id'] )).' )';
+                    $WHERE['id'] = '"'.self::DB_MAIN_TABLE.'"."id" IN( '.implode(',', common::integer( $filters['id'] )).' )';
                 }
             }
             else
             {
-                $WHERE['id'] = 'id = \''.common::integer( $filters['id'] ).'\'::INTEGER';
+                $WHERE['id'] = '"'.self::DB_MAIN_TABLE.'"."id" = \''.common::integer( $filters['id'] ).'\'::INTEGER';
             }
 
         }
-        if( !isset($filters['id']) )    { $WHERE['id'] = 'id > 0'; }
+        if( !isset($filters['id']) )    { $WHERE['id'] = '"'.self::DB_MAIN_TABLE.'"."id" > 0'; }
 
         $WHERE = implode( ' AND ', $WHERE );
         $WHERE = common::trim( $WHERE );
@@ -281,11 +283,15 @@ class recipes
 
         $SQL = '
                     SELECT
-                        *
+                        "'.self::DB_MAIN_TABLE.'".*,
+                        units.name      as reagent_units,
+                        units.short_name   as reagent_units_short
+
                     FROM
-                       '.self::DB_MAIN_TABLE.'
+                       "'.self::DB_MAIN_TABLE.'"
+                       LEFT JOIN "units"     ON ( "units"."id" = "'.self::DB_MAIN_TABLE.'"."units_id" )
                     '.$WHERE.'
-                    ORDER by name; '.db::CACHED;
+                    ORDER by "'.self::DB_MAIN_TABLE.'"."name"; '.db::CACHED;
 
         $cache_var = 'spr-'.self::DB_MAIN_TABLE.'-'.md5( $SQL ).'';
         $data = cache::get( $cache_var );

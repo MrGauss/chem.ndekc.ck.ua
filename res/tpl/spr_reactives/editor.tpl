@@ -15,7 +15,7 @@
 
     <div class="elem units">
         <label class="label">ќдиниц€ вим≥ру</label>
-        <input class="input" type="text" name="units" value="{tag:units}" data-important="1" data-save="1" data-autocomplete="1" data-key="{autocomplete:units:key}" data-table="{autocomplete:table}" data-column="units">
+        <select data-important="1" class="input select" data-save="1" data-value="{tag:units_id}" value="{tag:units_id}" name="units_id"><option value="0">--</option>{select:units}</select>
     </div>
 
     <div class="clear"></div>

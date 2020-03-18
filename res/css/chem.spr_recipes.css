@@ -3,6 +3,7 @@
 #main_frame #page_frame #list_frame #list .line table td.ingredients_html{ width: 500px; text-align: left; }
 #main_frame #page_frame #list_frame #list .line table td.ingredients_html span{ display: inline-block; padding: 5px; margin: 2px; border: 1px solid #00610F; color: #003308; background: #94FF9D; border-radius: 4px; text-transform: uppercase; font-size: 0.85em; }
 .default_editor .elem.name{ width: 100%;  }
+.default_editor .elem.units{ width: 100%;  }
 .default_editor .ingredients{ height: 200px; border: 1px solid #333333; padding: 5px; margin: 10px 5px 10px 5px; overflow: scroll; overflow-x: hidden; }
 .default_editor .ingredients .ingredient{ position: relative; display: block; margin-bottom: 2px; border: 1px solid #4A4A4A; padding: 10px 3px 10px 3px; text-align: center; text-transform: uppercase; font-size: 0.9em; letter-spacing: 1px; background: #FFF5B2 url(../img/spacer.png) no-repeat 99% 50%; opacity: 0.8; cursor: pointer; }
 .default_editor .ingredients .ingredient[data-reagent_id="0"]{ display: none; }

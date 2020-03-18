@@ -11,6 +11,11 @@
         <input class="input" type="text" name="name" value="{tag:name}" data-important="1" data-save="1">
     </div>
 
+    <div class="elem name">
+        <label class="label">Коротка назва</label>
+        <input class="input" type="text" name="short_name" value="{tag:short_name}" data-important="1" data-save="1">
+    </div>
+
 
     <div class="clear"></div>
 

@@ -560,7 +560,8 @@ ALTER SEQUENCE "public"."reactiv_id_seq" OWNED BY "public"."reactiv"."hash";
 CREATE TABLE "public"."reactiv_menu" (
     "id" bigint NOT NULL,
     "name" character varying(255) DEFAULT 0 NOT NULL,
-    "position" integer DEFAULT 0 NOT NULL
+    "position" integer DEFAULT 0 NOT NULL,
+    "units_id" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -602,7 +603,8 @@ CREATE TABLE "public"."reagent" (
     "ts" timestamp(6) without time zone DEFAULT ("now"())::timestamp without time zone NOT NULL,
     "units" character varying(32) DEFAULT ''::character varying NOT NULL,
     "name" character varying(255) DEFAULT ''::character varying NOT NULL,
-    "created_by_expert_id" bigint DEFAULT 0 NOT NULL
+    "created_by_expert_id" bigint DEFAULT 0 NOT NULL,
+    "units_id" integer DEFAULT 0 NOT NULL
 );
 
 
@@ -792,7 +794,8 @@ ALTER SEQUENCE "public"."stock_id_seq" OWNED BY "public"."stock"."id";
 CREATE TABLE "public"."units" (
     "id" integer NOT NULL,
     "name" character varying(255) DEFAULT ''::character varying NOT NULL,
-    "position" integer DEFAULT 0 NOT NULL
+    "position" integer DEFAULT 0 NOT NULL,
+    "short_name" character varying(32) DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -934,6 +937,7 @@ INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (10, 'Для 
 -- Data for Name: composition; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO "public"."composition" ("consume_hash", "reactiv_hash") VALUES ('e237637c008f2af947fa174c4ea86f8d', '0');
 
 
 --
@@ -968,7 +972,7 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 --
 
 INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, 0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
-INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '932e142807b50af2fcac4003493a65b7', 1, '46.255.34.197');
+INSERT INTO "public"."expert" ("id", "region_id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', 'aae036996e92dc02dc21ac06ad467a99', 1, '46.255.34.197');
 
 
 --
@@ -1012,9 +1016,9 @@ INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quan
 -- Data for Name: reactiv_menu; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reactiv_menu" ("id", "name", "position") VALUES (0, '--', 0);
-INSERT INTO "public"."reactiv_menu" ("id", "name", "position") VALUES (7, 'Реактив Маркі', 0);
-INSERT INTO "public"."reactiv_menu" ("id", "name", "position") VALUES (8, 'Тест Мекке', 0);
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id") VALUES (0, '--', 0, 0);
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id") VALUES (7, 'Реактив Маркі', 0, 1);
+INSERT INTO "public"."reactiv_menu" ("id", "name", "position", "units_id") VALUES (8, 'Тест Мекке', 0, 1);
 
 
 --
@@ -1031,74 +1035,74 @@ INSERT INTO "public"."reactiv_menu_ingredients" ("reagent_id", "reactiv_menu_id"
 -- Data for Name: reagent; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (2, '2020-01-02 15:39:01.529732', 'Літри', '1,3 - Динітробензол', 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (9, '2020-01-02 15:39:01.529732', 'Грами', 'Аргентум нітрат', 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (24, '2020-01-02 15:39:01.529732', 'Літри', 'Ефір диізопропіловий', 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (10, '2020-01-02 15:39:01.529732', 'Літри', 'Ацетон', 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (8, '2020-01-02 15:39:01.529732', 'Літри', 'Амоній молібденовокислий', 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (0, '2019-12-28 11:10:26.287818', 'Літри', '--', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (4, '2020-01-02 15:39:01.529732', 'Літри', 'N, N - диметилформамід', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (5, '2020-01-02 15:39:01.529732', 'Літри', 'Азотна кислота', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (6, '2020-01-02 15:39:01.529732', 'Літри', 'Альдегід оцтовий', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (7, '2020-01-02 15:39:01.529732', 'Літри', 'Аміак 25%', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (11, '2020-01-02 15:39:01.529732', 'Літри', 'Ацетонітрил', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (12, '2020-01-02 15:39:01.529732', 'Літри', 'Барій сульфат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (13, '2020-01-02 15:39:01.529732', 'Літри', 'Барію хлорид', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (14, '2020-01-02 15:39:01.529732', 'Літри', 'Бензол', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (15, '2020-01-02 15:39:01.529732', 'Літри', 'Бутанол', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (16, '2020-01-02 15:39:01.529732', 'Літри', 'Ванілін', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (17, '2020-01-02 15:39:01.529732', 'Літри', 'Вісмут нітрат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (18, '2020-01-02 15:39:01.529732', 'Літри', 'Гліцерин', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (19, '2020-01-02 15:39:01.529732', 'Літри', 'Дифенілкарбазон', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (20, '2020-01-02 15:39:01.529732', 'Літри', 'Діетиламін', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (21, '2020-01-02 15:39:01.529732', 'Літри', 'Діетиловий ефір', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (22, '2020-01-02 15:39:01.529732', 'Літри', 'Етанол', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (23, '2020-01-02 15:39:01.529732', 'Літри', 'Етилацетат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (25, '2020-01-02 15:39:01.529732', 'Літри', 'Ізопропанол', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (3, '2020-01-02 15:39:01.529732', 'Літри', '1,4-Диоксан', 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (81, '2020-03-16 22:23:10.617711', 'Штука', 'Їблани', 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (82, '2020-03-17 12:38:38.461639', 'Грам', 'Селениста кислота', 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (83, '2020-03-17 12:43:19.841877', 'Літри', 'Дистильована вода', 1);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (26, '2020-01-02 15:39:01.529732', 'Літри', 'Калій гідроксид', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (27, '2020-01-02 15:39:01.529732', 'Літри', 'Калію йодид', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (28, '2020-01-02 15:39:01.529732', 'Літри', 'Кальцію хлорид б/в', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (29, '2020-01-02 15:39:01.529732', 'Літри', 'Кобальт тіоціонат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (30, '2020-01-02 15:39:01.529732', 'Літри', 'Магній сульфат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (31, '2020-01-02 15:39:01.529732', 'Літри', 'Меркурій (ІІ) хлорид', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (32, '2020-01-02 15:39:01.529732', 'Літри', 'Метанол', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (33, '2020-01-02 15:39:01.529732', 'Літри', 'Метилен хлористий', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (34, '2020-01-02 15:39:01.529732', 'Літри', 'Метилстеарат для ГХ', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (35, '2020-01-02 15:39:01.529732', 'Літри', 'Мідь (ІІ) сульфат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (36, '2020-01-02 15:39:01.529732', 'Літри', 'Мурашина кислота', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (37, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій ванадат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (38, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій гідрокарбонат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (39, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій гідроксид', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (40, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій карбонат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (41, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій молібдат', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (42, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій нітрит', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (43, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій нітропрусид', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (44, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій сульфат б/в', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (45, '2020-01-02 15:39:01.529732', 'Літри', 'Натрію хлорид', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (46, '2020-01-02 15:39:01.529732', 'Літри', 'Нафтол альфа', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (47, '2020-01-02 15:39:01.529732', 'Літри', 'н-Гексан', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (48, '2020-01-02 15:39:01.529732', 'Літри', 'Нінгідрин', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (49, '2020-01-02 15:39:01.529732', 'Літри', 'о-Ксилол', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (50, '2020-01-02 15:39:01.529732', 'Літри', 'Ортофосфорна кислота', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (51, '2020-01-02 15:39:01.529732', 'Літри', 'Оцтова кислота, льодяна', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (52, '2020-01-02 15:39:01.529732', 'Літри', 'п-Диметиламінобензальдегід', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (53, '2020-01-02 15:39:01.529732', 'Літри', 'Петролейний ефір', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (54, '2020-01-02 15:39:01.529732', 'Літри', 'Піридин', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (55, '2020-01-02 15:39:01.529732', 'Літри', 'Платина VI хлорид', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (56, '2020-01-02 15:39:01.529732', 'Літри', 'Сульфанілова кислота', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (57, '2020-01-02 15:39:01.529732', 'Літри', 'Сульфатна кислота концентрована', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (58, '2020-01-02 15:39:01.529732', 'Літри', 'Толуол', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (59, '2020-01-02 15:39:01.529732', 'Літри', 'Тривкий синій Б', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (60, '2020-01-02 15:39:01.529732', 'Літри', 'Фенолфталеїн', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (61, '2020-01-02 15:39:01.529732', 'Літри', 'Ферум (ІІІ) хлорид', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (62, '2020-01-02 15:39:01.529732', 'Літри', 'Формальдегід', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (63, '2020-01-02 15:39:01.529732', 'Літри', 'Хлоридна кислота концентрована', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (64, '2020-01-02 15:39:01.529732', 'Літри', 'Хлороформ', 0);
-INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id") VALUES (65, '2020-01-02 15:39:01.529732', 'Літри', 'Циклогексан', 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (9, '2020-01-02 15:39:01.529732', 'Грами', 'Аргентум нітрат', 1, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (24, '2020-01-02 15:39:01.529732', 'Літри', 'Ефір диізопропіловий', 1, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (2, '2020-01-02 15:39:01.529732', 'Літри', '1,3 - Динітробензол', 1, 1);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (81, '2020-03-16 22:23:10.617711', 'Штука', 'Їблани', 1, 4);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (10, '2020-01-02 15:39:01.529732', 'Літри', 'Ацетон', 1, 1);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (22, '2020-01-02 15:39:01.529732', 'Літри', 'Етанол', 1, 1);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (8, '2020-01-02 15:39:01.529732', 'Літри', 'Амоній молібденовокислий', 1, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (0, '2019-12-28 11:10:26.287818', 'Літри', '--', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (4, '2020-01-02 15:39:01.529732', 'Літри', 'N, N - диметилформамід', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (5, '2020-01-02 15:39:01.529732', 'Літри', 'Азотна кислота', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (6, '2020-01-02 15:39:01.529732', 'Літри', 'Альдегід оцтовий', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (7, '2020-01-02 15:39:01.529732', 'Літри', 'Аміак 25%', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (11, '2020-01-02 15:39:01.529732', 'Літри', 'Ацетонітрил', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (12, '2020-01-02 15:39:01.529732', 'Літри', 'Барій сульфат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (13, '2020-01-02 15:39:01.529732', 'Літри', 'Барію хлорид', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (14, '2020-01-02 15:39:01.529732', 'Літри', 'Бензол', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (15, '2020-01-02 15:39:01.529732', 'Літри', 'Бутанол', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (16, '2020-01-02 15:39:01.529732', 'Літри', 'Ванілін', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (17, '2020-01-02 15:39:01.529732', 'Літри', 'Вісмут нітрат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (18, '2020-01-02 15:39:01.529732', 'Літри', 'Гліцерин', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (19, '2020-01-02 15:39:01.529732', 'Літри', 'Дифенілкарбазон', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (20, '2020-01-02 15:39:01.529732', 'Літри', 'Діетиламін', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (21, '2020-01-02 15:39:01.529732', 'Літри', 'Діетиловий ефір', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (23, '2020-01-02 15:39:01.529732', 'Літри', 'Етилацетат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (25, '2020-01-02 15:39:01.529732', 'Літри', 'Ізопропанол', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (3, '2020-01-02 15:39:01.529732', 'Літри', '1,4-Диоксан', 1, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (82, '2020-03-17 12:38:38.461639', 'Грам', 'Селениста кислота', 1, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (83, '2020-03-17 12:43:19.841877', 'Літри', 'Дистильована вода', 1, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (26, '2020-01-02 15:39:01.529732', 'Літри', 'Калій гідроксид', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (27, '2020-01-02 15:39:01.529732', 'Літри', 'Калію йодид', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (28, '2020-01-02 15:39:01.529732', 'Літри', 'Кальцію хлорид б/в', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (29, '2020-01-02 15:39:01.529732', 'Літри', 'Кобальт тіоціонат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (30, '2020-01-02 15:39:01.529732', 'Літри', 'Магній сульфат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (31, '2020-01-02 15:39:01.529732', 'Літри', 'Меркурій (ІІ) хлорид', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (32, '2020-01-02 15:39:01.529732', 'Літри', 'Метанол', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (33, '2020-01-02 15:39:01.529732', 'Літри', 'Метилен хлористий', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (34, '2020-01-02 15:39:01.529732', 'Літри', 'Метилстеарат для ГХ', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (35, '2020-01-02 15:39:01.529732', 'Літри', 'Мідь (ІІ) сульфат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (36, '2020-01-02 15:39:01.529732', 'Літри', 'Мурашина кислота', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (37, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій ванадат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (38, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій гідрокарбонат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (39, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій гідроксид', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (40, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій карбонат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (41, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій молібдат', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (42, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій нітрит', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (43, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій нітропрусид', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (44, '2020-01-02 15:39:01.529732', 'Літри', 'Натрій сульфат б/в', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (45, '2020-01-02 15:39:01.529732', 'Літри', 'Натрію хлорид', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (46, '2020-01-02 15:39:01.529732', 'Літри', 'Нафтол альфа', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (47, '2020-01-02 15:39:01.529732', 'Літри', 'н-Гексан', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (48, '2020-01-02 15:39:01.529732', 'Літри', 'Нінгідрин', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (49, '2020-01-02 15:39:01.529732', 'Літри', 'о-Ксилол', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (50, '2020-01-02 15:39:01.529732', 'Літри', 'Ортофосфорна кислота', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (51, '2020-01-02 15:39:01.529732', 'Літри', 'Оцтова кислота, льодяна', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (52, '2020-01-02 15:39:01.529732', 'Літри', 'п-Диметиламінобензальдегід', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (53, '2020-01-02 15:39:01.529732', 'Літри', 'Петролейний ефір', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (54, '2020-01-02 15:39:01.529732', 'Літри', 'Піридин', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (55, '2020-01-02 15:39:01.529732', 'Літри', 'Платина VI хлорид', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (56, '2020-01-02 15:39:01.529732', 'Літри', 'Сульфанілова кислота', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (57, '2020-01-02 15:39:01.529732', 'Літри', 'Сульфатна кислота концентрована', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (58, '2020-01-02 15:39:01.529732', 'Літри', 'Толуол', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (59, '2020-01-02 15:39:01.529732', 'Літри', 'Тривкий синій Б', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (60, '2020-01-02 15:39:01.529732', 'Літри', 'Фенолфталеїн', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (61, '2020-01-02 15:39:01.529732', 'Літри', 'Ферум (ІІІ) хлорид', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (62, '2020-01-02 15:39:01.529732', 'Літри', 'Формальдегід', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (63, '2020-01-02 15:39:01.529732', 'Літри', 'Хлоридна кислота концентрована', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (64, '2020-01-02 15:39:01.529732', 'Літри', 'Хлороформ', 0, 0);
+INSERT INTO "public"."reagent" ("id", "ts", "units", "name", "created_by_expert_id", "units_id") VALUES (65, '2020-01-02 15:39:01.529732', 'Літри', 'Циклогексан', 0, 0);
 
 
 --
@@ -1131,10 +1135,11 @@ INSERT INTO "public"."stock" ("id", "ts", "region_id", "reagent_id", "quantity_i
 -- Data for Name: units; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."units" ("id", "name", "position") VALUES (0, '--', 0);
-INSERT INTO "public"."units" ("id", "name", "position") VALUES (2, 'Грам', 0);
-INSERT INTO "public"."units" ("id", "name", "position") VALUES (1, 'Літр', 0);
-INSERT INTO "public"."units" ("id", "name", "position") VALUES (3, 'Метр', 0);
+INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (0, '--', 0, '');
+INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (1, 'Літр', 0, 'л');
+INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (2, 'Грам', 0, 'гр');
+INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (3, 'Метр', 0, 'м');
+INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (4, 'Штук', 0, 'шт');
 
 
 --
@@ -1246,7 +1251,7 @@ SELECT pg_catalog.setval('"public"."stock_id_seq"', 7, true);
 -- Name: units_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."units_id_seq"', 3, true);
+SELECT pg_catalog.setval('"public"."units_id_seq"', 4, true);
 
 
 --
@@ -1255,6 +1260,14 @@ SELECT pg_catalog.setval('"public"."units_id_seq"', 3, true);
 
 ALTER TABLE ONLY "public"."clearence"
     ADD CONSTRAINT "clearence_pkey" PRIMARY KEY ("id");
+
+
+--
+-- Name: composition composition_consume_hash_reactiv_hash_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."composition"
+    ADD CONSTRAINT "composition_consume_hash_reactiv_hash_key" UNIQUE ("consume_hash", "reactiv_hash");
 
 
 --
@@ -1319,6 +1332,14 @@ ALTER TABLE ONLY "public"."purpose"
 
 ALTER TABLE ONLY "public"."reactiv_consume"
     ADD CONSTRAINT "reactiv_consume_pkey" PRIMARY KEY ("hash");
+
+
+--
+-- Name: reactiv_menu_ingredients reactiv_menu_ingredients_reagent_id_reactiv_menu_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."reactiv_menu_ingredients"
+    ADD CONSTRAINT "reactiv_menu_ingredients_reagent_id_reactiv_menu_id_key" UNIQUE ("reagent_id", "reactiv_menu_id");
 
 
 --
@@ -1566,6 +1587,14 @@ ALTER TABLE ONLY "public"."reactiv_menu_ingredients"
 
 
 --
+-- Name: reactiv_menu reactiv_menu_units_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."reactiv_menu"
+    ADD CONSTRAINT "reactiv_menu_units_id_fkey" FOREIGN KEY ("units_id") REFERENCES "public"."units"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: reactiv reactiv_reactiv_menu_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1587,6 +1616,14 @@ ALTER TABLE ONLY "public"."reactiv"
 
 ALTER TABLE ONLY "public"."reagent"
     ADD CONSTRAINT "reagent_created_by_expert_id_fkey" FOREIGN KEY ("created_by_expert_id") REFERENCES "public"."expert"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: reagent reagent_units_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."reagent"
+    ADD CONSTRAINT "reagent_units_id_fkey" FOREIGN KEY ("units_id") REFERENCES "public"."units"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

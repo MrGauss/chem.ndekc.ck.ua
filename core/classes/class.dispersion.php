@@ -276,7 +276,8 @@ class dispersion
             SELECT
                 dispersion.*,
                 reagent.name as reagent_name,
-                reagent.units as reagent_units,
+                units.name   as reagent_units,
+                units.short_name   as reagent_units_short,
 
                 out_expert.name as out_expert_name,
                 out_expert.phname as out_expert_phname,
@@ -290,6 +291,7 @@ class dispersion
                 dispersion
                     LEFT JOIN stock     ON( dispersion.stock_id = stock.id AND dispersion.region_id = stock.region_id AND dispersion.group_id = stock.group_id )
                     LEFT JOIN reagent   ON( reagent.id = stock.reagent_id )
+                    LEFT JOIN units     ON ( units.id = reagent.units_id )
                     LEFT JOIN expert  as out_expert ON( out_expert.id = dispersion.out_expert_id )
                     LEFT JOIN expert  as inc_expert ON( inc_expert.id = dispersion.inc_expert_id )
             WHERE

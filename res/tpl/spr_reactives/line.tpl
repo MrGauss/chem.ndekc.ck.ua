@@ -3,7 +3,7 @@
         <tr>
             <td class="numi">{tag:numi}</td>
             <td class="name">{tag:name}</td>
-            <td class="units">{tag:units}</td>
+            <td class="units">{tag:units_name}</td>
             <td></td>
         </tr>
     </table>
