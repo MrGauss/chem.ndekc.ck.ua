@@ -133,7 +133,7 @@ class spr_manager
         $data = $this->get_raw( $filters );
 
         if( !is_array($data) ){ return ''; }
-
+             
         foreach( $data as $id => $line )
         {
             $line = common::db2html($line);

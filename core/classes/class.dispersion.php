@@ -41,6 +41,8 @@ class dispersion
         $SQL = 'DELETE FROM dispersion WHERE id='.$ID.' AND region_id='.CURRENT_REGION_ID.' AND group_id='.CURRENT_GROUP_ID.';';
         $this->db->query( $SQL );
 
+        cache::clean( 'spr-dispersion' );
+        cache::clean( 'spr' );
         cache::clean();
 
         return $ID;
@@ -168,6 +170,8 @@ class dispersion
         if( $ID ){ $this->db->query( 'COMMIT;' ); }
              else{ $this->db->query( 'ROLLBACK;' ); }
 
+        cache::clean( 'spr-dispersion' );
+        cache::clean( 'spr' );
         cache::clean();
 
         return $ID;
@@ -199,8 +203,6 @@ class dispersion
                 if( is_array($value) ){ continue; }
                 $tpl->set( '{tag:'.$key.'}', $value );
             }
-
-            $tpl->set( '{tag:reagent_units:1}', common::strtolower(substr( common::html_entity_decode($line['reagent_units']), 0, 1 )) );
 
             $tpl->compile( $skin );
         }
@@ -314,6 +316,8 @@ class dispersion
         {
             $data[$row['id']] = $row;
         }
+
+        cache::clean( $cache_var );
 
         cache::set( $cache_var, $data );
         return $data;

@@ -8,8 +8,8 @@
 #main_frame #page_frame #list_frame.dispersion #list .line table td.out_expert{ width: 200px; text-align: center; }
 
 .default_editor .elem.reagent       { width: 100%;  }
-.default_editor .elem.quantity      { width: 20%;  }
-.default_editor .elem.units         { width: 20%;  }
+.default_editor .elem.quantity      { width: 25%;  }
+.default_editor .elem.units         { width: 15%;  }
 .default_editor .elem.units input   { border: none; text-align: left; background: none; }
 
 

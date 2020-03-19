@@ -272,8 +272,6 @@ class stock
                 $tpl->set( '{tag:'.$key.'}', $value );
             }
 
-            $tpl->set( '{tag:reagent_units:1}', common::strtolower(substr( common::html_entity_decode($line['reagent_units']), 0, 1 )) );
-
             $tpl->compile( $skin );
         }
 
@@ -297,7 +295,7 @@ class stock
             {
                 $data[$k][] = 'data-'.$key.'="'.$val.'"';
             }
-            $data[$k] = '<option title="'.$line['reagent_name'].'" value="'.$line['id'].'" '.implode( ' ', $data[$k] ).'>'.$line['reagent_name'].' [Доступно: '.$line['quantity_left'].' '.$line['reagent_units_1l'].']</option>';
+            $data[$k] = '<option title="'.$line['reagent_name'].'" value="'.$line['id'].'" '.implode( ' ', $data[$k] ).'>'.$line['reagent_name'].' [Доступно: '.$line['quantity_left'].' '.$line['reagent_units_short'].']</option>';
         }
         $data = "\n\t".implode( "\n\t", $data )."\n";
 

@@ -13,7 +13,7 @@
 
     <div class="elem quantity">
         <label class="label">Кількість</label>
-        <input data-important="1" class="input" type="text" name="quantity_inc" value="{tag:quantity_inc}" data-save="1" data-mask="9999.9999" data-placeholder="___.___" placeholder="___.___">
+        <input data-important="1" class="input" type="text" name="quantity_inc" value="{tag:quantity_inc}" data-save="1" data-mask="999999.9999" data-placeholder="___.___" placeholder="___.___">
     </div>
     <div class="elem units">
         <label class="label">&nbsp;</label>
