@@ -101,8 +101,9 @@ chem['dispersion'] = new function()
             post['ajax'] = 1;
             post['action'] = 1;
             post['subaction'] = 1;
-            post['mod'] = $('body').attr('data-mod');
-            post['id'] = line_id;
+            post['mod']     = $('body').attr('data-mod');
+            post['id']      = line_id;
+            post['rand']    = Math.floor((Math.random() * 1000000) + 1);
 
         $.ajax({ data: post }).done(function( _r )
         {
@@ -161,12 +162,14 @@ chem['dispersion'] = new function()
                                 save_post['action'] = 2;
                                 save_post['subaction'] = 1;
                                 save_post['mod'] = $('body').attr('data-mod');
+                                save_post['rand'] = Math.floor((Math.random() * 1000000) + 1);
                                 save_post['id']  = $('#'+did).find('input[name="id"]').val();
                                 save_post['key'] = $('#'+did).find('input[name="key"]').val();
                                 save_post['save'] = {};
 
                             $('#'+did).find('[data-save="1"]').each( function()
                             {
+                                // alert( $(this).attr('name') + ' : ' + $(this).val().toString() );
                                 save_post['save'][$(this).attr('name').toString()] = $(this).val().toString();
                             } );
 
@@ -195,18 +198,20 @@ chem['dispersion'] = new function()
                                 {
                                     if( !line_id || line_id != _r['id'] )
                                     {
-                                        chem.close_it( $('#'+did) );
-                                        chem.dispersion.reload();
+                                        setTimeout( function(){ chem.close_it( $('#'+did) ); } , 1 );
+                                        setTimeout( function(){ chem.dispersion.reload(); } , 2 );
                                     }
                                     else
                                     {
                                         if( _r['id'] > 0 )
                                         {
                                             // chem.animate_opacity( $('#'+did+' .good_area'), 'Дані успішно збережено!' );
-                                            chem.dispersion.reload( _r['id'] );
-                                            chem.close_it( $('#'+did) );
 
-                                            $('#content #list_frame [data-id="'+_r['id']+'"]').trigger( "click" );
+                                            setTimeout( function(){ chem.dispersion.reload( _r['id'] ); } , 1 );
+                                            setTimeout( function(){ chem.close_it( $('#'+did) ); } , 2 );
+                                            setTimeout( function(){ $('#content #list_frame [data-id="'+_r['id']+'"]').trigger( "click" ); } , 3 );
+
+                                            //
                                         }
                                     }
                                 }
@@ -230,6 +235,7 @@ chem['dispersion'] = new function()
                             save_post['mod'] = $('body').attr('data-mod');
                             save_post['id']  = $('#'+did).find('input[name="id"]').val();
                             save_post['key'] = $('#'+did).find('input[name="key"]').val();
+                            save_post['rand'] = Math.floor((Math.random() * 1000000) + 1); 
 
                         $.ajax({ data: save_post }).done(function( _r )
                         {

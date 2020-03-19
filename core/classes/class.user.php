@@ -72,7 +72,7 @@ class user
         $WHERE = array();
 
         if( isset($filters['visible'] ) )   { $WHERE['expert.visible']      = 'expert.visible   = '.(common::integer( $filters['visible'] )?1:0).''; }
-        if( isset($filters['region_id'] ) ) { $WHERE['expert.region_id']    = 'expert.region_id = '.common::integer( $filters['region_id'] ).''; }
+        if( isset($filters['region_id'] ) ) { $WHERE['groups.region_id']    = 'groups.region_id = '.common::integer( $filters['region_id'] ).''; }
         if( isset($filters['group_id'] ) )  { $WHERE['expert.group_id']     = 'expert.group_id  = '.common::integer( $filters['group_id'] ).''; }
 
 
@@ -84,15 +84,17 @@ class user
         else
         {
             $WHERE['expert.id']         = 'expert.id > 0';
-            $WHERE['expert.region_id']  = 'expert.id = '.CURRENT_REGION_ID;
-            $WHERE['expert.group_id']   = 'expert.id = '.CURRENT_GROUP_ID;
+            //$WHERE['groups.region_id']  = 'groups.region_id = '.CURRENT_REGION_ID;
+            $WHERE['expert.group_id']   = 'expert.group_id  = '.CURRENT_GROUP_ID;
         }
 
         $SQL = '
             SELECT
-                *
+                expert.*,
+                groups.region_id as region_id
             FROM
                 expert
+                    LEFT JOIN groups ON( groups.id = expert.group_id )
             WHERE
                 '.implode( ' AND ', $WHERE ).'
             ORDER BY expert.surname, expert.name, expert.phname;

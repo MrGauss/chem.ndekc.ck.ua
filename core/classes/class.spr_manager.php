@@ -132,12 +132,20 @@ class spr_manager
 
         $data = $this->get_raw( $filters );
 
+
+
         if( !is_array($data) ){ return ''; }
-             
+
         foreach( $data as $id => $line )
         {
             $line = common::db2html($line);
-            $data[$id] = '<option value="'.$id.'">'.$line['name'].'</option>';
+            $attr = array();
+
+            foreach( $line as $k => $v ){ $attr[] = 'data-'.$k.'="'.$v.'"'; }
+
+            $attr = implode( ' ', $attr );
+
+            $data[$id] = '<option '.$attr.' value="'.$id.'">'.$line['name'].'</option>';
         }
         return implode( '', $data );
     }

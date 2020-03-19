@@ -38,7 +38,7 @@ class dispersion
             else        { common::err( $error ); return false; }
         }
 
-        $SQL = 'DELETE FROM dispersion WHERE id='.$ID.' AND region_id='.CURRENT_REGION_ID.' AND group_id='.CURRENT_GROUP_ID.';';
+        $SQL = 'DELETE FROM dispersion WHERE id='.$ID.' AND group_id='.CURRENT_GROUP_ID.';';
         $this->db->query( $SQL );
 
         cache::clean( 'spr-dispersion' );
@@ -65,7 +65,6 @@ class dispersion
 
         ///////////
 
-        if( !$error && $ID && $data4save['region_id'] != $original_data['region_id'] )      { $error = 'Ви не можете редагувати записи з іншого регіону!'; $error_area = ''; }
         if( !$error && $ID && $data4save['group_id']  != $original_data['group_id'] )       { $error = 'Ви не можете редагувати записи з іншого відділу!'; $error_area = ''; }
         if( !$error && $ID && $data4save['stock_id']  != $original_data['stock_id'] )       { $error = 'Заборонено редагувати реагент!'; $error_area = 'stock_id'; }
         if( !$error && $ID && !$data4save['stock_id'] )                                     { $error = 'Вкажіть реагент!'; $error_area = 'stock_id'; }
@@ -129,16 +128,12 @@ class dispersion
 
         $SQL = array();
 
-        $SQL['region_id']           = CURRENT_REGION_ID;
         $SQL['inc_expert_id']       = CURRENT_USER_ID;
         $SQL['group_id']            = CURRENT_GROUP_ID;
-
         $SQL['stock_id']            = common::integer($data['stock_id']);
         $SQL['out_expert_id']       = common::integer($data['out_expert_id']);
         $SQL['quantity_inc']        = common::float($data['quantity_inc']);
-
         $SQL['inc_date']            = common::en_date($data['inc_date'] ,'Y-m-d');
-
         $SQL['comment']             = common::filter($data['comment']);
 
         foreach( $SQL as $k => $v )
@@ -277,6 +272,7 @@ class dispersion
         $SQL = '
             SELECT
                 dispersion.*,
+                groups.region_id,
                 reagent.name as reagent_name,
                 units.name   as reagent_units,
                 units.short_name   as reagent_units_short,
@@ -291,23 +287,25 @@ class dispersion
 
             FROM
                 dispersion
-                    LEFT JOIN stock     ON( dispersion.stock_id = stock.id AND dispersion.region_id = stock.region_id AND dispersion.group_id = stock.group_id )
+                    LEFT JOIN stock     ON( dispersion.stock_id = stock.id AND dispersion.group_id = stock.group_id )
                     LEFT JOIN reagent   ON( reagent.id = stock.reagent_id )
                     LEFT JOIN units     ON ( units.id = reagent.units_id )
                     LEFT JOIN expert  as out_expert ON( out_expert.id = dispersion.out_expert_id )
                     LEFT JOIN expert  as inc_expert ON( inc_expert.id = dispersion.inc_expert_id )
+                    LEFT JOIN groups    ON ( dispersion.group_id = groups.id )
             WHERE
                 '.(isset($filters['id'])                            ? 'dispersion.id = '.$filters['id'].'' :   'dispersion.id > 0').'
-                '.(( isset($filters['id']) && $filters['id'] == 0 ) ? ''    :'AND dispersion.region_id = '.CURRENT_REGION_ID.'').'
+                '.(( isset($filters['id']) && $filters['id'] == 0 ) ? ''    :'AND groups.region_id = '.CURRENT_REGION_ID.'').'
                 '.(( isset($filters['id']) && $filters['id'] == 0 ) ? ''    :(CURRENT_GROUP_ID?'AND dispersion.group_id = '.CURRENT_GROUP_ID.'':'')).'
             ORDER by
                 reagent_name ASC; '.db::CACHED;
 
         $cache_var = 'spr-dispersion-'.md5( $SQL ).'-raw';
-        $data = false;
+
         $data = cache::get( $cache_var );
 
-        if( $data && is_array($data) && count($data) ){ return $data; }
+        if( $data && is_array($data) ){ return $data; }
+
         $data = array();
 
         $SQL = $this->db->query( $SQL );

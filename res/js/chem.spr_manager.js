@@ -138,7 +138,7 @@ chem['spr_manager'] = new function()
 
                 var width = 413;
 
-        
+
 
                 var bi = 0;
                 var dialog = {};

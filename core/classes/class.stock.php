@@ -31,9 +31,9 @@ class stock
 
         ///////////
 
-        if( !$error && $ID &&  $data4save['region_id']  != $original_data['region_id'] )      { $error = 'Ви не можете редагувати записи з іншого регіону!'; $error_area = ''; }
-        if( !$error && $ID &&  $data4save['group_id']   != $original_data['group_id'] )       { $error = 'Ви не можете редагувати записи з іншого відділу!'; $error_area = ''; }
-        if( !$error && $ID &&  $data4save['reagent_id'] != $original_data['reagent_id'] )    { $error = 'Заборонено редагувати реагент!'; $error_area = 'reagent_id'; }
+        if( !$error && $ID &&  CURRENT_REGION_ID  != $original_data['region_id'] )          { $error = 'Ви не можете редагувати записи з іншого регіону!'; $error_area = ''; }
+        if( !$error && $ID &&  $data4save['group_id']   != $original_data['group_id'] )     { $error = 'Ви не можете редагувати записи з іншого відділу!'; $error_area = ''; }
+        if( !$error && $ID &&  $data4save['reagent_id'] != $original_data['reagent_id'] )   { $error = 'Заборонено редагувати реагент!'; $error_area = 'reagent_id'; }
         if( !$error && $ID && !$data4save['reagent_id'] )                                   { $error = 'Вкажіть реагент!'; $error_area = 'reagent_id'; }
 
         ///////////
@@ -117,7 +117,7 @@ class stock
             else        { common::err( $error ); return false; }
         }
 
-        $SQL = 'DELETE FROM stock WHERE id='.$ID.' AND region_id='.CURRENT_REGION_ID.' AND group_id='.CURRENT_GROUP_ID.';';
+        $SQL = 'DELETE FROM stock WHERE id='.$ID.' AND group_id='.CURRENT_GROUP_ID.';';
         $this->db->query( $SQL );
 
         cache::clean();
@@ -133,7 +133,6 @@ class stock
 
         $SQL = array();
 
-        $SQL['region_id']           = CURRENT_REGION_ID;
         $SQL['inc_expert_id']       = CURRENT_USER_ID;
         $SQL['group_id']            = CURRENT_GROUP_ID;
         $SQL['reagent_id']          = common::integer($data['reagent_id']);
@@ -317,6 +316,8 @@ class stock
                 units.name      as reagent_units,
                 units.short_name   as reagent_units_short,
 
+                groups.region_id,
+
                 expert.name     as expert_name,
                 expert.surname as expert_surname,
                 expert.phname as expert_phname,
@@ -326,10 +327,11 @@ class stock
                 stock
                 LEFT JOIN reagent   ON ( reagent.id = stock.reagent_id )
                 LEFT JOIN units     ON ( units.id = reagent.units_id )
-                LEFT JOIN expert    ON  ( expert.id = stock.inc_expert_id )
+                LEFT JOIN expert    ON ( expert.id = stock.inc_expert_id )
+                LEFT JOIN groups    ON ( stock.group_id = groups.id )
             WHERE
                 '.(isset($filters['id'])?'stock.id = \''.$filters['id'].'\'::INTEGER':'stock.id > 0').'
-                '.(( isset($filters['id']) && $filters['id'] == 0 )?'':'AND stock.region_id = '.CURRENT_REGION_ID.'').'
+                '.(( isset($filters['id']) && $filters['id'] == 0 )?'':'AND groups.region_id = '.CURRENT_REGION_ID.'').'
                 '.(( isset($filters['id']) && $filters['id'] == 0 )?'':(CURRENT_GROUP_ID?'AND stock.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER ':'')).'
             ORDER by
                 stock.inc_date DESC; '.db::CACHED;

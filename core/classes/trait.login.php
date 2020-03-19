@@ -135,7 +135,22 @@ trait login
 	{
 		$token = $this->strtolower( $this->db->safesql( $token ) );
 		
-		$SQL = 'SELECT id, login, last_ip, region_id, group_id FROM expert WHERE token=\''.$token.'\' AND last_ip=\''.USER_IP.'\' LIMIT 1 OFFSET 0;';
+		$SQL = '
+                SELECT
+                    expert.id,
+                    expert.login,
+                    expert.last_ip,
+                    groups.region_id,
+                    expert.group_id
+                FROM
+                    expert
+                    LEFT JOIN groups ON( groups.id = expert.group_id )
+                WHERE
+                    expert.token=\''.$token.'\'
+                    AND
+                    expert.last_ip=\''.USER_IP.'\'
+                LIMIT 1 OFFSET 0;';
+
 		$id = $this->db->super_query( $SQL );
 
 		if( is_array($id) && isset($id['id']) && isset($id['region_id']) )
@@ -166,7 +181,23 @@ trait login
 
         // echo '<!-- '.$login.':'.$pass.' -->';
 
-		$SQL = 'SELECT id, login, region_id, group_id FROM expert WHERE login=\''.$login.'\' and password=\''.$pass.'\' LIMIT 1 OFFSET 0;';
+		$SQL = '
+                SELECT
+                    expert.id,
+                    expert.login,
+                    expert.last_ip,
+                    groups.region_id,
+                    expert.group_id
+                FROM
+                    expert
+                    LEFT JOIN groups ON( groups.id = expert.group_id )
+                WHERE
+                    expert.login=\''.$login.'\'
+                    AND
+                    expert.password=\''.$pass.'\'
+                LIMIT 1
+                OFFSET 0;';
+
         $id = $this->db->super_query( $SQL );
 
 		if( is_array($id) && isset($id['id']) )
