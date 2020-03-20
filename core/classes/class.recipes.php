@@ -19,6 +19,32 @@ class recipes
     const DB_MAIN_TABLE = 'reactiv_menu';
     const CACHE_CONST   = 'spr';
 
+    public static final function make_select( $table, $selected = 0 )
+    {
+        $spr = new self( $table );
+        return $spr->get_select();
+    }
+
+    public final function get_select( $filters = array() )
+    {
+        $data = $this->get_raw( $filters );
+
+        if( !is_array($data) ){ return ''; }
+
+        foreach( $data as $id => $line )
+        {
+            $line = common::db2html($line);
+            $attr = array();
+
+            foreach( $line as $k => $v ){ $attr[] = 'data-'.$k.'="'.$v.'"'; }
+
+            $attr = implode( ' ', $attr );
+
+            $data[$id] = '<option '.$attr.' value="'.$id.'">'.$line['name'].'</option>';
+        }
+        return implode( '', $data );
+    }
+
     public final function remove( $ID = 0 )
     {
         $ID = common::integer( $ID );
@@ -251,6 +277,11 @@ class recipes
         return $tpl->result( $skin );
     }
 
+    public final function get_available_raw( $filters = array() )
+    {
+
+    }
+
     public final function get_raw( $filters = array() )
     {
         if( is_array($filters) )
@@ -286,13 +317,27 @@ class recipes
                     SELECT
                         "'.self::DB_MAIN_TABLE.'".*,
                         units.name      as reagent_units,
-                        units.short_name   as reagent_units_short
+                        units.short_name   as reagent_units_short,
 
+                        array_to_string(
+                        ARRAY(
+                            SELECT
+                            DISTINCT ON( reagent.id ) concat_ws( \':\', COALESCE( reagent.id, 0 )::text, COALESCE( dispersion.quantity_left, 0 )::text )
+                            FROM
+                            reactiv_menu_ingredients
+                            RIGHT JOIN reagent ON( reagent.id = reactiv_menu_ingredients.reagent_id )
+                            LEFT JOIN stock ON( stock.reagent_id = reagent.id )
+                            LEFT JOIN dispersion ON( dispersion.stock_id = stock.id )
+
+                            WHERE reactiv_menu_ingredients.reactiv_menu_id = "'.self::DB_MAIN_TABLE.'".id
+                            ORDER BY reagent.id ASC, dispersion.quantity_left DESC
+                        ), \',\' ) as available_in_lab
                     FROM
                        "'.self::DB_MAIN_TABLE.'"
                        LEFT JOIN "units"     ON ( "units"."id" = "'.self::DB_MAIN_TABLE.'"."units_id" )
                     '.$WHERE.'
-                    ORDER by "'.self::DB_MAIN_TABLE.'"."name"; '.db::CACHED;
+                    ORDER by "'.self::DB_MAIN_TABLE.'"."name";
+        '.db::CACHED;
 
         $cache_var = 'spr-'.self::DB_MAIN_TABLE.'-'.md5( $SQL ).'';
         $data = cache::get( $cache_var );
@@ -312,19 +357,41 @@ class recipes
             $data[$row['id']]['comment'] = common::stripslashes( $data[$row['id']]['comment'] );
             $data[$row['id']]['comment'] = common::html_entity_decode( $data[$row['id']]['comment'] );
             $data[$row['id']]['comment'] = common::htmlspecialchars_decode( $data[$row['id']]['comment'] );
+
+            $data[$row['id']]['all_available'] = true;
+
+            if( isset($data[$row['id']]['available_in_lab']) )
+            {
+                $data[$row['id']]['available_in_lab'] = explode(',', $data[$row['id']]['available_in_lab']);
+                foreach( $data[$row['id']]['available_in_lab'] as $k=>$v )
+                {
+                    unset( $data[$row['id']]['available_in_lab'][$k] );
+                    $v = explode( ':', $v );
+                    $v[0] = common::integer( $v[0] );
+                    $v[1] = common::float( isset($v[1]) ? $v[1] : 0 );
+
+                    $data[$row['id']]['available_in_lab'][$v[0]] = $v[1];
+
+                    if( !$v[1] )
+                    {
+                        $data[$row['id']]['all_available'] = false;
+                    }
+                }
+            }
+
         }
 
         if( count($data) )
         {
             $SQL = '
                 SELECT
-                    *
+                    reactiv_menu_ingredients.*
                 FROM
                     reactiv_menu_ingredients
                 WHERE
-                    reactiv_menu_id IN( '. implode( ',', array_keys( $data ) ) .' )
+                    reactiv_menu_ingredients.reactiv_menu_id IN( '. implode( ',', array_keys( $data ) ) .' )
                 ORDER BY
-                    reagent_id ASC;
+                    reactiv_menu_ingredients.reagent_id ASC;
                 '.db::CACHED;
 
             $SQL = $this->db->query( $SQL );

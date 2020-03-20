@@ -14,13 +14,16 @@ class common
 
     static public final function table2select( $table_name, $selected )
     {
-        if( $table_name == 'user' )          { return user::get_select( common::integer($selected) ); }
-        if( $table_name == 'stock' )         { return stock::get_select( common::integer($selected) ); }
-        if( $table_name == 'reagent' )       { return spr_manager::make_select( 'reagent',          common::integer($selected) ); }
-        if( $table_name == 'clearence' )     { return spr_manager::make_select( 'clearence',        common::integer($selected) ); }
-        if( $table_name == 'reagent_state' ) { return spr_manager::make_select( 'reagent_state',    common::integer($selected) ); }
-        if( $table_name == 'danger_class' )  { return spr_manager::make_select( 'danger_class',     common::integer($selected) ); }
-        if( $table_name == 'units' )         { return spr_manager::make_select( 'units',            common::integer($selected) ); }
+        if( $table_name == 'user' )             { return user::get_select(         common::integer($selected) ); }
+        if( $table_name == 'stock' )            { return stock::get_select(        common::integer($selected) ); }
+        if( $table_name == 'recipes' )          { return recipes::make_select(     common::integer($selected) ); }
+
+        if( $table_name == 'reagent' )          { return spr_manager::make_select( 'reagent',          common::integer($selected) ); }
+        if( $table_name == 'clearence' )        { return spr_manager::make_select( 'clearence',        common::integer($selected) ); }
+        if( $table_name == 'reagent_state' )    { return spr_manager::make_select( 'reagent_state',    common::integer($selected) ); }
+        if( $table_name == 'danger_class' )     { return spr_manager::make_select( 'danger_class',     common::integer($selected) ); }
+        if( $table_name == 'units' )            { return spr_manager::make_select( 'units',            common::integer($selected) ); }
+
 
         return false;
     }
