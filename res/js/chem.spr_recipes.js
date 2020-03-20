@@ -66,6 +66,7 @@ chem['spr_recipes'] = new function()
                         .replaceWith( _r['lines'] );
 
                     $('#content #list_frame .list .line[data-id="'+line_id+'"]')
+                        .off()
                         .on( "click", function(){ chem.spr_recipes.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
@@ -83,6 +84,7 @@ chem['spr_recipes'] = new function()
 
                     $('#content #list_frame .list').append( _r['lines'] );
                     $('#content #list_frame [data-id]')
+                        .off()    
                         .on( "click", function(){ chem.spr_recipes.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()

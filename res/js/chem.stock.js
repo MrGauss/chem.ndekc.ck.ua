@@ -73,7 +73,8 @@ chem['stock'] = new function()
                     $('#content .stock .list [data-id]').off().remove();
                     $('#content .stock .list').append( _r['lines'] );
                     $('#content .stock [data-id]')
-                        .on( "click", function(){ chem.stock.editor( $(this) ); })
+                        .off(  )
+                        .on( "click", function(){ chem.stock.editor( $(this) ); } )
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
                         {
@@ -120,6 +121,11 @@ chem['stock'] = new function()
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
 
+                $('#'+did+' [name="reagent_id"]').each(function()
+                {
+                    $(this).on( 'change', function(){ $(this).parents('#'+did).find('input[name="units"]').val( $(this).find('option:selected').attr( 'data-units_name' ) ); } );
+                });
+
                 var bi = 0;
                 var dialog = {};
                     dialog["zIndex"]  = 2001;
@@ -140,6 +146,7 @@ chem['stock'] = new function()
                     dialog["buttons"][bi]["text"]  = "ַבונודעט";
                     dialog["buttons"][bi]["click"] = function()
                     {
+
                         if( !$('#'+did+' .error_area').hasClass('dnone') ){ $('#'+did+' .error_area').addClass('dnone'); }
 
                         if( chem.stock.check_before_save( $('#'+did) ) )

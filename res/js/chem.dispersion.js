@@ -59,6 +59,7 @@ chem['dispersion'] = new function()
                         .replaceWith( _r['lines'] );
 
                     $('#content #list_frame .list .line[data-id="'+line_id+'"]')
+                        .off()
                         .on( "click", function(){ chem.dispersion.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
@@ -73,6 +74,7 @@ chem['dispersion'] = new function()
                     $('#content #list_frame .list .line[data-id]').off().remove();
                     $('#content #list_frame .list').append( _r['lines'] );
                     $('#content #list_frame [data-id]')
+                        .off()
                         .on( "click", function(){ chem.dispersion.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
@@ -235,7 +237,7 @@ chem['dispersion'] = new function()
                             save_post['mod'] = $('body').attr('data-mod');
                             save_post['id']  = $('#'+did).find('input[name="id"]').val();
                             save_post['key'] = $('#'+did).find('input[name="key"]').val();
-                            save_post['rand'] = Math.floor((Math.random() * 1000000) + 1); 
+                            save_post['rand'] = Math.floor((Math.random() * 1000000) + 1);
 
                         $.ajax({ data: save_post }).done(function( _r )
                         {
