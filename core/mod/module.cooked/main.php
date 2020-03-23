@@ -6,11 +6,11 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-$_dispersion = new cooked;
+$cooked = new cooked;
 
 $tpl->load( 'cooked/main' );
 
-$tpl->set( '{list}', $_dispersion->get_html( array(), 'cooked/line' ) );
+$tpl->set( '{list}', $cooked->get_html( array(), 'cooked/line' ) );
 
 $tpl->compile( 'cooked/main' );
 

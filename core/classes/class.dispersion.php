@@ -181,6 +181,7 @@ class dispersion
         $tpl = new tpl;
 
         $I = count( $data );
+
         foreach( $data as $line )
         {
             $tpl->load( $skin );
@@ -273,6 +274,7 @@ class dispersion
             SELECT
                 dispersion.*,
                 groups.region_id,
+                reagent.id   as reagent_id,
                 reagent.name as reagent_name,
                 units.name   as reagent_units,
                 units.short_name   as reagent_units_short,

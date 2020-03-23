@@ -86,60 +86,115 @@ chem['cooked'] = new function()
 
     }
 
+
+    this.sort_ingridients = function( obj )
+    {
+        if( chem.cooked._STILL_SORT ){ return false; }
+
+        chem.cooked._STILL_SORT = false;
+
+        var direction = 'ASC';
+
+        obj.find('.reagent')
+        .sort(function(a,b)
+        {
+            var a_pos = parseInt( $(a).prop('data-position') );
+            var b_pos = parseInt( $(b).prop('data-position') );
+
+            console.log( 'SORTING - A: '+a_pos+' B:'+b_pos );
+
+            if( a_pos > b_pos ){ return -1; }
+            if( b_pos > a_pos ){ return  1; }
+            return 0;
+        })
+        .detach().appendTo( obj );
+    }
+
     this.recipe_seleted = function( recipe_id, selected_opt, dialog_window )
     {
         recipe_id = parseInt( recipe_id );
 
+        var ingridients = recipe_id
+                                ? selected_opt.attr('data-ingridients').toString().split( ','.toString() )
+                                : 0;
+
+        var normal_width = parseInt( dialog_window.attr('data-needed_width') );
+
         var opts = {};
-            opts['duration'] = 300;
-            opts['easing'] = 'easeInOutExpo';
+            opts['duration']    = 10;
+            opts['easing']      = 'easeInOutExpo';
 
         if( dialog_window.find('select[name="reactiv_menu_id"]').hasClass('fastchange') )
         {
-            opts['duration'] = 10;
+            opts['duration'] = 5;
             dialog_window.find('select[name="reactiv_menu_id"]').removeClass('fastchange');
-        }
-
-        if( !dialog_window.parents('.ui-dialog').attr( 'data-width' ) )
-        {
-            dialog_window.parents('.ui-dialog').attr( 'data-width', dialog_window.parents('.ui-dialog').width() );
         }
 
         if( recipe_id > 0 )
         {
-            opts['start'] = function()
+            opts['done']        = function()
             {
-                dialog_window.parents('.ui-dialog').width( dialog_window.parents('.ui-dialog').attr( 'data-width' ) );
+                if( dialog_window.is(':visible') )
+                {
+                    dialog_window.dialog({ "width": normal_width });
+                    dialog_window.dialog("widget")
+                            .position({
+                                "my": 'center center',
+                                "at": 'center center',
+                                "of": $(window)
+                            });
+                }
             };
 
-            dialog_window.find('.recipe_needed').each(function()
-            {
-                if( $(this).hasClass('norecipe') ){ $(this).removeClass('norecipe'); }
-                $(this).stop().show( opts );
-            });
+            dialog_window
+                .find('.recipe_needed')
+                .removeClass('norecipe')
+                .stop()
+                .show( opts );
+
             dialog_window.find('.recipe_needed .input').attr('disabled', 'disabled').prop( 'disabled', false );
         }
         else
         {
-            opts['start'] = function()
+            opts['done']        = function()
             {
-                dialog_window.parents('.ui-dialog').attr( 'data-width', dialog_window.parents('.ui-dialog').width() );
+                if( dialog_window.is(':visible') )
+                {
+                    dialog_window.dialog({ "width": 420 });
+
+                    dialog_window.dialog("widget")
+                            .position({
+                                "my": 'center center',
+                                "at": 'center center',
+                                "of": $(window)
+                            });
+                }
             };
 
-            opts['done'] = function()
-            {
-                dialog_window.parents('.ui-dialog').width( 400 );
-            };
+            dialog_window
+                .find('.recipe_needed')
+                .removeClass('norecipe')
+                .addClass('norecipe')
+                .stop()
+                .hide( opts );
 
-            dialog_window.find('.recipe_needed').each(function()
-            {
-                if( !$(this).hasClass('norecipe') ){ $(this).addClass('norecipe'); }
-                $(this).stop().hide( opts );
-            });
             dialog_window.find('.recipe_needed .input').attr('disabled', 'disabled').prop( 'disabled', true );
         }
 
         dialog_window.find('select[name="units_id"]').val( parseInt( selected_opt.attr('data-units_id') ) ).attr('disabled', 'disabled').prop('disabled', true );
+
+        //////////
+
+        dialog_window.find('#ingridients .reagent[data-reagent_id]').removeClass( 'needed' ).addClass( 'not_needed' ).attr('data-position', 0 ).prop('data-position', 0 );
+
+        for (var k in ingridients )
+        {
+            dialog_window.find('#ingridients').find('.reagent[data-reagent_id="'+ingridients[k]+'"]').addClass( 'needed' ).removeClass( 'not_needed' ).attr('data-position', 1 ).prop('data-position', 1 );
+        };
+
+        chem.cooked.sort_ingridients( dialog_window.find('#ingridients') );
+
+        //////////
     }
 
     this.editor = function( obj )
@@ -149,6 +204,7 @@ chem['cooked'] = new function()
         var line_hash = obj.attr('data-hash');
         var did_pref = 'cooked-edit-form';
         var did = did_pref + '-' + line_hash + '-' + Math.floor((Math.random() * 1000000) + 1);
+        var dialog_width = 800;
 
         chem.close_it( $('[id*="'+did_pref+'"]') );
 
@@ -167,7 +223,7 @@ chem['cooked'] = new function()
 
             if( _r['form'] )
             {
-                $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Приготування робочих реактивів: '+( line_hash ? 'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
+                $('#ajax').append( '<div id="'+did+'" data-needed_width="'+dialog_width+'" data-role="dialog:window" title="Приготування робочих реактивів: '+( line_hash ? 'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
 
                 autocomplete.init( $('#'+did+'') );
 
@@ -181,6 +237,13 @@ chem['cooked'] = new function()
                     chem.cooked.recipe_seleted( $(this).val(), $(this).find('option:selected'), $('#'+did+'') );
                 } );
 
+                if( line_hash )
+                {
+                    $('#'+did+' select[name="reactiv_menu_id"]')
+                        .attr( 'disabled', 'disabled' )
+                        .prop( 'disabled', true );
+                }
+
                 $('#'+did+' select[name="reactiv_menu_id"]').addClass('fastchange').trigger( "change" );
 
                 var bi = 0;
@@ -188,7 +251,7 @@ chem['cooked'] = new function()
                     dialog["zIndex"]  = 2001;
                     dialog["modal"]   = true;
                     dialog["autoOpen"]   = true;
-                    dialog["width"]   = '700';
+                    dialog["width"]   = dialog_width;
                     dialog["resizable"]   = false;
                     dialog["buttons"] = {};
 

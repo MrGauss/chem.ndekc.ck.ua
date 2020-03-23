@@ -9,9 +9,34 @@
 .default_editor .elem.safe_place     { width: 50%;  }
 .default_editor .elem.safe_needs     { width: 50%;  }
 
+.default_editor .elem.ingridients    { width: 50%; }
+.default_editor .elem.composition    { width: 50%; }
+
 .default_editor .elem.recipe         { width: 100%;  }
 .default_editor .elem.recipe select option[data-all_available=""],
 .default_editor .elem.recipe select option[data-all_available="0"]{ background: red; display: none; }
 
 .default_editor .elem select[name="units_id"]{ border-color: #BFBFBF; background-color: #EBEBEB; background-image: none; }
 .default_editor .elem.recipe_needed.norecipe{ opacity: 0.1; }
+
+.default_editor #ingridients,
+.default_editor #composition{ height: 250px; overflow: hidden; overflow-y: scroll; border: 1px solid #4F4F4F; padding: 5px; }
+
+.default_editor .list .reagent{ padding: 8px 5px 8px 5px; margin: 1px 0px 4px 0px; border: 1px solid #8A8A8A; background: #EDEDED; opacity: 0.6; cursor: not-allowed; }
+.default_editor #ingridients.list .reagent.needed{ background-color: #E4FFE0; border-color: #128500; opacity: 0.8; cursor: pointer; }
+.default_editor #ingridients.list .reagent.needed:hover{ opacity: 1.0; }
+
+.default_editor .list .reagent table{ width: 100%; }
+.default_editor .list .reagent table td .reagent_name{ font-size: 1.2em; color: #1F1F1F }
+.default_editor .list .reagent table td .inc_date{ font-size: 0.8em; letter-spacing: 0.075em; text-transform: uppercase; opacity: 0.8; font-weight: bold; }
+.default_editor .list .reagent table td{ width: auto; }
+.default_editor .list .reagent table td.name{ width: auto;  }
+.default_editor .list .reagent table td.quantity_left{ width: 20%; color: #3F3F3F; font-size: 1.0em; font-weight: bold; }
+.default_editor .list .reagent table td.button{ width: 18px; }
+
+.default_editor #composition.list .reagent{ background-color: #E0F3FF; border-color: #005E99; opacity: 0.9; cursor: pointer; }
+.default_editor #composition.list .reagent:hover{ opacity: 1.0; }
+.default_editor #composition.list .reagent table td.quantity{ width: 30%; }
+.default_editor #composition.list .reagent table td.quantity div{ position: relative; padding-right: 30px; }
+.default_editor #composition.list .reagent table td.quantity .reagent_units_short{ display: block; width: 30px; position: absolute; bottom: 0px; right: 0px; text-align: center; font-size: 1.1em; text-transform: lowercase; }
+.default_editor #composition.list .reagent table td.button{ width: 18px;  }

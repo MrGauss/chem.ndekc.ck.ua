@@ -43,6 +43,8 @@ class recipes
                 $attr[] = 'data-'.$k.'="'.$v.'"';
             }
 
+            $attr[] = 'data-ingridients="'.implode(',', array_keys( is_array($line['ingredients'])?$line['ingredients']:array() ) ).'"';
+
             $attr = implode( ' ', $attr );
 
             $data[$id] = '<option '.$attr.' value="'.$id.'">'.$line['name'].'</option>';
@@ -102,7 +104,6 @@ class recipes
         ///////////
         if( !$error && isset($data4save['name']) && common::strlen( $data4save['name'] ) > 64 )     { $error = 'Назва занадто довга!'; $error_area = 'name'; }
         if( !$error && isset($data4save['name']) && common::strlen( $data4save['name'] ) < 3 )      { $error = 'Назва занадто коротка!'; $error_area = 'name'; }
-
         ///////////
         $SQL = 'SELECT count(id) as count FROM reactiv_menu WHERE lower("name") = lower(\''.$this->db->safesql($data4save['name']).'\'::text) '. ( isset($original_data['id']) ? ' AND id != '.common::integer($original_data['id']) : ''  ) .';';
         if( $this->db->super_query( $SQL )['count'] > 0 )
@@ -110,6 +111,20 @@ class recipes
             $error = 'Такий запис вже існує!'; $error_area = 'name';
         }
         ///////////
+
+        $a = array();
+        $a['1'] = array_unique($data4save['ingredients']);
+        $a['2'] = array_unique(array_keys($original_data['ingredients']));
+
+        if( $ID > 0 && ( count(array_diff( $a['1'], $a['2'] )) || count(array_diff( $a['2'], $a['1'] )) ) )
+        {
+            if( $this->db->super_query( 'SELECT count(hash) FROM reactiv WHERE reactiv_menu_id = '.$ID )['count'] > 0 )
+            {
+                $error = 'Ви не можете змінювати склад, оскільки за даним рецептом вже приготовано розчини!'; $error_area = 'ingredients';
+            }
+        }
+        $a = null;
+        unset( $a );
 
         if( $error != false )
         {
@@ -154,7 +169,7 @@ class recipes
 
         ///////////////////////////////////////////////////
 
-        if( !$this->check_data_before_save( $SQL, $ID?$this->get_raw(array('id'=>$ID))[$ID] : array() ) ){ return false; }
+        if( !$this->check_data_before_save( array_merge( $SQL, array( 'ingredients' => $data['ingredients'] ) ), $ID?$this->get_raw(array('id'=>$ID))[$ID] : array() ) ){ return false; }
 
         ///////////////////////////////////////////////////
 

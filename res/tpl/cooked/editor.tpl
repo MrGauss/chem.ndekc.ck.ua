@@ -34,7 +34,19 @@ array (
 
     <div class="clear"></div>
 
-    
+    <div class="elem ingridients recipe_needed">
+        <label class="label">Доступні інгрідієнти</label>
+        <div id="ingridients" class="list">
+            {ingridients}
+        </div>
+    </div>
+
+    <div class="elem composition recipe_needed">
+        <label class="label">Склад</label>
+        <div id="composition" class="list">
+            {composition}
+        </div>
+    </div>
 
     <div class="clear"></div>
 
