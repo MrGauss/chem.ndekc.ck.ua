@@ -10,7 +10,7 @@ $spr = new recipes;
 
 $tpl->load( _MOD_.'/main' );
 
-$tpl->set( '{list}', $spr->get_html( array(),  _MOD_.'/line' ) );
+$tpl->set( '{list}', $spr->get_html( array(  ),  _MOD_.'/line' ) );
 
 $tpl->compile(  _MOD_.'/main' );
 

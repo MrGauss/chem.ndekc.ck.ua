@@ -19,10 +19,10 @@ class recipes
     const DB_MAIN_TABLE = 'reactiv_menu';
     const CACHE_CONST   = 'spr';
 
-    public static final function make_select( $table, $selected = 0 )
+    public static final function make_select( $selected = 0 )
     {
-        $spr = new self( $table );
-        return $spr->get_select();
+        $spr = new self();
+        return $spr->get_select( array() );
     }
 
     public final function get_select( $filters = array() )
@@ -36,12 +36,20 @@ class recipes
             $line = common::db2html($line);
             $attr = array();
 
-            foreach( $line as $k => $v ){ $attr[] = 'data-'.$k.'="'.$v.'"'; }
+            foreach( $line as $k => $v )
+            {
+                if( is_array($v) ){ continue; }
+
+                $attr[] = 'data-'.$k.'="'.$v.'"';
+            }
 
             $attr = implode( ' ', $attr );
 
             $data[$id] = '<option '.$attr.' value="'.$id.'">'.$line['name'].'</option>';
         }
+
+
+
         return implode( '', $data );
     }
 
@@ -215,6 +223,9 @@ class recipes
 
             $line['numi'] = $I--;
 
+            $line['all_available'] = isset($line['all_available'])?$line['all_available']:false;
+            $line['all_available'] = $line['all_available']?1:0;
+
             $line = common::db2html( $line );
 
             foreach( $line as $key => $value )
@@ -226,7 +237,15 @@ class recipes
             $line['ingredients_html'] = array();
             foreach( $line['ingredients'] as $ingredient_id => $ingredient_data )
             {
-                $line['ingredients_html'][] = '<span data-reagent_id="'.$ingredient_data['reagent_id'].'" title="'.common::db2html( $reagent[$ingredient_data['reagent_id']]['name'] ).'">'.common::db2html( $reagent[$ingredient_data['reagent_id']]['name'] ).'</span>';
+                $ingredient_data['quantity_left']       = common::float( isset($ingredient_data['quantity_left'])?$ingredient_data['quantity_left']:0 );
+                $ingredient_data['reactiv_menu_id']     = common::integer( isset($ingredient_data['reactiv_menu_id'])?$ingredient_data['reactiv_menu_id']:0 );
+                $ingredient_data['reagent_id']          = common::integer( isset($ingredient_data['reagent_id'])?$ingredient_data['reagent_id']:0 );
+                $ingredient_data['reagent_id']          = common::integer( isset($ingredient_data['available_in_lab'])?$ingredient_data['available_in_lab']:0 )?1:0;
+
+                $attrs = array();
+                foreach( $ingredient_data as $k=>$v ){ $attrs[] = 'data-'.$k.'="'.$v.'"'; }
+
+                $line['ingredients_html'][] = '<span '.implode( ' ', $attrs ).' title="'.($ingredient_data['available_in_lab']?'[ÄÎÑÒÓÏÍÎ: '.$ingredient_data['quantity_left'].''.$ingredient_data['units_short_name'].']':'[Â²ÄÑÓÒÍ²É Â ËÀÁÎĞÀÒÎĞ²¯]').'">'.$ingredient_data['reagent_name'].'</span>';
             }
             $line['ingredients_html'] = implode( ' ', $line['ingredients_html'] );
             $tpl->set( '{tag:ingredients_html}', $line['ingredients_html'] );
@@ -286,7 +305,8 @@ class recipes
     {
         if( is_array($filters) )
         {
-            if( isset($filters['id']) ){ $filters['id']     = common::integer( $filters['id'] ); }
+            if( isset($filters['id']) )                  { $filters['id']             = common::integer( $filters['id'] ); }
+            if( isset($filters['only_available']) )      { $filters['only_available'] = common::integer( $filters['only_available'] ) ? true : false; }
         }
 
         $WHERE = array();
@@ -312,38 +332,21 @@ class recipes
         $WHERE = common::trim( $WHERE );
         $WHERE = strlen($WHERE)>3 ? 'WHERE '.$WHERE : '';
 
-
         $SQL = '
                     SELECT
                         "'.self::DB_MAIN_TABLE.'".*,
                         units.name      as reagent_units,
-                        units.short_name   as reagent_units_short,
-
-                        array_to_string(
-                        ARRAY(
-                            SELECT
-                            DISTINCT ON( reagent.id ) concat_ws( \':\', COALESCE( reagent.id, 0 )::text, COALESCE( dispersion.quantity_left, 0 )::text )
-                            FROM
-                            reactiv_menu_ingredients
-                            RIGHT JOIN reagent ON( reagent.id = reactiv_menu_ingredients.reagent_id )
-                            LEFT JOIN stock ON( stock.reagent_id = reagent.id )
-                            LEFT JOIN dispersion ON( dispersion.stock_id = stock.id )
-
-                            WHERE reactiv_menu_ingredients.reactiv_menu_id = "'.self::DB_MAIN_TABLE.'".id
-                            ORDER BY reagent.id ASC, dispersion.quantity_left DESC
-                        ), \',\' ) as available_in_lab
+                        units.short_name   as reagent_units_short
                     FROM
                        "'.self::DB_MAIN_TABLE.'"
                        LEFT JOIN "units"     ON ( "units"."id" = "'.self::DB_MAIN_TABLE.'"."units_id" )
                     '.$WHERE.'
-                    ORDER by "'.self::DB_MAIN_TABLE.'"."name";
+                    ORDER by "'.self::DB_MAIN_TABLE.'"."name" ASC;
         '.db::CACHED;
 
-        $cache_var = 'spr-'.self::DB_MAIN_TABLE.'-'.md5( $SQL ).'';
+        $cache_var = 'spr-'.self::DB_MAIN_TABLE.'-'.md5( md5( $SQL ) . md5( serialize( $filters ) ) ).'';
+
         $data = cache::get( $cache_var );
-
-        $data = false;
-
         if( $data && is_array($data) && count($data) ){ return $data; }
         $data = array();
 
@@ -378,32 +381,60 @@ class recipes
                     }
                 }
             }
-
         }
 
         if( count($data) )
         {
             $SQL = '
+
                 SELECT
-                    reactiv_menu_ingredients.*
+                    DISTINCT ON( reactiv_menu_ingredients.unique_index )
+                        COALESCE( reagent.id, 0 )::INTEGER as reagent_id,
+                        COALESCE( dispersion.quantity_left, 0 )::FLOAT as quantity_left,
+                        reactiv_menu_ingredients.reactiv_menu_id as reactiv_menu_id,
+                        reagent."name" as reagent_name,
+                        units."name" as units_name,
+                        units.short_name as units_short_name
                 FROM
                     reactiv_menu_ingredients
-                WHERE
-                    reactiv_menu_ingredients.reactiv_menu_id IN( '. implode( ',', array_keys( $data ) ) .' )
+                RIGHT JOIN reagent ON( reagent.id = reactiv_menu_ingredients.reagent_id )
+                RIGHT JOIN units ON( units.id = reagent.units_id )
+
+                LEFT JOIN stock ON( stock.reagent_id = reagent.id       AND stock.group_id = '.CURRENT_GROUP_ID.' )
+                LEFT JOIN dispersion ON( dispersion.stock_id = stock.id AND dispersion.group_id = '.CURRENT_GROUP_ID.' )
+
+                WHERE reactiv_menu_ingredients.reactiv_menu_id IN( '. implode( ',', array_keys( $data ) ) .' )
                 ORDER BY
-                    reactiv_menu_ingredients.reagent_id ASC;
-                '.db::CACHED;
+                    reactiv_menu_ingredients.unique_index ASC,
+                    dispersion.quantity_left DESC; '.db::CACHED;
+
 
             $SQL = $this->db->query( $SQL );
 
             while( ( $row = $this->db->get_row($SQL) ) !== false )
             {
                 if( !isset($data[$row['reactiv_menu_id']]['ingredients']) ){ $data[$row['reactiv_menu_id']]['ingredients'] = array(); }
+
                 $data[$row['reactiv_menu_id']]['ingredients'][$row['reagent_id']] = $row;
 
+                $line = &$data[$row['reactiv_menu_id']]['ingredients'][$row['reagent_id']];
 
+                $line['reagent_id'] = common::integer( $row['reagent_id'] );
+                $line['reactiv_menu_id'] = common::integer( $row['reactiv_menu_id'] );
+                $line['quantity_left'] = common::float( $row['quantity_left'] );
+
+                $line['available_in_lab'] = $line['quantity_left'] ? true : false;
+
+                if( !$line['quantity_left'] ){ $data[$row['reactiv_menu_id']]['all_available'] = false; }
+
+                if( isset($filters['only_available']) && $filters['only_available'] && !$data[$row['reactiv_menu_id']]['all_available'] )
+                {
+                    $data[$row['reactiv_menu_id']] = null;
+                    unset( $data[$row['reactiv_menu_id']] );
+                }
             }
         }
+
 
         cache::set( $cache_var, $data );
         return $data;

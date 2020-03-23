@@ -23,21 +23,31 @@ class cooked
 
         if( !is_array($data) ){ return false; }
 
-
         $tpl = new tpl;
 
         $tpl->load( $skin );
 
-        $data['key'] = common::key_gen( $line_hash );
+        $_dates = array();
+        $_dates[] = 'inc_date';
+        $_dates[] = 'dead_date';
 
+        foreach( $_dates as $_date )
+        {
+            $data[$_date]       = isset($data[$_date])      ? common::en_date( $data[$_date], 'd.m.Y' ) : date( 'd.m.Y' );
+            if( strpos( $data[$_date], '.197' ) !== false ){ $data[$_date] = ''; }
+        }
+
+        $data['key'] = common::key_gen( $line_hash );
 
         foreach( $data as $k => $v )
         {
             if( is_array($v) ){ continue; }
 
             $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
+            $tpl->set( '{autocomplete:'.$k.':key}', autocomplete::key( 'reactiv', $k ) );
         }
 
+        $tpl->set( '{autocomplete:table}', 'reactiv' );
         $tpl->compile( $skin );
 
         return $tpl->result( $skin );

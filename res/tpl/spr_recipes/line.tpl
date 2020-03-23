@@ -1,4 +1,4 @@
-<div class="line" data-id="{tag:id}" data-inc_date="{tag:inc_date_unix}">
+<div class="line" data-id="{tag:id}" data-all_available="{tag:all_available}">
     <table>
         <tr>
             <td class="numi">{tag:numi}</td>
