@@ -6,6 +6,10 @@
     <input type="hidden" name="hash" value="{tag:hash}" />
     <input type="hidden" name="key" value="{tag:key}" />
 
+    <div id="empty_composition" class="dnone">
+        {@include=cooked/composition}
+    </div>
+
     <div class="elem recipe">
         <label class="label">Рецепт приготування робочого реактиву</label>
         <select data-important="1" class="input select" data-save="1" data-value="{tag:reactiv_menu_id}" value="{tag:reactiv_menu_id}" name="reactiv_menu_id"><option value="0">--</option>{select:recipes}</select>
@@ -21,7 +25,7 @@
                 <div class="elems_line">
                     <div class="elem quantity">
                         <label class="label">Кількість реактиву</label>
-                        <input data-important="1" class="input" type="text" name="quantity_inc" value="{tag:quantity_inc}" data-save="1" data-mask="9999.9999" data-placeholder="___.___" placeholder="___.___">
+                        <input data-important="1" class="input" type="number" min="0" step="0.01" maxlength="10" max="1000000000" name="quantity_inc" value="{tag:quantity_inc}" data-save="1" data-mask="9999.9999" data-placeholder="___.___" placeholder="___.___">
                     </div>
                     <div class="elem units">
                         <label class="label">Одиниці виміру</label>
@@ -79,7 +83,7 @@
         </tr>
         <tr><td><div id="composition" class="list elem">{composition}<div class="clear"></div></div><div class="clear"></div></td></tr>
         <tr><td class="side1 naming"><div class="elem"><label class="label">Інгрідієнти</label></div><div class="clear"></div></td></tr>
-        <tr><td><div id="ingridients" class="list elem">{ingridients}<div class="clear"></div></div></td></tr>
+        <tr><td><div id="ingridients" class="list elem">{ingridients}<div class="clear"></div> </div></td></tr>
     </table>
 
 

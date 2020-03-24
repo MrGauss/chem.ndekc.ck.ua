@@ -193,6 +193,53 @@ chem['cooked'] = new function()
         dialog_window.dialog("widget").position({ my: "center", at: "center", of: window });
     }
 
+    this.add_to_composition = function( obj )
+    {
+        if( !obj.hasClass('needed') ){ return false; }
+        if(  obj.hasClass('dnone') ) { return false; }
+
+        obj.addClass( 'dnone' );
+
+        var dialog_obj = obj.parents( '.default_editor' );
+        var empty_obj  = dialog_obj.find( '#empty_composition .reagent' );
+
+        empty_obj.attr( 'data-consume_hash', '' );
+        empty_obj.attr( 'data-reagent_name',        obj.attr( 'data-reagent_name' ) );
+        empty_obj.attr( 'data-reagent_id',          obj.attr( 'data-reagent_id' ));
+        empty_obj.attr( 'data-dispersion_id',       obj.attr( 'data-dispersion_id' ));
+        empty_obj.attr( 'data-reactiv_hash', '' );
+        empty_obj.attr( 'data-quantity',     '' );
+        empty_obj.attr( 'data-quantity_left',       obj.attr( 'data-quantity_left' ) );
+        empty_obj.attr( 'data-reagent_units_short', obj.attr( 'data-reagent_units_short' ) );
+        empty_obj.attr( 'data-inc_date',            obj.attr( 'data-inc_date' ) );
+
+        empty_obj.find( '.reagent_name' ).html(         empty_obj.attr( 'data-reagent_name' ) );
+        empty_obj.find( '.quantity_left' ).html(        empty_obj.attr( 'data-quantity_left' ) );
+        empty_obj.find( 'input[max]' ).attr( 'max',     empty_obj.attr( 'data-quantity_left' ) );      
+        empty_obj.find( '.reagent_units_short' ).html(  empty_obj.attr( 'data-reagent_units_short' ) );
+        empty_obj.find( '.inc_date span' ).html(        empty_obj.attr( 'data-inc_date' ) );
+        empty_obj.find( '[name="quantity"]' ).val( '' );
+
+        empty_obj
+            .clone()
+            .appendTo( dialog_obj.find( '#composition' ) )
+            .find('[data-role="button"]')
+            .on('click',function()
+            {
+                var p = $(this).parents('.reagent');
+                var d = $(this).parents('.default_editor');
+                d.find( '#ingridients [data-dispersion_id="' + p.attr( 'data-dispersion_id' ) + '"]' ).removeClass( 'dnone' );
+                p.remove();
+            })
+            .parents('.reagent')
+            .find( '[name="quantity"]' )
+            .off()
+            .on( 'change', function()
+            {
+                //chem.cooked.check_input_quantity(  );
+            });
+    }
+
     this.editor = function( obj )
     {
         chem.single_open( obj );
@@ -227,13 +274,17 @@ chem['cooked'] = new function()
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
 
-
                 if( line_hash )
                 {
                     $('#'+did+' select[name="reactiv_menu_id"]')
                         .attr( 'disabled', 'disabled' )
                         .prop( 'disabled', true );
                 }
+
+                $('#'+did+' #composition .reagent').each( function()
+                {
+                    $('#'+did ).find( '#ingridients [data-dispersion_id="' + $(this).attr( 'data-dispersion_id' ) + '"]' ).addClass( 'dnone' );
+                });
 
                 $('#'+did+'').on( "dialogopen", function( event, ui )
                 {
@@ -242,7 +293,10 @@ chem['cooked'] = new function()
                         chem.cooked.recipe_seleted( $(this).val(), $(this).find('option:selected'), $('#'+did+'') );
                     } ).trigger( "change" );
 
-
+                    $('#'+did+' #ingridients .reagent [data-role="button"]').on( "click", function( event, ui )
+                    {
+                        chem.cooked.add_to_composition( $(this).parents('.reagent') );
+                    });
                 } );
 
                 var bi = 0;

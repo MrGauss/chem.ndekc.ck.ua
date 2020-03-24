@@ -276,6 +276,7 @@ class dispersion
                 groups.region_id,
                 reagent.id   as reagent_id,
                 reagent.name as reagent_name,
+                ( stock.id::text || \'-\'::text || extract(year from stock.inc_date )::text ) as reagent_number, 
                 units.name   as reagent_units,
                 units.short_name   as reagent_units_short,
 

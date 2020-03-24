@@ -233,6 +233,11 @@ class stock
 
             $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
             $tpl->set( '{autocomplete:'.$k.':key}', autocomplete::key( 'stock', $k ) );
+
+            if( in_array( $k, $_dates ) )
+            {
+                $tpl->set( '{tag:'.$k.':Y}', common::en_date( $v, 'Y' ) );
+            }
         }
 
         $tpl->set( '{autocomplete:table}', 'stock' );
@@ -248,6 +253,8 @@ class stock
 
         $data = is_array($data) ? $data : array();
 
+        $_dates = array();
+
         $tpl = new tpl;
 
         $I = count( $data );
@@ -255,20 +262,22 @@ class stock
         {
             $tpl->load( $skin );
 
-
             $line['numi'] = $I--;
 
             $line['inc_date_unix'] = strtotime( $line['inc_date'] );
             $line['inc_date'] = date( 'Y.m.d', $line['inc_date_unix'] );
 
+            $tpl->set( '{tag:inc_date}', common::db2html( date( 'Y.m.d', $line['inc_date_unix'] ) ) );
+            $tpl->set( '{tag:inc_date:Y}', common::db2html( date( 'Y', $line['inc_date_unix'] ) ) );
+
             $line['quantity_used'] = common::float( $line['quantity_dispersed'] ) - common::float( $line['quantity_not_used'] );
 
-            $line = common::db2html( $line );
+
 
             foreach( $line as $key => $value )
             {
                 if( is_array($value) ){ continue; }
-                $tpl->set( '{tag:'.$key.'}', $value );
+                $tpl->set( '{tag:'.$key.'}', common::db2html( $value ) );
             }
 
             $tpl->compile( $skin );
@@ -313,6 +322,7 @@ class stock
             SELECT
                 stock.*,
                 reagent.name    as reagent_name,
+                ( stock.id::text || \'-\'::text || extract(year from stock.inc_date )::text ) as reagent_number,
                 units.name      as reagent_units,
                 units.short_name   as reagent_units_short,
 
@@ -335,6 +345,8 @@ class stock
                 '.(( isset($filters['id']) && $filters['id'] == 0 )?'':(CURRENT_GROUP_ID?'AND stock.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER ':'')).'
             ORDER by
                 stock.inc_date DESC; '.db::CACHED;
+
+        //echo $SQL;exit;
 
         $cache_var = 'stock-'.md5($SQL).'-raw';
         $data = cache::get( $cache_var );

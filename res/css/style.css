@@ -60,7 +60,7 @@ option::-moz-focus-inner{border:0;padding:0;}
 
 /*********************************/
 
-input[type="text"], input[type="password"], textarea, select
+input[type="number"], input[type="text"], input[type="password"], textarea, select
 {
     -webkit-transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
     -moz-transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
@@ -75,11 +75,17 @@ input[type="text"], input[type="password"], textarea, select
     cursor: pointer;
 }
 
-input[type="text"][data-important="1"], input[type="password"][data-important="1"], textarea[data-important="1"], select[data-important="1"]{ background-image: url(../img/important-12px.png); }
-input[type="text"][data-important="1"].blred, input[type="password"][data-important="1"].blred, textarea[data-important="1"].blred, select[data-important="1"].blred{ background-color: #FFC7C7; background-image: url(../img/important-red-16px.png); border-color: #FF0000; opacity: 1.0; }
-input[type="text"][data-important="1"].warn, input[type="password"][data-important="1"].warn, textarea[data-important="1"].warn, select[data-important="1"].warn{background-image: url(../img/important-red-16px.png); opacity: 1.0; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"],
+input[type="number"]:hover,
+input[type="number"]:focus { -moz-appearance: textfield; -webkit-appearance: none;  }
 
-input[type="text"]:hover, input[type="password"]:hover, textarea:hover
+input[type="number"][data-important="1"], input[type="text"][data-important="1"], input[type="password"][data-important="1"], textarea[data-important="1"], select[data-important="1"]{ background-image: url(../img/important-12px.png); }
+input[type="number"][data-important="1"].blred, input[type="text"][data-important="1"].blred, input[type="password"][data-important="1"].blred, textarea[data-important="1"].blred, select[data-important="1"].blred{ background-color: #FFC7C7; background-image: url(../img/important-red-16px.png); border-color: #FF0000; opacity: 1.0; }
+input[type="number"][data-important="1"].warn, input[type="text"][data-important="1"].warn, input[type="password"][data-important="1"].warn, textarea[data-important="1"].warn, select[data-important="1"].warn{background-image: url(../img/important-red-16px.png); opacity: 1.0; }
+
+input[type="number"]:hover, input[type="text"]:hover, input[type="password"]:hover, textarea:hover
 {
     -moz-user-focus: none !important;
     border-color: #111111;
@@ -87,7 +93,7 @@ input[type="text"]:hover, input[type="password"]:hover, textarea:hover
     background-color: #FFFFFF;
     cursor: pointer;
 }
-input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus
+input[type="number"]:focus, input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus
 {
     -moz-user-focus: none !important;
     border-color: #111111;
@@ -96,7 +102,7 @@ input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:f
     cursor: text;
 }
 
-input[type="text"][disabled="disabled"], input[type="password"][disabled="disabled"], textarea[disabled="disabled"], input[type="text"][readonly="readonly"], input[type="password"][readonly="readonly"], textarea[readonly="readonly"]{ cursor: text; }
+input[type="number"][disabled="disabled"], input[type="text"][disabled="disabled"], input[type="password"][disabled="disabled"], textarea[disabled="disabled"], input[type="text"][readonly="readonly"], input[type="password"][readonly="readonly"], textarea[readonly="readonly"]{ cursor: text; }
 .curpointer{ cursor: pointer; }
 .noselect{ -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 input[type="checkbox"]{ display: inline-block; position: relative; top: 2px; }

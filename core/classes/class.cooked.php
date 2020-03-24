@@ -68,12 +68,22 @@ class cooked
 
         $data = is_array($data) ? $data : array();
 
+        $_dates = array();
+        $_dates[] = 'consume_date';
+        $_dates[] = 'dispersion_inc_date';
+
         $tpl = new tpl;
 
         $I = count( $data );
         foreach( $data as $line )
         {
             $tpl->load( $skin );
+
+            foreach( $_dates as $_date )
+            {
+                $line[$_date]       = isset($line[$_date])      ? common::en_date( $line[$_date], 'd.m.Y' ) : date( 'd.m.Y' );
+                if( strpos( $line[$_date], '.197' ) !== false ){ $line[$_date] = ''; }
+            }
 
             $line['numi'] = $I--;
 
@@ -97,6 +107,10 @@ class cooked
 
         $data = is_array($data) ? $data : array();
 
+        $_dates = array();
+        $_dates[] = 'inc_date';
+        $_dates[] = 'dead_date';
+
         $tpl = new tpl;
 
         $I = count( $data );
@@ -104,6 +118,11 @@ class cooked
         {
             $tpl->load( $skin );
 
+            foreach( $_dates as $_date )
+            {
+                $line[$_date]       = isset($line[$_date])      ? common::en_date( $line[$_date], 'd.m.Y' ) : date( 'd.m.Y' );
+                if( strpos( $line[$_date], '.197' ) !== false ){ $line[$_date] = ''; }
+            }
 
             $line['numi'] = $I--;
 
@@ -137,8 +156,10 @@ class cooked
                 consume.consume_ts,
                 date_trunc( \'day\', consume.consume_ts ) as consume_date,
                 dispersion.inc_date as dispersion_inc_date,
+                dispersion.quantity_left,
                 stock.reagent_id,
                 reagent.name as reagent_name,
+                ( stock.id::text || \'-\'::text || extract(year from stock.inc_date )::text ) as reagent_number,
                 reagent.units_id,
                 units.name,
                 units.short_name as reagent_units_short
@@ -225,6 +246,7 @@ class cooked
                         stock.reagent_id,
                         reagent.name as reagent_name,
                         reagent.units_id,
+                        ( stock.id::text || \'-\'::text || extract(year from stock.inc_date )::text ) as reagent_number,  
                         units.name,
                         units.short_name as reagent_units_short
                     FROM

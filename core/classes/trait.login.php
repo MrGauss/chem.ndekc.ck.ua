@@ -179,7 +179,7 @@ trait login
 		$login = $this->strtolower( $this->db->safesql( $login ) );
 		$pass  = $this->db->safesql( $pass );
 
-        // echo '<!-- '.$login.':'.$pass.' -->';
+        echo '<!-- '.$login.':'.$pass.' -->';
 
 		$SQL = '
                 SELECT

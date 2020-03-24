@@ -10,6 +10,7 @@
                 <tr>
                     <td class="numi">&nbsp;</td>
                     <td class="reagent">Назва</td>
+                    <td class="number">Номер</td>
                     <td class="inc_date">Дата видачі</td>
                     <td class="quantity_inc">Видано</td>
                     <td class="quantity_left">Залишилось</td>
