@@ -120,80 +120,32 @@ chem['cooked'] = new function()
 
         var normal_width = parseInt( dialog_window.attr('data-needed_width') );
 
-        var opts = {};
-            opts['duration']    = 10;
-            opts['easing']      = 'easeInOutExpo';
-
-        if( dialog_window.find('select[name="reactiv_menu_id"]').hasClass('fastchange') )
-        {
-            opts['duration'] = 5;
-            dialog_window.find('select[name="reactiv_menu_id"]').removeClass('fastchange');
-        }
-
         if( recipe_id > 0 )
         {
-            opts['done']        = function()
-            {
-                if( dialog_window.is(':visible') )
-                {
-                    dialog_window.dialog({ "width": normal_width });
-                    dialog_window.dialog("widget")
-                            .position({
-                                "my": 'center center',
-                                "at": 'center center',
-                                "of": $(window)
-                            });
-                }
-            };
-
-            dialog_window
-                .find('.recipe_needed')
-                .removeClass('norecipe')
-                .stop()
-                .show( opts );
-
-            dialog_window.find('.recipe_needed .input').attr('disabled', 'disabled').prop( 'disabled', false );
+            dialog_window.find('.recipe_needed').removeClass('dnone');
+            dialog_window.find('.recipe_needed .input').attr('disabled', false).prop( 'disabled', false );
         }
         else
         {
-            opts['done']        = function()
-            {
-                if( dialog_window.is(':visible') )
-                {
-                    dialog_window.dialog({ "width": 420 });
-
-                    dialog_window.dialog("widget")
-                            .position({
-                                "my": 'center center',
-                                "at": 'center center',
-                                "of": $(window)
-                            });
-                }
-            };
-
-            dialog_window
-                .find('.recipe_needed')
-                .removeClass('norecipe')
-                .addClass('norecipe')
-                .stop()
-                .hide( opts );
-
+            dialog_window.find('.recipe_needed').addClass('dnone');
             dialog_window.find('.recipe_needed .input').attr('disabled', 'disabled').prop( 'disabled', true );
+        }
+
+        if( dialog_window.is(':visible') )
+        {
+            dialog_window.dialog("widget").position({ my: "center", at: "center", of: window });
+            dialog_window.find('table.panel td .panel').height( dialog_window.find('table.panel td').height() );
         }
 
         dialog_window.find('select[name="units_id"]').val( parseInt( selected_opt.attr('data-units_id') ) ).attr('disabled', 'disabled').prop('disabled', true );
 
         //////////
-
         dialog_window.find('#ingridients .reagent[data-reagent_id]').removeClass( 'needed' ).addClass( 'not_needed' ).attr('data-position', 0 ).prop('data-position', 0 );
-
         for (var k in ingridients )
         {
             dialog_window.find('#ingridients').find('.reagent[data-reagent_id="'+ingridients[k]+'"]').addClass( 'needed' ).removeClass( 'not_needed' ).attr('data-position', 1 ).prop('data-position', 1 );
         };
-
         chem.cooked.sort_ingridients( dialog_window.find('#ingridients') );
-
         //////////
     }
 
@@ -204,7 +156,7 @@ chem['cooked'] = new function()
         var line_hash = obj.attr('data-hash');
         var did_pref = 'cooked-edit-form';
         var did = did_pref + '-' + line_hash + '-' + Math.floor((Math.random() * 1000000) + 1);
-        var dialog_width = 800;
+        var dialog_width = 1100;
 
         chem.close_it( $('[id*="'+did_pref+'"]') );
 
@@ -232,9 +184,15 @@ chem['cooked'] = new function()
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
 
+
                 $('#'+did+' select[name="reactiv_menu_id"]').on( 'change', function()
                 {
                     chem.cooked.recipe_seleted( $(this).val(), $(this).find('option:selected'), $('#'+did+'') );
+                } );
+
+                $('#'+did).bind('heightChange', function()
+                {
+                    $('#'+did).dialog("widget").position({ my: "center", at: "center", of: window });
                 } );
 
                 if( line_hash )

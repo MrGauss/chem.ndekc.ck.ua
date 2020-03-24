@@ -1,16 +1,20 @@
 #main_frame #page_frame #list_frame #list .line table td.numi{ width: 60px; text-align: center; }
 
+.default_editor table.panel{ width: 100% }
+.default_editor table.panel td{ width: 33.33% }
+.default_editor table.panel td .panel{ position: relative; width: 100%; height: 100%; overflow: hidden; }
+
 .default_editor                      { min-height: 20px; }
-.default_editor .elem.inc_date       { width: 25%;  }
-.default_editor .elem.dead_date      { width: 25%;  }
-.default_editor .elem.inc_expert_id  { width: 50%;  }
+.default_editor .elem.inc_date       { width: 50%;  }
+.default_editor .elem.dead_date      { width: 50%;  }
+.default_editor .elem.inc_expert_id  { width: 100%;  }
 
 .default_editor .elem.comment        { width: 100%;  }
 .default_editor .elem.safe_place     { width: 50%;  }
 .default_editor .elem.safe_needs     { width: 50%;  }
 
-.default_editor .elem.ingridients    { width: 50%; }
-.default_editor .elem.composition    { width: 50%; }
+.default_editor .elem.ingridients    { width: 100%; }
+.default_editor .elem.composition    { width: 100%; }
 
 .default_editor .elem.recipe         { width: 100%;  }
 .default_editor .elem.recipe select option[data-all_available=""],
@@ -20,7 +24,7 @@
 .default_editor .elem.recipe_needed.norecipe{ opacity: 0.1; }
 
 .default_editor #ingridients,
-.default_editor #composition{ height: 250px; overflow: hidden; overflow-y: scroll; border: 1px solid #4F4F4F; padding: 5px; }
+.default_editor #composition{ height: 100%; overflow: hidden; overflow-y: scroll; border: 1px solid #4F4F4F; padding: 5px; }
 
 .default_editor .list .reagent{ padding: 8px 5px 8px 5px; margin: 1px 0px 4px 0px; border: 1px solid #8A8A8A; background: #EDEDED; opacity: 0.6; cursor: not-allowed; }
 .default_editor #ingridients.list .reagent.needed{ background-color: #E4FFE0; border-color: #128500; opacity: 0.8; cursor: pointer; }
