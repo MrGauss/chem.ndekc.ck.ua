@@ -118,35 +118,79 @@ chem['cooked'] = new function()
                                 ? selected_opt.attr('data-ingridients').toString().split( ','.toString() )
                                 : 0;
 
-        var normal_width = parseInt( dialog_window.attr('data-needed_width') );
+        ///
+        dialog_window
+            .find('#ingridients .reagent[data-reagent_id]')
+                .removeClass( 'needed' )
+                .addClass( 'not_needed' )
+                .attr('data-position', 0 )
+                .prop('data-position', 0 );
 
-        if( recipe_id > 0 )
-        {
-            dialog_window.find('.recipe_needed').removeClass('dnone');
-            dialog_window.find('.recipe_needed .input').attr('disabled', false).prop( 'disabled', false );
-        }
-        else
-        {
-            dialog_window.find('.recipe_needed').addClass('dnone');
-            dialog_window.find('.recipe_needed .input').attr('disabled', 'disabled').prop( 'disabled', true );
-        }
-
-        if( dialog_window.is(':visible') )
-        {
-            dialog_window.dialog("widget").position({ my: "center", at: "center", of: window });
-            dialog_window.find('table.panel td .panel').height( dialog_window.find('table.panel td').height() );
-        }
-
-        dialog_window.find('select[name="units_id"]').val( parseInt( selected_opt.attr('data-units_id') ) ).attr('disabled', 'disabled').prop('disabled', true );
-
-        //////////
-        dialog_window.find('#ingridients .reagent[data-reagent_id]').removeClass( 'needed' ).addClass( 'not_needed' ).attr('data-position', 0 ).prop('data-position', 0 );
         for (var k in ingridients )
         {
             dialog_window.find('#ingridients').find('.reagent[data-reagent_id="'+ingridients[k]+'"]').addClass( 'needed' ).removeClass( 'not_needed' ).attr('data-position', 1 ).prop('data-position', 1 );
         };
+        ///
+
         chem.cooked.sort_ingridients( dialog_window.find('#ingridients') );
-        //////////
+        chem.cooked.resize_dialog( dialog_window, recipe_id );
+
+        //
+
+        dialog_window.find('select[name="units_id"]')
+            .val( parseInt( selected_opt.attr('data-units_id') ) )
+            .attr( 'disabled', 'disabled' )
+            .prop( 'disabled', true );
+    }
+
+    this.resize_dialog = function( dialog_window, recipe_id )
+    {
+        var width           = dialog_window.dialog( 'option', 'width' );
+        var normal_width    = dialog_window.dialog( 'option', 'normal_width' );
+
+        var param_panel_height  = 0;
+        var label_height        = 0;
+
+        if( recipe_id > 0 )
+        {
+            dialog_window.find('.recipe_needed').removeClass('dnone');
+            dialog_window.dialog( 'option', 'width', normal_width );
+
+            dialog_window
+                .find( '.recipe_needed .input' )
+                    .attr( 'disabled', false)
+                    .prop( 'disabled', false );
+
+            //
+
+            param_panel_height = 0;
+            dialog_window.find('#param_panel .elems_line').each(function()
+            {
+                param_panel_height = param_panel_height + parseInt( $(this).height() );
+            });
+
+            label_height        = dialog_window.find('#param_panel .label:first').height();
+
+            //dialog_window.find('.ingridients_panel').height( param_panel_height );
+            //dialog_window.find('.ingridients_panel .list').height( ( ( param_panel_height - label_height ) / 2 ) - 27 );
+        }
+        else
+        {
+            dialog_window.find('.recipe_needed').removeClass('dnone').addClass('dnone');
+
+            dialog_window
+                .find( '.recipe_needed .input' )
+                .attr( 'disabled', 'disabled' )
+                .prop( 'disabled', true );
+
+            dialog_window.dialog( 'option', 'width', 415 );
+
+            dialog_window
+                .find('table.panel .panel .list')
+                    .height( 100 );
+        }
+
+        dialog_window.dialog("widget").position({ my: "center", at: "center", of: window });
     }
 
     this.editor = function( obj )
@@ -156,7 +200,7 @@ chem['cooked'] = new function()
         var line_hash = obj.attr('data-hash');
         var did_pref = 'cooked-edit-form';
         var did = did_pref + '-' + line_hash + '-' + Math.floor((Math.random() * 1000000) + 1);
-        var dialog_width = 1100;
+        var dialog_width = 920;
 
         chem.close_it( $('[id*="'+did_pref+'"]') );
 
@@ -180,20 +224,9 @@ chem['cooked'] = new function()
                 autocomplete.init( $('#'+did+'') );
 
                 $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ).trigger( "change" ); });
-
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
 
-
-                $('#'+did+' select[name="reactiv_menu_id"]').on( 'change', function()
-                {
-                    chem.cooked.recipe_seleted( $(this).val(), $(this).find('option:selected'), $('#'+did+'') );
-                } );
-
-                $('#'+did).bind('heightChange', function()
-                {
-                    $('#'+did).dialog("widget").position({ my: "center", at: "center", of: window });
-                } );
 
                 if( line_hash )
                 {
@@ -202,14 +235,23 @@ chem['cooked'] = new function()
                         .prop( 'disabled', true );
                 }
 
-                $('#'+did+' select[name="reactiv_menu_id"]').addClass('fastchange').trigger( "change" );
+                $('#'+did+'').on( "dialogopen", function( event, ui )
+                {
+                    $('#'+did+' select[name="reactiv_menu_id"]').on( 'change', function()
+                    {
+                        chem.cooked.recipe_seleted( $(this).val(), $(this).find('option:selected'), $('#'+did+'') );
+                    } ).trigger( "change" );
+
+
+                } );
 
                 var bi = 0;
                 var dialog = {};
                     dialog["zIndex"]  = 2001;
                     dialog["modal"]   = true;
                     dialog["autoOpen"]   = true;
-                    dialog["width"]   = dialog_width;
+                    dialog["width"]          = dialog_width;
+                    dialog["normal_width"]   = dialog["width"];
                     dialog["resizable"]   = false;
                     dialog["buttons"] = {};
 
