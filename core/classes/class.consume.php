@@ -32,6 +32,7 @@ class consume
             $filters['consume_hash'] = is_array($filters['reactiv_hash']) ? $filters['consume_hash'] : array( $filters['consume_hash'] );
             $WHERE['consume_hash']   = 'consume.hash IN(\''. implode( '\', \'', array_values( $filters['consume_hash'] ) ) .'\')';
         }
+        else{ $WHERE['consume_hash']   = 'consume.hash != \'\''; }
 
         if( isset($filters['using_hash']) )
         {
@@ -65,6 +66,8 @@ class consume
                     LEFT JOIN "using" ON( "using".hash = consume.using_hash )
                     LEFT JOIN reactiv ON( "using".hash = reactiv.using_hash )
             '.$WHERE.';';
+
+        // echo $SQL;exit;
 
         $cache_var = 'consume-'.md5( $SQL ).'-raw';
 

@@ -140,7 +140,7 @@ chem['dispersion'] = new function()
                     dialog["zIndex"]  = 2001;
                     dialog["modal"]   = true;
                     dialog["autoOpen"]   = true;
-                    dialog["width"]   = '413';
+                    dialog["width"]   = '513';
                     dialog["resizable"]   = false;
                     dialog["buttons"] = {};
 

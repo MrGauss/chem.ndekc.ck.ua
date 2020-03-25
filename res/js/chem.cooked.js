@@ -215,7 +215,7 @@ chem['cooked'] = new function()
 
         empty_obj.find( '.reagent_name' ).html(         empty_obj.attr( 'data-reagent_name' ) );
         empty_obj.find( '.quantity_left' ).html(        empty_obj.attr( 'data-quantity_left' ) );
-        empty_obj.find( 'input[max]' ).attr( 'max',     empty_obj.attr( 'data-quantity_left' ) );      
+        empty_obj.find( 'input[max]' ).attr( 'max',     empty_obj.attr( 'data-quantity_left' ) );
         empty_obj.find( '.reagent_units_short' ).html(  empty_obj.attr( 'data-reagent_units_short' ) );
         empty_obj.find( '.inc_date span' ).html(        empty_obj.attr( 'data-inc_date' ) );
         empty_obj.find( '[name="quantity"]' ).val( '' );
@@ -319,28 +319,46 @@ chem['cooked'] = new function()
                     dialog["buttons"][bi] = {};
                     dialog["buttons"][bi]["text"]  = "ַבונודעט";
                     dialog["buttons"][bi]["click"] = function()
-                    { /*
+                    {
                         if( !$('#'+did+' .error_area').hasClass('dnone') ){ $('#'+did+' .error_area').addClass('dnone'); }
 
                         if( chem.cooked.check_before_save( $('#'+did) ) )
                         {
-                            var save_post = {};
-                                save_post['ajax'] = 1;
-                                save_post['action'] = 2;
-                                save_post['subaction'] = 1;
-                                save_post['mod'] = $('body').attr('data-mod');
-                                save_post['id']  = $('#'+did).find('input[name="id"]').val();
-                                save_post['key'] = $('#'+did).find('input[name="key"]').val();
-                                save_post['save'] = {};
+                            var post = {};
+                                post['ajax'] = 1;
+                                post['action'] = 2;
+                                post['subaction'] = 1;
+
+                                post['mod']    = $('body').attr('data-mod');
+                                post['hash']   = $('#'+did).find('input[name="hash"]').val();
+                                post['key']    = $('#'+did).find('input[name="key"]').val();
+                                post['save']   = {};
 
                             $('#'+did).find('[data-save="1"]').each( function()
                             {
-                                save_post['save'][$(this).attr('name').toString()] = $(this).val().toString();
+                                post['save'][$(this).attr('name').toString()] = $(this).val().toString();
                             } );
 
-                            $.ajax({ data: save_post }).done(function( _r )
+                            post['save']['composition'] = new Array;
+
+                            $('#'+did + ' #composition .reagent' ).each(function()
                             {
-                                try{ _r = jQuery.parseJSON( _r ); }catch(err){ chem.err( 'ERROR: '+err+"\n\n"+_r ); return false; }
+                                post['save']['composition'].push
+                                (
+                                    {
+                                        'dispersion_id':    $(this).attr( 'data-dispersion_id' ),
+                                        'consume_hash':     $(this).attr( 'data-consume_hash' ),
+                                        'reagent_id':       $(this).attr( 'data-reagent_id' ),
+                                        'reactiv_hash':     $(this).attr( 'data-reactiv_hash' ),
+                                        'quantity':         $(this).find('[name="quantity"]').val()
+                                    }
+                                );
+                            });
+
+                            $.ajax({ data: post }).done(function( _r )
+                            {
+                                alert( _r );
+                              /*  try{ _r = jQuery.parseJSON( _r ); }catch(err){ chem.err( 'ERROR: '+err+"\n\n"+_r ); return false; }
 
                                 _r['error'] = parseInt(_r['error']);
                                 _r['id'] = parseInt(_r['id']);
@@ -377,10 +395,10 @@ chem['cooked'] = new function()
                                             $('#content #list_frame [data-id="'+_r['id']+'"]').trigger( "click" );
                                         }
                                     }
-                                }
+                                } */
                             });
                         }
-                        */
+
 
                     };
 

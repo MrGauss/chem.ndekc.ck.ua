@@ -25,7 +25,7 @@ switch ( _ACTION_ )
         }
         else
         {
-            ajax::set_data( 'hash', $cooked->save( isset($_POST['hash'])?common::filter_hash($_POST['hash']):false, isset($_POST['save'])?$_POST['save']:false ) );
+            ajax::set_data( 'hash', $cooked->save( isset($_POST['hash'])?common::filter_hash($_POST['hash']):false, isset($_POST['save'])?$_POST['save'] : array() ) );
         }
 
     break;
