@@ -1,6 +1,12 @@
 <div id="list_frame" class="stock">
     <div id="filters" class="filters">
         <button id="create" type="button" data-id="0">Створити</button>
+
+        <div class="element">
+            <label class="label">Реактив</label>
+            <select class="input select" data-value="0" value="0" name="reagent_id" data-filter="1"><option value="0">--</option>{select:reagent}</select>
+        </div>
+
         <button id="search" type="button">Шукати</button>
     </div>
 

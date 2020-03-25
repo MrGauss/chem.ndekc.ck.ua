@@ -2,7 +2,7 @@
     <table>
         <tr>
             <td class="numi">{tag:numi}</td>
-            <td class="reagent">{tag:reagent_name}</td>
+            <td class="reagent">{tag:reagent:name}</td>
             <td class="number">{tag:reagent_number}</td>
             <td class="inc_date">{tag:inc_date}</td>
             <td class="quantity_inc">{tag:quantity_inc}  {tag:reagent_units_short}</td>

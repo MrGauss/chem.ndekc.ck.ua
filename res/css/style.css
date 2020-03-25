@@ -177,10 +177,13 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #mainlist .hr_vertval{ background: transparent; display: inline-block; border-left: 1px dashed #555555; width: 1px; height: 140px; position: relative; }
 
 #main_frame #page_frame #list_frame{ position: relative; height: 100%; width: 100%; padding: 80px 0px 0px 0px; }
-#main_frame #page_frame #list_frame #filters{ position: absolute; top: 0px; left: 0px; height: 80px; width: 100%; background: none; z-index: 15; border-bottom: 1px solid #999999; padding: 5px; }
+#main_frame #page_frame #list_frame #filters{ position: absolute; top: 0px; left: 0px; height: 80px; width: 100%; background: none; z-index: 15; border-bottom: 1px solid #999999; padding: 5px 170px 5px 170px; }
 #main_frame #page_frame #list_frame #filters #create,
 #main_frame #page_frame #list_frame #filters #search{ display: block; position: absolute; top: 12px; left:  10px; width: 140px; height: 40px; background: #007500; letter-spacing: 0.1em; }
 #main_frame #page_frame #list_frame #filters #search{ left:  auto; right: 10px; background: #184D7B;  }
+#main_frame #page_frame #list_frame #filters .element{ height: 100%; display: inline-block; width: 200px; overflow: hidden; }
+#main_frame #page_frame #list_frame #filters .element .input{ height: 32px; width: 100%; }
+#main_frame #page_frame #list_frame #filters .element .label{ display: block; padding: 0px 5px 5px 5px; width: 100%; text-align: center; font-weight: bold; text-transform: uppercase; font-size: 0.85em; }
 
 #main_frame #page_frame #list_frame #list   { position: relative; height: 100%; width: 100%; background: #FFFFFF; z-index: 14; overflow: scroll; overflow-x: hidden; padding: 45px 5px 5px 5px; }
 #main_frame #page_frame #list_frame #list .line{ position: relative; z-index: 15; padding: 5px; border: 1px solid #39A331; background: #CAFFC7; margin: 5px 5px 0px 5px; cursor: pointer; opacity: 0.8; }

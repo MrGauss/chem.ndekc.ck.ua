@@ -303,7 +303,7 @@ class stock
             {
                 $data[$k][] = 'data-'.$key.'="'.$val.'"';
             }
-            $data[$k] = '<option title="'.$line['reagent_name'].'" value="'.$line['id'].'" '.implode( ' ', $data[$k] ).'>'.$line['reagent_name'].' [Доступно: '.$line['quantity_left'].' '.$line['reagent_units_short'].']</option>';
+            $data[$k] = '<option title="'.$line['reagent_name'].'" value="'.$line['id'].'" '.implode( ' ', $data[$k] ).'>'.$line['reagent_name'].' ['.$line['reagent_number'].'] доступно '.$line['quantity_left'].' '.$line['reagent_units_short'].'</option>';
         }
         $data = "\n\t".implode( "\n\t", $data )."\n";
 

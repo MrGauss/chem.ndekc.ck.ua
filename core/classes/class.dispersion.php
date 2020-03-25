@@ -176,6 +176,9 @@ class dispersion
     {
         $data = $this->get_raw( $filters );
 
+        $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
+        $units   = ( new spr_manager( 'units' )   )->get_raw();
+
         $data = is_array($data) ? $data : array();
 
         $tpl = new tpl;
@@ -198,6 +201,18 @@ class dispersion
             {
                 if( is_array($value) ){ continue; }
                 $tpl->set( '{tag:'.$key.'}', $value );
+            }
+
+            foreach( ( isset($reagent[$line['reagent_id']]) ? $reagent[$line['reagent_id']] : array() ) as $key => $value )
+            {
+                if( is_array($value) ){ continue; }
+                $tpl->set( '{tag:reagent:'.$key.'}', $value );
+            }
+
+            foreach( ( ( isset($reagent[$line['reagent_id']]) && isset($units[$reagent[$line['reagent_id']]['units_id']]) ) ? $units[$reagent[$line['reagent_id']]['units_id']] : array() ) as $key => $value )
+            {
+                if( is_array($value) ){ continue; }
+                $tpl->set( '{tag:reagent:units:'.$key.'}', $value );
             }
 
             $tpl->compile( $skin );
@@ -275,7 +290,6 @@ class dispersion
                 dispersion.*,
                 groups.region_id,
                 reagent.id   as reagent_id,
-                reagent.name as reagent_name,
                 stock.reagent_number,
                 units.name   as reagent_units,
                 units.short_name   as reagent_units_short,
@@ -301,7 +315,7 @@ class dispersion
                 '.(( isset($filters['id']) && $filters['id'] == 0 ) ? ''    :'AND groups.region_id = '.CURRENT_REGION_ID.'').'
                 '.(( isset($filters['id']) && $filters['id'] == 0 ) ? ''    :(CURRENT_GROUP_ID?'AND dispersion.group_id = '.CURRENT_GROUP_ID.'':'')).'
             ORDER by
-                reagent_name ASC; '.db::CACHED;
+                reagent.name ASC; '.db::CACHED;
 
         $cache_var = 'spr-dispersion-'.md5( $SQL ).'-raw';
 
@@ -310,7 +324,6 @@ class dispersion
         if( $data && is_array($data) ){ return $data; }
 
         $data = array();
-
         $SQL = $this->db->query( $SQL );
 
         while( ( $row = $this->db->get_row($SQL) ) !== false )
