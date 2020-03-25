@@ -322,7 +322,6 @@ class stock
             SELECT
                 stock.*,
                 reagent.name    as reagent_name,
-                ( stock.id::text || \'-\'::text || extract(year from stock.inc_date )::text ) as reagent_number,
                 units.name      as reagent_units,
                 units.short_name   as reagent_units_short,
 

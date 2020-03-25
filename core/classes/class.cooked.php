@@ -246,7 +246,7 @@ class cooked
                         stock.reagent_id,
                         reagent.name as reagent_name,
                         reagent.units_id,
-                        ( stock.id::text || \'-\'::text || extract(year from stock.inc_date )::text ) as reagent_number,  
+                        stock.reagent_number,
                         units.name,
                         units.short_name as reagent_units_short
                     FROM
