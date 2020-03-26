@@ -1,4 +1,18 @@
+#main_frame #page_frame #list_frame #list .line{ position: relative; }
+
+#main_frame #page_frame #list_frame #list .line .dead_date{ position: absolute; padding: 0px 5px 0px 5px; width: 180px; height: 18px; overflow: hidden; text-align: center; bottom: 0px; left: 0px; background: #6F6F6F; color: #FFFFFF; opacity: 0.8; }
+#main_frame #page_frame #list_frame #list .line .dead_date b,
+#main_frame #page_frame #list_frame #list .line .dead_date em{ font-weight: normal; font-style: normal; font-size: 0.8em; text-transform: uppercase; }
+
+#main_frame #page_frame #list_frame #list .line table{ width: 100%;}
 #main_frame #page_frame #list_frame #list .line table td.numi{ width: 60px; text-align: center; }
+#main_frame #page_frame #list_frame #list .line table td.name{ width: 240px; text-align: left; }
+#main_frame #page_frame #list_frame #list .line table td.inc_date{ width: 110px; text-align: center; }
+#main_frame #page_frame #list_frame #list .line table td.quantity_inc{ width: 140px; text-align: center; }
+#main_frame #page_frame #list_frame #list .line table td.quantity_left{ width: 140px; text-align: center; }
+#main_frame #page_frame #list_frame #list .line table td.composition{ width: auto; text-align: left; }
+
+#main_frame #page_frame #list_frame #list .line table td.inc_date span.inc_date { display: block; font-weight: bold; font-size: 0.85em; font-style: normal; text-transform: uppercase; color: #094C00; letter-spacing: 0.1em; }
 
 .default_editor table.panel{ width: 100%;  vertical-align: top; border: none; }
 .default_editor table.panel td{ width: auto; vertical-align: top; position: relative; border: none; }

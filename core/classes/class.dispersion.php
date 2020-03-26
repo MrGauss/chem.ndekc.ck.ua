@@ -291,6 +291,7 @@ class dispersion
                 groups.region_id,
                 reagent.id   as reagent_id,
                 stock.reagent_number,
+                stock.dead_date,
                 units.name   as reagent_units,
                 units.short_name   as reagent_units_short,
 

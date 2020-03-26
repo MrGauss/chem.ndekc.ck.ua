@@ -43,7 +43,7 @@ chem['cooked'] = new function()
             post['filters'][$(this).attr('name')] = $(this).val();
         });
 
-        if( line_hash > 0 ){ post['filters']['hash'] = line_hash; }
+        if( line_hash != '' ){ post['filters']['hash'] = line_hash; }
 
         $.ajax({ data: post }).done(function( _r )
         {
@@ -57,7 +57,7 @@ chem['cooked'] = new function()
                         .off()
                         .replaceWith( _r['lines'] );
 
-                    $('#content #list_frame .list .line[data-id="'+line_id+'"]')
+                    $('#content #list_frame .list .line[data-hash="'+line_hash+'"]')
                         .on( "click", function(){ chem.cooked.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
@@ -69,9 +69,9 @@ chem['cooked'] = new function()
                 }
                 else
                 {
-                    $('#content #list_frame .list .line[data-id]').off().remove();
+                    $('#content #list_frame .list .line[data-hash]').off().remove();
                     $('#content #list_frame .list').append( _r['lines'] );
-                    $('#content #list_frame [data-id]')
+                    $('#content #list_frame [data-hash]')
                         .on( "click", function(){ chem.cooked.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
@@ -357,8 +357,7 @@ chem['cooked'] = new function()
 
                             $.ajax({ data: post }).done(function( _r )
                             {
-                                alert( _r );
-                              /*  try{ _r = jQuery.parseJSON( _r ); }catch(err){ chem.err( 'ERROR: '+err+"\n\n"+_r ); return false; }
+                               try{ _r = jQuery.parseJSON( _r ); }catch(err){ chem.err( 'ERROR: '+err+"\n\n"+_r ); return false; }
 
                                 _r['error'] = parseInt(_r['error']);
                                 _r['id'] = parseInt(_r['id']);
@@ -379,23 +378,22 @@ chem['cooked'] = new function()
                                 }
                                 else
                                 {
-                                    if( !line_id || line_id != _r['id'] )
+                                    // alert( line_hash+':'+_r['hash'] );
+                                    if( !line_hash || line_hash != _r['hash'] )
                                     {
                                         chem.close_it( $('#'+did) );
                                         chem.cooked.reload();
                                     }
                                     else
                                     {
-                                        if( _r['id'] > 0 )
+                                        if( _r['hash'] != '' )
                                         {
-                                            // chem.animate_opacity( $('#'+did+' .good_area'), 'Дані успішно збережено!' );
-                                            chem.cooked.reload( _r['id'] );
+                                            chem.cooked.reload( _r['hash'] );
                                             chem.close_it( $('#'+did) );
-
-                                            $('#content #list_frame [data-id="'+_r['id']+'"]').trigger( "click" );
+                                            //$('#content #list_frame [data-hash="'+_r['hash']+'"]').trigger( "click" );
                                         }
                                     }
-                                } */
+                                }
                             });
                         }
 
