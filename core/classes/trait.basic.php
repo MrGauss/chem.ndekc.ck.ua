@@ -38,6 +38,12 @@ trait basic
 		exit;
 	}
 
+    static public final function compare_perc( $a, $b )
+    {
+        if( !$a ){ return 100; }
+        return round( ( 100 / self::float($a) ) * self::float( $b ), 0 );
+    }
+
     static public final function ban( $text )
     {
         $file = LOGS_DIR.DS.'banlist'.DS.USER_IP;

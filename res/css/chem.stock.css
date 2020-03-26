@@ -9,6 +9,11 @@
 #main_frame #page_frame #list_frame.stock #list .line table td.quantity_not_used{ width: 100px; text-align: center; }
 #main_frame #page_frame #list_frame.stock #list .line table td.inc_date{ width: 150px; text-align: center; }
 
+
+
+
+
+
 .default_editor .elem.reagent       { width: 75%;  }
 .default_editor .elem.quantity      { width: 15%;  }
 .default_editor .elem.units         { width: 10%;  }

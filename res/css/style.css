@@ -186,7 +186,7 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #list_frame #filters .element .label{ display: block; padding: 0px 5px 5px 5px; width: 100%; text-align: center; font-weight: bold; text-transform: uppercase; font-size: 0.85em; }
 
 #main_frame #page_frame #list_frame #list   { position: relative; height: 100%; width: 100%; background: #FFFFFF; z-index: 14; overflow: scroll; overflow-x: hidden; padding: 45px 5px 5px 5px; }
-#main_frame #page_frame #list_frame #list .line{ position: relative; z-index: 15; padding: 5px; border: 1px solid #39A331; background: #CAFFC7; margin: 5px 5px 0px 5px; cursor: pointer; opacity: 0.8; }
+#main_frame #page_frame #list_frame #list .line{ position: relative; z-index: 15; padding: 5px 5px 8px 5px; border: 1px solid #39A331; background: #CAFFC7; margin: 5px 5px 0px 5px; cursor: pointer; opacity: 0.8; }
 #main_frame #page_frame #list_frame #list .line.blink{ border-color: #2E9900; background-color: #A6FF8F; opacity: 1.0; }
 #main_frame #page_frame #list_frame #list .line:hover{ opacity: 1.0; }
 #main_frame #page_frame #list_frame #list .line table{ width: 100%;  border-collapse: collapse; vertical-align: middle; }
@@ -197,6 +197,100 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #list_frame #list .line.header table td{ text-align: center!important; padding: 0px; text-transform: uppercase; font-weight: bold; font-size: 0.85em; }
 #main_frame #page_frame #list_frame #list .line.header table td:hover{ background: #BFBFBF; }
 #main_frame #page_frame #list_frame #list .line.header table td.active{ background: #BFBFBF; }
+
+#main_frame #page_frame #list_frame #list .line .using_perc{ display: none; position: absolute; bottom: 0px; left: 0px; height: 14px; padding: 1px 0px 0px 0px; width: 140px; overflow: hidden; background: #39A331; opacity: 0.8; text-align: center; font-size: 0.7em; letter-spacing: 0.05em; text-transform: uppercase; color: #FFFFFF; font-weight: bold; }
+#main_frame #page_frame #list_frame #list .line.fully_used  .using_perc.fully_used{ display: block; background-color: #5F5F5F; }
+#main_frame #page_frame #list_frame #list .line.almost_used .using_perc.almost_used{ display: block; background-color: #8A0000; }
+#main_frame #page_frame #list_frame #list .line.half_used   .using_perc.half_used{ display: block; }
+#main_frame #page_frame #list_frame #list .line.not_used    .using_perc.not_used{ display: block; }
+
+/* ------------------- */
+
+#main_frame #page_frame #list_frame #list .line .lifetime_label{ display: none; position: absolute; top: 0px; right: 0px; width: 240px; height: 15px; background: #8E8E8E; text-align: center; letter-spacing: 0.01em; text-transform: uppercase; font-size: 0.8em; }
+
+#main_frame #page_frame #list_frame #list .line[data-lifetime="gone"]{ border-color: #3F3F3F; background-color: #EFEFEF; filter: grayscale(100%); }
+#main_frame #page_frame #list_frame #list .line[data-lifetime="gone"] .lifetime_label.lf_gone{ display: block; background-color: #5F5F5F; color: #FFFFFF; }
+
+#main_frame #page_frame #list_frame #list .line[data-lifetime="0"]
+{
+    background-color: #FFE5E5; border-color: #8A0000;
+
+    -webkit-animation-name: gone_lifetime;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: gone_lifetime;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: gone_lifetime;
+    -moz-animation-duration: 1s;
+    -moz-animation-timing-function: linear;
+    -moz-animation-iteration-count: infinite;
+
+    animation-name: gone_lifetime;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+}
+#main_frame #page_frame #list_frame #list .line[data-lifetime="0"] .lifetime_label.lf_today{ display: block; background-color: #8A0000; color: #FFFFFF; }
+
+#main_frame #page_frame #list_frame #list .line[data-lifetime="1"],
+#main_frame #page_frame #list_frame #list .line[data-lifetime="2"],
+#main_frame #page_frame #list_frame #list .line[data-lifetime="3"],
+#main_frame #page_frame #list_frame #list .line[data-lifetime="4"],
+#main_frame #page_frame #list_frame #list .line[data-lifetime="5"],
+#main_frame #page_frame #list_frame #list .line[data-lifetime="6"],
+#main_frame #page_frame #list_frame #list .line[data-lifetime="7"]{ background-color: #FFF6C7; border-color: #E09600; }
+#main_frame #page_frame #list_frame #list .line[data-lifetime="1"] .lifetime_label.lf_1day,
+#main_frame #page_frame #list_frame #list .line[data-lifetime="2"] .lifetime_label.lf_1day,
+#main_frame #page_frame #list_frame #list .line[data-lifetime="3"] .lifetime_label.lf_1day,
+#main_frame #page_frame #list_frame #list .line[data-lifetime="4"] .lifetime_label.lf_1day,
+#main_frame #page_frame #list_frame #list .line[data-lifetime="5"] .lifetime_label.lf_1day,
+#main_frame #page_frame #list_frame #list .line[data-lifetime="6"] .lifetime_label.lf_1day,
+#main_frame #page_frame #list_frame #list .line[data-lifetime="7"] .lifetime_label.lf_1day{ display: block; background-color: #E09600; color: #FFFFFF; }
+
+@-moz-keyframes gone_lifetime {
+        0% { background-color: #FFE5E5; }
+        50% { background-color: #FFA8A8; }
+        100% { background-color: #FFE5E5; }
+}
+
+@-webkit-keyframes gone_lifetime {
+        0% { background-color: #FFE5E5; }
+        50% { background-color: #FFA8A8; }
+        100% { background-color: #FFE5E5; }
+}
+
+@keyframes gone_lifetime {
+        0% { background-color: #FFE5E5; }
+        50% { background-color: #FFA8A8; }
+        100% { background-color: #FFE5E5; }
+}
+
+/* ------------------- */
+
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="0"] .lifetime_label,
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="1"] .lifetime_label,
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="2"] .lifetime_label,
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="3"] .lifetime_label,
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="4"] .lifetime_label,
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="5"] .lifetime_label,
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="6"] .lifetime_label,
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="7"] .lifetime_label,
+#main_frame #page_frame #list_frame #list .line.fully_used .lifetime_label{ display: none;  }
+
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="0"],
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="1"],
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="2"],
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="3"],
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="4"],
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="5"],
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="6"],
+#main_frame #page_frame #list_frame #list .line.fully_used[data-lifetime="7"],
+#main_frame #page_frame #list_frame #list .line.fully_used{ animation-name: none; -moz-animation-name: none; -webkit-animation-name: none; border-color: #3F3F3F; background-color: #EFEFEF; filter: grayscale(100%); }
+
+/* ------------------- */
+
+
+#main_frame #page_frame #list_frame #list .line.fully_used{ border-color: #3F3F3F; background-color: #EFEFEF; filter: grayscale(100%); }
+#main_frame #page_frame #list_frame #list .line.almost_used{ background-color: #FFDBDB; border-color: #8A0000;  }
 
 .default_editor                 { position: relative; min-height: 200px; width: 100%; padding: 0px; margin: 0px; font-size: 1.0em;  }
 .default_editor select          { text-transform: uppercase; letter-spacing: 1px; }

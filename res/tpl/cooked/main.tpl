@@ -11,6 +11,7 @@
                     <td class="numi">&nbsp;</td>
                     <td class="name">Назва</td>
                     <td class="inc_date">Дата приготування</td>
+                    <td class="dead_date">Кінцева дата</td>
                     <td class="quantity_inc">Приготована кількість</td>
                     <td class="quantity_left">Залишилось</td>
                     <td class="composition">Склад</td>

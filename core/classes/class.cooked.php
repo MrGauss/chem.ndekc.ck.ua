@@ -131,14 +131,22 @@ class cooked
 
         $ingredients = array();
 
+        $existed_consume = array();
+        if( strlen($reactiv_hash) == 32 )
+        {
+            $existed_consume = ( new consume )->get_raw( array( 'reactiv_hash' => $reactiv_hash ) );
+        }
+
         $SQL['consume'] = array();
         foreach( $data['composition'] as $ingridient )
         {
+
             $ingridient['consume_hash'] = common::filter( isset( $ingridient['consume_hash'] ) ? $ingridient['consume_hash'] : false );
             $SQL['consume'][$ingridient['dispersion_id']]['dispersion_id'] = common::integer( $ingridient['dispersion_id'] );
             $SQL['consume'][$ingridient['dispersion_id']]['inc_expert_id'] = common::integer( $SQL['reactiv']['inc_expert_id'] );
             $SQL['consume'][$ingridient['dispersion_id']]['quantity']      = common::float( $ingridient['quantity'] );
             $SQL['consume'][$ingridient['dispersion_id']]['using_hash']    = ( strlen($_USING_HASH) == 32 ) ? $_USING_HASH : '%USING_HASH%';
+
 
             if( !$SQL['consume'][$ingridient['dispersion_id']]['quantity'] )        { return self::error( 'Не визначена кількість реактиву!' ); }
             if( !$SQL['consume'][$ingridient['dispersion_id']]['dispersion_id'] )   { return self::error( 'Реактив не знайдено в лабораторії!' ); }
@@ -150,8 +158,16 @@ class cooked
             $_disp = $_disp[$SQL['consume'][$ingridient['dispersion_id']]['dispersion_id']];
 
             if( $_disp['group_id'] != CURRENT_GROUP_ID )   { return self::error( 'Реактив не знайдено в лабораторії!' ); }
-            if( $SQL['consume'][$ingridient['dispersion_id']]['quantity'] > common::float($_disp['quantity_left']) )   { return self::error( 'Збавте свій апетит! Такої кількості реактиву в лабораторії немає!' ); }
-            if( time() > strtotime($_disp['dead_date']) )   { return self::error( 'Реактив "'.common::db2html($reagent[$_disp['reagent_id']]['name']).' ['.common::db2html( $_disp['reagent_number'] ).']" зіпсувався! Його неможна використати!' ); }
+
+            $uq = 0;
+            if( is_array($existed_consume) && isset($existed_consume[$ingridient['consume_hash']]) && isset($existed_consume[$ingridient['consume_hash']]['quantity']) )
+            {
+                $uq = $existed_consume[$ingridient['consume_hash']]['quantity'];
+                $uq = common::float( $uq );
+            }
+
+            if( $SQL['consume'][$ingridient['dispersion_id']]['quantity'] > ( common::float($_disp['quantity_left']) + $uq ) )   { return self::error( 'Збавте свій апетит! Такої кількості реактиву в лабораторії немає!' ); }
+            if( time() > strtotime($_disp['dead_date']) )   { return self::error( 'Реактив "'.common::trim($reagent[$_disp['reagent_id']]['name']).' ['.common::db2html( $_disp['reagent_number'] ).']" зіпсувався! Його неможна використати!' ); }
 
             if( !isset( $reactiv_menu['ingredients'][$_disp['reagent_id']] ) ){ return self::error( 'Реактив відсутній в рецепті!' ); }
 
@@ -405,6 +421,23 @@ class cooked
 
             $tpl->load( $skin );
 
+            $line['not_used_perc'] = common::compare_perc( $line['quantity_inc'], $line['quantity_left'] );
+
+            if( $line['not_used_perc'] <= 1 )                                { $tpl->set( '{tag:not_used_class}',   'fully_used' ); }
+            if( $line['not_used_perc'] >  1 && $line['not_used_perc'] <= 10 ){ $tpl->set( '{tag:not_used_class}',   'almost_used' ); }
+            if( $line['not_used_perc'] > 10 && $line['not_used_perc'] <= 50 ){ $tpl->set( '{tag:not_used_class}',   'half_used' ); }
+            if( $line['not_used_perc'] > 50 )                                { $tpl->set( '{tag:not_used_class}',   'not_used' ); }
+
+            $line['lifetime'] = strtotime( common::en_date( $line['dead_date'], 'Y-m-d 00:00:01' ) ) - strtotime( date( 'Y-m-d 00:00:01', time() ) );
+            if( $line['lifetime'] < 0 )
+            {
+                $line['lifetime'] = 'gone';
+            }
+            else
+            {
+                $line['lifetime'] = floor( $line['lifetime'] / ( 60*60*24 ) );
+            }
+
             foreach( $_dates as $_date )
             {
                 $line[$_date]       = isset($line[$_date])      ? common::en_date( $line[$_date], 'd.m.Y' ) : date( 'd.m.Y' );
@@ -412,8 +445,6 @@ class cooked
             }
 
             $line['numi'] = $I--;
-
-
 
             foreach( $line as $key => $value )
             {

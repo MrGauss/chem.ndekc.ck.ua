@@ -262,7 +262,24 @@ class stock
         {
             $tpl->load( $skin );
 
+            $line['not_used_perc'] = common::compare_perc( $line['quantity_inc'], $line['quantity_left'] );
+
+            if( $line['not_used_perc'] <= 1 )                                { $tpl->set( '{tag:not_used_class}',   'fully_used' ); }
+            if( $line['not_used_perc'] >  1 && $line['not_used_perc'] <= 10 ){ $tpl->set( '{tag:not_used_class}',   'almost_used' ); }
+            if( $line['not_used_perc'] > 10 && $line['not_used_perc'] <= 50 ){ $tpl->set( '{tag:not_used_class}',   'half_used' ); }
+            if( $line['not_used_perc'] > 50 )                                { $tpl->set( '{tag:not_used_class}',   'not_used' ); }
+
             $line['numi'] = $I--;
+
+            $line['lifetime'] = strtotime( $line['dead_date'] ) - time();
+            if( $line['lifetime'] < 0 )
+            {
+                $line['lifetime'] = 'gone';
+            }
+            else
+            {
+                $line['lifetime'] = floor( $line['lifetime'] / ( 60*60*24 ) );
+            }
 
             $line['inc_date_unix'] = strtotime( $line['inc_date'] );
             $line['inc_date'] = date( 'Y.m.d', $line['inc_date_unix'] );
@@ -271,8 +288,6 @@ class stock
             $tpl->set( '{tag:inc_date:Y}', common::db2html( date( 'Y', $line['inc_date_unix'] ) ) );
 
             $line['quantity_used'] = common::float( $line['quantity_dispersed'] ) - common::float( $line['quantity_not_used'] );
-
-
 
             foreach( $line as $key => $value )
             {
