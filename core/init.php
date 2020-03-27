@@ -34,8 +34,10 @@ require( CLASSES_DIR.DS.'class.spr_manager.php' );
 require( CLASSES_DIR.DS.'class.stock.php' );
 require( CLASSES_DIR.DS.'class.dispersion.php' );
 require( CLASSES_DIR.DS.'class.recipes.php' );
+require( CLASSES_DIR.DS.'class.using.php' );
 require( CLASSES_DIR.DS.'class.cooked.php' );
 require( CLASSES_DIR.DS.'class.consume.php' );
+require( CLASSES_DIR.DS.'class.reactiv_consume.php' );
 require( CLASSES_DIR.DS.'class.autocomplete.php' );
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-chem['stock'] = new function()
+chem['using'] = new function()
 {
     this.check_before_save = function( obj )
     {
@@ -27,24 +27,20 @@ chem['stock'] = new function()
         else{ return true; }
     }
 
-    this.reload = function( line_id )
+    this.reload = function( line_hash )
     {
-        line_id = parseInt( line_id );
-        line_id = line_id ? line_id : 0;
+        line_hash = line_hash ? line_hash : '';
 
         var post = {};
-            post['ajax'] = 1;
-            post['action'] = 4;
-            post['subaction'] = 1;
-            post['mod'] = $('body').attr('data-mod');
-            post['filters'] = {};
+            post['ajax']        = 1;
+            post['action']      = 4;
+            post['subaction']   = 1;
+            post['mod']         = $('body').attr('data-mod');
+            post['filters']     = {};
 
-        $('#filters').find('[data-role="filter"]').each(function()
-        {
-            post['filters'][$(this).attr('name')] = $(this).val();
-        });
+        $('#filters').find('[data-role="filter"]').each(function(){ post['filters'][$(this).attr('name')] = $(this).val(); });
 
-        if( line_id > 0 ){ post['filters']['id'] = line_id; }
+        if( line_hash != '' ){ post['filters']['hash'] = line_hash; }
 
         $.ajax({ data: post }).done(function( _r )
         {
@@ -52,14 +48,15 @@ chem['stock'] = new function()
 
             if( _r['lines'] )
             {
-                if( line_id > 0 )
+                if( line_hash != '' )
                 {
-                    $('#content .stock .list [data-id="'+line_id+'"]')
+                    $('#content #list_frame .list .line[data-hash="'+line_hash+'"]')
                         .off()
                         .replaceWith( _r['lines'] );
 
-                    $('#content .stock .list [data-id="'+line_id+'"]')
-                        .on( "click", function(){ chem.stock.editor( $(this) ); })
+                    $('#content #list_frame .list .line[data-hash="'+line_hash+'"]')
+                        .off()
+                        .on( "click", function(){ chem.using.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
                         {
@@ -70,11 +67,11 @@ chem['stock'] = new function()
                 }
                 else
                 {
-                    $('#content .stock .list [data-id]').off().remove();
-                    $('#content .stock .list').append( _r['lines'] );
-                    $('#content .stock [data-id]')
-                        .off(  )
-                        .on( "click", function(){ chem.stock.editor( $(this) ); } )
+                    $('#content #list_frame .list .line[data-hash]').off().remove();
+                    $('#content #list_frame .list').append( _r['lines'] );
+                    $('#content #list_frame [data-hash]')
+                        .off()
+                        .on( "click", function(){ chem.using.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
                         {
@@ -92,9 +89,9 @@ chem['stock'] = new function()
     {
         chem.single_open( obj );
 
-        var line_id = parseInt( obj.attr('data-id') );
-        var did_pref = 'stock-edit-form';
-        var did = did_pref + '-' + line_id + '-' + Math.floor((Math.random() * 1000000) + 1);
+        var line_hash = obj.attr('data-hash');
+        var did_pref = 'using-edit-form';
+        var did = did_pref + '-' + line_hash + '-' + Math.floor((Math.random() * 1000000) + 1);
 
         chem.close_it( $('[id*="'+did_pref+'"]') );
 
@@ -102,8 +99,9 @@ chem['stock'] = new function()
             post['ajax'] = 1;
             post['action'] = 1;
             post['subaction'] = 1;
-            post['mod'] = $('body').attr('data-mod');
-            post['id'] = line_id;
+            post['mod']     = $('body').attr('data-mod');
+            post['hash']      = line_hash;
+            post['rand']    = Math.floor((Math.random() * 1000000) + 1);
 
         $.ajax({ data: post }).done(function( _r )
         {
@@ -112,26 +110,20 @@ chem['stock'] = new function()
 
             if( _r['form'] )
             {
-                $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Облік надходжень реактивів і витратних матеріалів: '+(line_id?'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
+                $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Облік витрат: '+(line_hash?'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
 
                 autocomplete.init( $('#'+did+'') );
 
-                $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ); });
-
-                $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
-                $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
-
-                $('#'+did+' [name="reagent_id"]').each(function()
-                {
-                    $(this).on( 'change', function(){ $(this).parents('#'+did).find('input[name="units"]').val( $(this).find('option:selected').attr( 'data-units_name' ) ); } );
-                });
+                $('#'+did+'').find('select[data-value]')    .each(function(){ $(this).val( $(this).attr('data-value') ).trigger( "change" ); });
+                $('#'+did+'').find('input[name*="date"]')   .each(function(){ chem.init_datepicker( $(this) ); });
+                $('#'+did+' [data-mask]')                   .each(function(){ chem.init_mask( $(this) ); });
 
                 var bi = 0;
                 var dialog = {};
                     dialog["zIndex"]  = 2001;
                     dialog["modal"]   = true;
                     dialog["autoOpen"]   = true;
-                    dialog["width"]   = '800';
+                    dialog["width"]   = '900';
                     dialog["resizable"]   = false;
                     dialog["buttons"] = {};
 
@@ -146,31 +138,28 @@ chem['stock'] = new function()
                     dialog["buttons"][bi]["text"]  = "Зберегти";
                     dialog["buttons"][bi]["click"] = function()
                     {
-
                         if( !$('#'+did+' .error_area').hasClass('dnone') ){ $('#'+did+' .error_area').addClass('dnone'); }
 
-                        if( chem.stock.check_before_save( $('#'+did) ) )
+                        if( chem.using.check_before_save( $('#'+did) ) )
                         {
-                            var save_post = {};
-                                save_post['ajax'] = 1;
-                                save_post['action'] = 2;
-                                save_post['subaction'] = 1;
-                                save_post['mod'] = $('body').attr('data-mod');
-                                save_post['id']  = $('#'+did).find('input[name="id"]').val();
-                                save_post['key'] = $('#'+did).find('input[name="key"]').val();
-                                save_post['save'] = {};
+                            var post = {};
+                                post['ajax'] = 1;
+                                post['action'] = 2;
+                                post['subaction'] = 1;
+                                post['mod']         = $('body').attr('data-mod');
+                                post['rand']        = Math.floor((Math.random() * 1000000) + 1);
+                                post['hash']        = $('#'+did).find('input[name="hash"]').val();
+                                post['key']         = $('#'+did).find('input[name="key"]').val();
+                                post['save']        = {};
 
-                            $('#'+did).find('[data-save="1"]').each( function()
-                            {
-                                save_post['save'][$(this).attr('name').toString()] = $(this).val().toString();
-                            } );
+                            $('#'+did).find('[data-save="1"]').each( function(){ post['save'][$(this).attr('name').toString()] = $(this).val().toString(); } );
 
-                            $.ajax({ data: save_post }).done(function( _r )
+                            $.ajax({ data: post }).done(function( _r )
                             {
                                 try{ _r = jQuery.parseJSON( _r ); }catch(err){ chem.err( 'ERROR: '+err+"\n\n"+_r ); return false; }
 
                                 _r['error'] = parseInt(_r['error']);
-                                _r['id'] = parseInt(_r['id']);
+                                _r['hash'] = _r['hash'];
 
                                 if( parseInt(_r['error'])>0 )
                                 {
@@ -188,17 +177,19 @@ chem['stock'] = new function()
                                 }
                                 else
                                 {
-                                    if( !line_id || line_id != _r['id'] )
+                                    if( !line_hash || line_hash != _r['hash'] )
                                     {
-                                        chem.close_it( $('#'+did) );
-                                        chem.stock.reload();
+                                        setTimeout( function(){ chem.close_it( $('#'+did) ); } , 1 );
+                                        setTimeout( function(){ chem.using.reload(); } , 2 );
                                     }
                                     else
                                     {
-                                        if( _r['id'] > 0 )
+                                        if( _r['hash'] != '' )
                                         {
-                                            chem.animate_opacity( $('#'+did+' .good_area'), 'Дані успішно збережено!' );
-                                            chem.stock.reload( _r['id'] );
+
+                                            setTimeout( function(){ chem.using.reload( _r['hash'] ); } , 1 );
+                                            setTimeout( function(){ chem.close_it( $('#'+did) ); } , 2 );
+                                            setTimeout( function(){ $('#content #list_frame [data-hash="'+_r['hash']+'"]').trigger( "click" ); } , 3 );
                                         }
                                     }
                                 }
@@ -215,24 +206,25 @@ chem['stock'] = new function()
                     dialog["buttons"][bi]["text"]  = "Видалити";
                     dialog["buttons"][bi]["click"] = function()
                     {
-                        var save_post = {};
-                            save_post['ajax'] = 1;
-                            save_post['action'] = 3;
-                            save_post['subaction'] = 1;
-                            save_post['mod'] = $('body').attr('data-mod');
-                            save_post['id']  = $('#'+did).find('input[name="id"]').val();
-                            save_post['key'] = $('#'+did).find('input[name="key"]').val();
+                        var post = {};
+                            post['ajax'] = 1;
+                            post['action'] = 3;
+                            post['subaction'] = 1;
+                            post['mod']         = $('body').attr('data-mod');
+                            post['hash']        = $('#'+did).find('input[name="hash"]').val();
+                            post['key']         = $('#'+did).find('input[name="key"]').val();
+                            post['rand']        = Math.floor((Math.random() * 1000000) + 1);
 
-                        $.ajax({ data: save_post }).done(function( _r )
+                        $.ajax({ data: post }).done(function( _r )
                         {
                             _r = chem.txt2json( _r );
-                            _r['id'] = parseInt(_r['id']);
 
-                            if( _r['id'] > 0 )
+                            if( _r['hash'] != '' )
                             {
-                                $('#list .line[data-id="'+_r['id']+'"]').remove();
+                                $('#list .line[data-hash="'+_r['hash']+'"]').remove();
                                 chem.close_it( $('#'+did) );
-                                chem.stock.reload();
+
+                                chem.using.reload();
                             }
                         });
                     };
@@ -247,19 +239,19 @@ chem['stock'] = new function()
 
     this.init = function()
     {
-        $('#content .stock [data-id]').on( "click", function()
+        $('#content #list_frame [data-hash]').on( "click", function()
         {
-            chem.stock.editor( $(this) );
+            chem.using.editor( $(this) );
         });
 
-        $('#content .stock #filters #search').on( "click", function()
+        $('#content #list_frame #filters #search').on( "click", function()
         {
-            chem.stock.reload();
+            chem.using.reload();
         });
     }
 }
 
 $(document).ready( function()
 {
-    chem.stock.init();
+    chem.using.init();
 });

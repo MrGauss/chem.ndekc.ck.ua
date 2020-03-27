@@ -4,8 +4,7 @@
     <div class="hr_vertval"></div>
     <div class="element i07"><a href="/index.php?mod=cooked"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Приготовані<br>реактиви</span></a></div>
     <div class="hr_vertval"></div>
-    <div class="element i06"><a href="/index.php?mod=consume"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Використання реактивів</span></a></div>
-
+    <div class="element i06"><a href="/index.php?mod=using"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Використання реактивів</span></a></div>
 
     <hr>
 

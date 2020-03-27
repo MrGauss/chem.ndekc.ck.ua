@@ -58,6 +58,7 @@ chem['cooked'] = new function()
                         .replaceWith( _r['lines'] );
 
                     $('#content #list_frame .list .line[data-hash="'+line_hash+'"]')
+                        .off()
                         .on( "click", function(){ chem.cooked.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
@@ -72,6 +73,7 @@ chem['cooked'] = new function()
                     $('#content #list_frame .list .line[data-hash]').off().remove();
                     $('#content #list_frame .list').append( _r['lines'] );
                     $('#content #list_frame [data-hash]')
+                        .off()
                         .on( "click", function(){ chem.cooked.editor( $(this) ); })
                         .addClass('blink')
                         .switchClass( 'blink', 'normal', 1000, 'swing', function()
@@ -404,35 +406,36 @@ chem['cooked'] = new function()
                     dialog["buttons"][bi]["data-role"] = "close_button";
                     bi++;
 
-                    dialog["buttons"][bi] = {};
-                    dialog["buttons"][bi]["text"]  = "Видалити";
-                    dialog["buttons"][bi]["click"] = function()
-                    { /*
-                        var save_post = {};
-                            save_post['ajax'] = 1;
-                            save_post['action'] = 3;
-                            save_post['subaction'] = 1;
-                            save_post['mod'] = $('body').attr('data-mod');
-                            save_post['id']  = $('#'+did).find('input[name="id"]').val();
-                            save_post['key'] = $('#'+did).find('input[name="key"]').val();
-
-                        $.ajax({ data: save_post }).done(function( _r )
+                    if( line_hash != '' )
+                    {
+                        dialog["buttons"][bi] = {};
+                        dialog["buttons"][bi]["text"]  = "Видалити";
+                        dialog["buttons"][bi]["click"] = function()
                         {
-                            _r = chem.txt2json( _r );
-                            _r['id'] = parseInt(_r['id']);
+                            var post = {};
+                                post['ajax'] = 1;
+                                post['action'] = 3;
+                                post['subaction'] = 1;
+                                post['mod'] = $('body').attr('data-mod');
+                                post['hash']   = $('#'+did).find('input[name="hash"]').val();
+                                post['key']    = $('#'+did).find('input[name="key"]').val();
 
-                            if( _r['id'] > 0 )
+                            $.ajax({ data: post }).done(function( _r )
                             {
-                                $('#list .line[data-id="'+_r['id']+'"]').remove();
-                                chem.close_it( $('#'+did) );
+                                _r = chem.txt2json( _r );
 
-                                chem.cooked.reload();
-                            }
-                        });     */
-                    };
-                    dialog["buttons"][bi]["class"] = "type5 right";
-                    dialog["buttons"][bi]["data-role"] = "delete_button";
-                    bi++;
+                                if( _r['hash'] != '' )
+                                {
+                                    $('#list .line[data-hash="'+_r['hash']+'"]').remove();
+                                    chem.close_it( $('#'+did) );
+                                    chem.cooked.reload();
+                                }
+                            });
+                        };
+                        dialog["buttons"][bi]["class"] = "type5 right";
+                        dialog["buttons"][bi]["data-role"] = "delete_button";
+                        bi++;
+                    }
 
                 $('#'+did).dialog( dialog );
             }

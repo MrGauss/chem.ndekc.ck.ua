@@ -14,6 +14,61 @@ class cooked
 {
     use basic, spr, db_connect;
 
+    public final function remove( $reactiv_hash = 0 )
+    {
+        $reactiv_hash = common::filter_hash( $reactiv_hash );
+        $error = '';
+
+        if( !$error && !$reactiv_hash ){ $error = 'Ідентифікатор не визначено!'; }
+
+        ////////////////////////////////////
+
+        $data = array();
+        if( !$error && $reactiv_hash ){ $data = $reactiv_hash?$this->get_raw(array('hash'=>$reactiv_hash))[$reactiv_hash] : array(); }
+
+        if( !$error && ( !is_array($data) || !count($data) ) )                                  { $error = 'Помилка отримання даних!'; }
+        if( !$error && $data['quantity_left'] != $data['quantity_inc'] )                        { $error = 'Неможливо видалити реактив, який вже почали використовувати!';  }
+
+        ////////////////////////////////////
+        if( $error != false )
+        {
+            if( _AJAX_ ){ ajax::set_error( rand(10,99), $error ); return false; }
+            else        { common::err( $error ); return false; }
+        }
+
+        $this->db->query( 'BEGIN;' );
+        $this->db->query( '
+                                DELETE FROM reactiv USING "using"
+                                WHERE
+                                        "using".hash            = reactiv.hash
+                                    AND "using".purpose_id      = \''.$data['purpose_id'].'\'
+                                    AND reactiv.hash            = \''.$data['hash'].'\'
+                                    AND reactiv.using_hash      = \''.$data['using_hash'].'\'
+                                    AND reactiv.group_id        = '.CURRENT_GROUP_ID.'
+                                ;' );
+
+        foreach( $data['composition'] as $ingridient )
+        {
+
+            $this->db->query( '
+                                DELETE FROM "consume" USING "dispersion"
+                                WHERE
+                                        dispersion.id       = consume.dispersion_id
+                                    AND dispersion.group_id ='.CURRENT_GROUP_ID.'
+                                    AND dispersion.id       = \''.$ingridient['dispersion_id'].'\'::INTEGER
+                                    AND hash                = \''.$ingridient['consume_hash'].'\'
+                                    AND using_hash          = \''.$ingridient['using_hash'].'\'
+                                ;' );
+        }
+
+        $this->db->query( 'DELETE FROM "using" WHERE hash=\''.$data['using_hash'].'\' AND purpose_id=\''.$data['purpose_id'].'\';' );
+        $this->db->query( 'COMMIT;' );
+
+        cache::clean();
+
+        return $reactiv_hash;
+    }
+
     public final static function error( $error, $error_area = false )
     {
         if( $error != false )
@@ -36,6 +91,7 @@ class cooked
     public final function save( $reactiv_hash = false, $data = array() )
     {
         $error = false;
+        $reactiv_hash = common::filter_hash( $reactiv_hash );
 
         if( !is_array($data) )            { return self::error( 'Помилка передачі даних!' ); }
         if( !isset($data['composition']) || !is_array($data['composition']) || !count(($data['composition'])) ){ return self::error( 'Відсутня інформація про компоненти!' ); }
@@ -114,6 +170,7 @@ class cooked
         $SQL['using'] = array();
         $SQL['using']['date']       = $SQL['reactiv']['inc_date'];
         $SQL['using']['purpose_id'] = $purpose['id'];
+        $SQL['using']['group_id']   = CURRENT_GROUP_ID;
 
         if( strlen($_USING_HASH) != 32 )
         {
@@ -146,6 +203,7 @@ class cooked
             $SQL['consume'][$ingridient['dispersion_id']]['inc_expert_id'] = common::integer( $SQL['reactiv']['inc_expert_id'] );
             $SQL['consume'][$ingridient['dispersion_id']]['quantity']      = common::float( $ingridient['quantity'] );
             $SQL['consume'][$ingridient['dispersion_id']]['using_hash']    = ( strlen($_USING_HASH) == 32 ) ? $_USING_HASH : '%USING_HASH%';
+            $SQL['consume'][$ingridient['dispersion_id']]['date']          = $SQL['reactiv']['inc_date'];
 
 
             if( !$SQL['consume'][$ingridient['dispersion_id']]['quantity'] )        { return self::error( 'Не визначена кількість реактиву!' ); }
@@ -285,7 +343,10 @@ class cooked
         $line_hash = common::filter_hash( $line_hash );
 
         $data = $this->get_raw( array( 'hash' => $line_hash ) );
+
         $data = isset( $data[$line_hash] ) ? $data[$line_hash] : false;
+
+
 
         if( !is_array($data) ){ return false; }
 
@@ -302,7 +363,7 @@ class cooked
         foreach( $_dates as $_date )
         {
             $data[$_date]       = isset($data[$_date])      ? common::en_date( $data[$_date], 'd.m.Y' ) : date( 'd.m.Y' );
-            if( strpos( $data[$_date], '.197' ) !== false ){ $data[$_date] = ''; }
+            if( strpos( $data[$_date], '.197' ) !== false ){ $data[$_date] = date('d.m.Y'); }
         }
 
         $data['key'] = common::key_gen( $line_hash );
@@ -534,11 +595,11 @@ class cooked
             FROM
                 reactiv
                     LEFT JOIN reactiv_menu ON ( reactiv_menu.id = reactiv.reactiv_menu_id )
-                    LEFT JOIN "using" ON ( "using".hash = reactiv.using_hash )
+                    LEFT JOIN "using" ON ( "using".hash = reactiv.using_hash AND reactiv.group_id = "using".group_id )
             WHERE
                 '.(( isset($filters['hash']) ) ? 'reactiv.hash = \''.$filters['hash'].'\'' : 'reactiv.hash != \'\'').'
-                '.(( isset($filters['hash']) && $filters['hash'] == '' ) ? ''    :(CURRENT_GROUP_ID?'AND reactiv.group_id = '.CURRENT_GROUP_ID.'':'')).'
-            ORDER by
+                AND ( reactiv.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR reactiv.group_id = 0 )
+            ORDER by   
                 reactiv.inc_date DESC;
                 '.db::CACHED;
 
@@ -552,6 +613,7 @@ class cooked
 
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
+            $row['hash'] = common::filter_hash( $row['hash'] );
             $data[$row['hash']] = $row;
             $data[$row['hash']]['composition'] = array();
         }
@@ -579,6 +641,8 @@ class cooked
             }
         }
         //////////////////////////////////////////////////////////////////////////////////
+
+        //var_export($data);exit;
 
         cache::set( $cache_var, $data );
         return $data;

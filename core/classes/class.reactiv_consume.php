@@ -10,7 +10,7 @@ if( !trait_exists( 'basic' ) )      { require( CLASSES_DIR.DS.'trait.basic.php' 
 if( !trait_exists( 'spr' ) )        { require( CLASSES_DIR.DS.'trait.spr.php' ); }
 if( !trait_exists( 'db_connect' ) ) { require( CLASSES_DIR.DS.'trait.db_connect.php' ); }
 
-class consume
+class reactiv_consume
 {
     use basic, spr, db_connect;
 
@@ -30,9 +30,9 @@ class consume
         {
             $filters['consume_hash'] = common::filter_hash( $filters['consume_hash'] );
             $filters['consume_hash'] = is_array($filters['consume_hash']) ? $filters['consume_hash'] : array( $filters['consume_hash'] );
-            $WHERE['consume_hash']   = 'consume.hash IN(\''. implode( '\', \'', array_values( $filters['consume_hash'] ) ) .'\')';
+            $WHERE['consume_hash']   = 'reactiv_consume.hash IN(\''. implode( '\', \'', array_values( $filters['consume_hash'] ) ) .'\')';
         }
-        else{ $WHERE['consume_hash']   = 'consume.hash != \'\''; }
+        else{ $WHERE['consume_hash']   = 'reactiv_consume.hash != \'\''; }
 
         if( isset($filters['using_hash']) )
         {
@@ -45,31 +45,26 @@ class consume
 
         $SQL = '
             SELECT
-                reactiv.hash 	as reactiv_hash,
-                consume.hash    as consume_hash,
-                "using".hash 	as using_hash,
-                consume.quantity,
-                consume.dispersion_id,
-                consume.consume_ts,
-                consume.date    as consume_date,
-                "using".date    as using_date,
+                reactiv_consume.hash        as consume_hash,
+                reactiv_consume.hash 	    as reactiv_hash,
+                "using".hash 	            as using_hash,
+
+                reactiv_consume.quantity,
+                reactiv_consume.consume_ts  as consume_date,
+                "using".date                as using_date,
                 "using".purpose_id,
-                dispersion.inc_date as dispersion_inc_date,
-                dispersion.quantity_left as dispersion_quantity_left,
-                dispersion.quantity_inc as dispersion_quantity_inc,
-                stock.reagent_id,
-                stock.reagent_number
+
+                reactiv.inc_date            as reactiv_inc_date,
+                reactiv.dead_date           as reactiv_dead_date,
+                reactiv.quantity_inc        as reactiv_quantity_inc,
+                reactiv.quantity_left       as reactiv_quantity_left
             FROM
-                consume
-                    RIGHT JOIN dispersion ON( dispersion.id = consume.dispersion_id )
-                    RIGHT JOIN stock ON( stock.id = dispersion.stock_id )
-                    LEFT JOIN "using" ON( "using".hash = consume.using_hash )
-                    LEFT JOIN reactiv ON( "using".hash = reactiv.using_hash )
+                reactiv_consume
+                    LEFT JOIN "using" ON( "using".hash = reactiv_consume.using_hash )
+                    LEFT JOIN reactiv ON( reactiv_consume.reactive_hash = reactiv.hash )
             '.$WHERE.';';
 
-        // echo $SQL;exit;
-
-        $cache_var = 'consume-'.md5( $SQL ).'-raw';
+        $cache_var = 'reactiv_consume-'.md5( $SQL ).'-raw';
 
         $data = cache::get( $cache_var );
         if( $data && is_array($data) ){ return $data; }

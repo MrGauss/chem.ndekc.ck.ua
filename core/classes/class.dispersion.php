@@ -89,16 +89,17 @@ class dispersion
         if( !$error && $data4save['quantity_inc'] == 0 )      { $error = 'Зазначте кількість реактиву!'; $error_area = 'quantity_inc'; }
         if( !$error && $data4save['out_expert_id'] == 0 )     { $error = 'Зазначте хто отримав реактив!'; $error_area = 'out_expert_id'; }
 
+
+
         ///////////
-        $stock = new stock;
-        $stock = $stock->get_raw( array( 'id' => $data4save['stock_id'] ) )[$data4save['stock_id']];
+        $stock = ( new stock )->get_raw( array( 'id' => $data4save['stock_id'] ) )[$data4save['stock_id']];
 
         if( !$error && ( ( $stock['quantity_left'] + (isset($original_data['quantity_inc'])?$original_data['quantity_inc']:0) ) - $data4save['quantity_inc'] ) < 0 )
         {
             $error = 'Ви намагаєтесь видати задагато теактиву! Вирахувати недостачу з Вашої заробітної плати?'; $error_area = 'quantity_inc';
         }
 
-
+        if( time() > strtotime($stock['dead_date']) ){ $error = 'Ви намагаєтесь видати зіпсований реактив!'; $error_area = 'stock_id'; }
 
         ///////////
 
@@ -330,9 +331,8 @@ class dispersion
                     LEFT JOIN expert  as inc_expert ON( inc_expert.id = dispersion.inc_expert_id )
                     LEFT JOIN groups    ON ( dispersion.group_id = groups.id )
             WHERE
-                '.(isset($filters['id'])                            ? 'dispersion.id = '.$filters['id'].'' :   'dispersion.id > 0').'
-                '.(( isset($filters['id']) && $filters['id'] == 0 ) ? ''    :'AND groups.region_id = '.CURRENT_REGION_ID.'').'
-                '.(( isset($filters['id']) && $filters['id'] == 0 ) ? ''    :(CURRENT_GROUP_ID?'AND dispersion.group_id = '.CURRENT_GROUP_ID.'':'')).'
+                '.(isset($filters['id']) ? 'dispersion.id = '.$filters['id'].'' : 'dispersion.id > 0').'
+                AND ( dispersion.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR dispersion.group_id = 0 )
             ORDER by
                 reagent.name ASC; '.db::CACHED;
 

@@ -308,17 +308,24 @@ class stock
         $data = $class->get_raw();
         $data = is_array($data) ? $data : array();
 
+
         foreach( $data as $k=>$line )
         {
             $line['reagent_units_1l'] = substr($line['reagent_units'],0,1);
             $line = common::db2html( $line );
+
+            $line['lifetime'] = strtotime($line['dead_date']) - time();
+            if( $line['lifetime'] < 1 ){ $line['lifetime'] = 0; }
+
+            $line['lifetime'] = floor( $line['lifetime'] / ( 60*60*24 ) );
 
             $data[$k] = array();
             foreach( $line as $key => $val )
             {
                 $data[$k][] = 'data-'.$key.'="'.$val.'"';
             }
-            $data[$k] = '<option title="'.$line['reagent_name'].'" value="'.$line['id'].'" '.implode( ' ', $data[$k] ).'>'.$line['reagent_name'].' ['.$line['reagent_number'].'] доступно '.$line['quantity_left'].' '.$line['reagent_units_short'].'</option>';
+
+            $data[$k] = '<option title="'.$line['reagent_name'].'" value="'.$line['id'].'" '.implode( ' ', $data[$k] ).'>'.$line['reagent_name'].' ['.$line['reagent_number'].'] | '.$line['quantity_left'].' '.$line['reagent_units_short'].' | до '. common::en_date( $line['dead_date'], 'd.m.Y' ) .'</option>';
         }
         $data = "\n\t".implode( "\n\t", $data )."\n";
 
@@ -355,8 +362,7 @@ class stock
                 LEFT JOIN groups    ON ( stock.group_id = groups.id )
             WHERE
                 '.(isset($filters['id'])?'stock.id = \''.$filters['id'].'\'::INTEGER':'stock.id > 0').'
-                '.(( isset($filters['id']) && $filters['id'] == 0 )?'':'AND groups.region_id = '.CURRENT_REGION_ID.'').'
-                '.(( isset($filters['id']) && $filters['id'] == 0 )?'':(CURRENT_GROUP_ID?'AND stock.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER ':'')).'
+                AND ( stock.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR stock.group_id = 0 )
             ORDER by
                 stock.inc_date DESC; '.db::CACHED;
 

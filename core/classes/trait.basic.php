@@ -87,7 +87,10 @@ trait basic
     {
         if( !is_scalar( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::filter_hash', $data ); }
-        return preg_replace( '!(\W+)!is', '', $data );
+
+        $data = preg_replace( '!(\W+)!is', '', $data );
+        $data = ( strlen( $data ) == 32 ) ? $data : false;
+        return $data;
     }
 
     static public final function filter( $data )

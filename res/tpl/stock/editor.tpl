@@ -31,7 +31,7 @@
     </div>
 
     <div class="elem dead_date">
-        <label class="label">Кінцева дата</label>
+        <label class="label">Кінцева дата зберігання</label>
         <input data-important="1" class="input" type="text" autocomplete="off" name="dead_date" value="{tag:dead_date}" data-save="1" data-mask="99.99.9999" data-placeholder="__.__.____" placeholder="__.__.____" maxlength="10" data-mindate="+1d" data-maxdate="+10y">
     </div>
 
