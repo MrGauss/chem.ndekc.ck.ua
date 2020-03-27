@@ -18,6 +18,7 @@ class common
         if( $table_name == 'stock' )            { return stock::get_select(        common::integer($selected) ); }
         if( $table_name == 'recipes' )          { return recipes::make_select(     common::integer($selected) ); }
 
+        if( $table_name == 'purpose' )          { return spr_manager::make_select( 'purpose',          common::integer($selected) ); }
         if( $table_name == 'reagent' )          { return spr_manager::make_select( 'reagent',          common::integer($selected) ); }
         if( $table_name == 'clearence' )        { return spr_manager::make_select( 'clearence',        common::integer($selected) ); }
         if( $table_name == 'reagent_state' )    { return spr_manager::make_select( 'reagent_state',    common::integer($selected) ); }

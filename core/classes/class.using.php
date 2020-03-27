@@ -24,7 +24,7 @@ class using
         if( !is_array($data) ){ return false; }
 
         $_dates = array();
-        //$_dates[] = 'date';
+        $_dates[] = 'date';
 
         foreach( $_dates as $_date )
         {
@@ -38,17 +38,37 @@ class using
 
         $data['key'] = common::key_gen( $line_hash );
 
+        $tags = array();
+
         foreach( $data as $k => $v )
         {
             if( is_array($v) ){ continue; }
+
+            $tags[] = '{tag:'.$k.'}';
 
             $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
             $tpl->set( '{autocomplete:'.$k.':key}', autocomplete::key( 'stock', $k ) );
         }
 
+        if( $data['reactiv_hash'] && $data['reactiv_menu_id'] && isset($data['cooked_reactives']) && is_array($data['cooked_reactives']) && count($data['cooked_reactives']) )
+        {
+            foreach( $data['cooked_reactives'][$data['reactiv_hash']] as $k => $v )
+            {
+                if( is_array($v) ){ continue; }
+
+                $tpl->set( '{tag:reactiv:'.$k.'}', common::db2html( $v ) );
+
+                $tags[] = '{tag:reactiv:'.$k.'}';
+            }
+
+            $tpl->set( '{tag:reactiv:units:short_name}', ( new spr_manager( 'units' ) )->get_raw()[$data['cooked_reactives'][$data['reactiv_hash']]['reactiv_units_id']]['short_name'] );;
+        }
+
         $tpl->set( '{autocomplete:table}', 'stock' );
 
         $tpl->compile( $skin );
+
+        //var_export($tags);exit;
 
         return $tpl->result( $skin );
     }
@@ -109,13 +129,14 @@ class using
 
         $SQL = '
             SELECT
-                "using".*
+                "using".*,
+                reactiv.hash as reactiv_hash,
+                reactiv.reactiv_menu_id as reactiv_menu_id
             FROM
                 "using"
+                LEFT JOIN reactiv ON( reactiv.using_hash = "using".hash )
             '.$WHERE.'
             ;';
-
-        echo $SQL; exit;
 
         $cache_var = 'using-'.md5( $SQL ).'-raw';
 
@@ -125,11 +146,20 @@ class using
 
         $SQL = $this->db->query( $SQL );
 
+        $reactives = array();
+
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
+            $row['hash']            = common::filter_hash( $row['hash'] );
+            $row['reactiv_hash']    = common::filter_hash( $row['reactiv_hash'] );
+            $row['reactiv_menu_id'] = common::integer( $row['reactiv_menu_id'] );
+
+            $reactives[$row['hash']] = $row['reactiv_hash'];
+
             $data[$row['hash']] = $row;
             $data[$row['hash']]['consume']            = array();
             $data[$row['hash']]['reactiv_consume']    = array();
+            $data[$row['hash']]['cooked_reactives']   = array();
         }
 
         foreach( (new consume)->get_raw( array(  'using_hash' => array_keys( $data ) ) ) as $consume )
@@ -150,6 +180,16 @@ class using
             }
 
             $data[$consume['using_hash']]['reactiv_consume'][$consume['consume_hash']] = $consume;
+        }
+
+        foreach( ( new cooked )->get_raw( array(  'using_hash' => array_keys( $data ) ) ) as $ractive )
+        {
+            if( !isset($data[$ractive['using_hash']]) || !is_array($data[$ractive['using_hash']]['cooked_reactives']) )
+            {
+                common::err( 'Помилка отримання даних!' );
+            }
+
+            $data[$consume['using_hash']]['cooked_reactives'][$ractive['hash']] = $ractive;
         }
 
         return $data;

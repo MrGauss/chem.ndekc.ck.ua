@@ -1,0 +1,16 @@
+
+.default_editor .sides{  }
+.default_editor .sides .side{ float: left; width: 50%; }
+.default_editor .sides .side .list{ width: 100%; }
+.default_editor .sides .side .listline{ border: 1px solid #3F3F3F; padding: 5px; height: 200px; width: 100%; overflow: hidden; overflow-y: scroll; }
+
+
+.default_editor .elem.purpose{ width: 50%;  }
+
+.default_editor .elem.exp_date{ width: 15%;  }
+.default_editor .elem.exp_number{ width: 25%;  }
+.default_editor .elem.obj_count{ width: 10%;  }
+
+.default_editor .elem.reactiv_menu_id{ width: 33%;  }
+.default_editor .elem.quantity_inc{ width: 11%;  }
+.default_editor .elem.units_short_name{ width: 6%;  }

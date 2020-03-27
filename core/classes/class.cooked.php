@@ -581,7 +581,17 @@ class cooked
     {
         if( is_array($filters) )
         {
-            if( isset($filters['hash']) ){ $filters['hash'] = common::filter_hash( $filters['hash'] ); }
+            if( isset($filters['hash']) )
+            {
+                $filters['hash'] = common::filter_hash( $filters['hash'] );
+                $filters['hash'] = is_array($filters['hash']) ? $filters['hash'] : array( $filters['hash'] );
+            }
+
+            if( isset($filters['using_hash']) )
+            {
+                $filters['using_hash'] = common::filter_hash( $filters['using_hash'] );
+                $filters['using_hash'] = is_array($filters['using_hash']) ? $filters['using_hash'] : array( $filters['using_hash'] );
+            }
         }
 
         $SQL = '
@@ -597,9 +607,10 @@ class cooked
                     LEFT JOIN reactiv_menu ON ( reactiv_menu.id = reactiv.reactiv_menu_id )
                     LEFT JOIN "using" ON ( "using".hash = reactiv.using_hash AND reactiv.group_id = "using".group_id )
             WHERE
-                '.(( isset($filters['hash']) ) ? 'reactiv.hash = \''.$filters['hash'].'\'' : 'reactiv.hash != \'\'').'
+                '.(( isset($filters['hash'])        && count($filters['hash'])       ) ? 'reactiv.hash IN (\''.implode( '\', \'', $filters['hash'] ).'\')'       : 'reactiv.hash != \'\'').'
+                '.(( isset($filters['using_hash'])  && count($filters['using_hash']) ) ? 'AND "using".hash IN (\''.implode( '\', \'', $filters['using_hash'] ).'\')' : '').'
                 AND ( reactiv.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR reactiv.group_id = 0 )
-            ORDER by   
+            ORDER by
                 reactiv.inc_date DESC;
                 '.db::CACHED;
 
@@ -621,9 +632,7 @@ class cooked
         //////////////////////////////////////////////////////////////////////////////////
         if( is_array($data) && count($data) )
         {
-            $consume = new consume;
-
-            foreach( $consume->get_raw( array( 'reactiv_hash' => array_keys( $data ) ) ) as $consume_hash => $consume_data )
+            foreach( (new consume)->get_raw( array( 'reactiv_hash' => array_keys( $data ) ) ) as $consume_hash => $consume_data )
             {
                 if( !isset($data[$consume_data['reactiv_hash']]) || !isset($data[$consume_data['reactiv_hash']]['composition']) )
                 {

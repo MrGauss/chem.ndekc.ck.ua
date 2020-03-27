@@ -79,6 +79,7 @@ class consume
 
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
+            $row['consume_hash'] = common::filter_hash( $row['consume_hash'] );
             $data[$row['consume_hash']] = $row;
         }
         return $data;
