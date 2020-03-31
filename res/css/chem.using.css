@@ -24,15 +24,23 @@
 .default_editor .elem.units_short_name{ width: 6%;  }
 
 
-.default_editor .listline .consume{ width: 100%; padding: 3px 5px 2px 5px; border: 1px solid #3F3F3F; }
+.default_editor .listline .consume{ width: 100%; padding: 3px 5px 2px 5px; border: 1px solid #3F3F3F; background: #DDFFDB; }
 .default_editor .listline .consume table{ width: 100%; }
-.default_editor .listline .consume table td{ width: auto; }
-.default_editor .listline .consume table td.name{ width: auto; }
-.default_editor .listline .consume table td.name .reagent_name_fr{ width: 280px; overflow: hidden; background: red; }
-.default_editor .listline .consume table td.name .reagent_name{ width: 100%; overflow: hidden; }
-.default_editor .listline .consume table td.name .inc_date{ display: block; width: 100%; overflow: hidden; }
+.default_editor .listline .consume table td{ width: auto; padding: 10px 0px 10px 0px; }
+.default_editor .listline .consume table td.name{ width: auto;  }
+
+.default_editor .listline .consume table td.name .reagent_name_fr{ width: 280px; overflow: hidden; }
+.default_editor .listline .consume table td.quantity .quantity_fr{  }
+
+.default_editor .listline .consume table td.name .reagent_name,
+.default_editor .listline .consume table td.name .reagent_number,
+.default_editor .listline .consume table td.name .inc_date,
 .default_editor .listline .consume table td.name .available{ display: block; width: 100%; overflow: hidden; }
-.default_editor .listline .consume table td.quantity{ width: auto; }
-.default_editor .listline .consume table td.quantity .input{ width: 40px; min-width: 10px; }
-.default_editor .listline .consume table td.quantity .reagent_units_short{ display: block; width: 30px; overflow: hidden; float: right; }
-.default_editor .listline .consume table td.button{ width: 18px; }
+.default_editor .listline .consume table td.name .reagent_name{ font-weight: bold; text-transform: uppercase; font-size: 1.0em; letter-spacing: 0.05em; }
+.default_editor .listline .consume table td.name .reagent_number{ font-weight: normal; text-transform: uppercase; font-size: 0.9em; opacity: 0.8; letter-spacing: 0.05em; }
+
+
+.default_editor .listline .consume table td.quantity{ text-align: left; padding-left: 5px; }
+.default_editor .listline .consume table td.quantity .input[name="quantity"]{            width: 70px;               text-align: left; padding-left: 5px; }
+.default_editor .listline .consume table td.quantity .input[name="units_short_name"]{    width: 30px; border: none; text-align: left; background: none; }
+.default_editor .listline .consume table td.quantity .reagent_units_short{ display: block; width: 30px; overflow: hidden; float: right; text-align: center; }

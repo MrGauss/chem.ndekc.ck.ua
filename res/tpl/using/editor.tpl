@@ -93,13 +93,16 @@
         <tr>
             <td class="name">
                 <div class="reagent_name_fr">
-                    <div class="reagent_name">{tag:reagent:name} [{tag:reagent_number}]</div>
-                    <span class="inc_date">Видано: <span>{tag:dispersion_inc_date}</span></span>
-                    <span class="available">Доступно: <span class="quantity_left">{tag:dispersion_quantity_left}</span>&nbsp;<span class="reagent_units_short">{tag:reagent:units:short_name}</span></span>
+                    <span class="reagent_name">{tag:reagent:name}</span>
+                    <span class="reagent_number">[{tag:reagent_number}]</span>
                 </div>
             </td>
-            <td class="quantity"><div><input class="input"  name="quantity" type="number" min="0" step="0.01" maxlength="10" max="{tag:dispersion_quantity_left}" value="{tag:quantity}" data-save="1" data-mask="999999.99999" data-placeholder="___.___" placeholder="___.___"><span class="reagent_units_short">{tag:reagent:units:short_name}</span></div></td>
-            <td class="button"><span class="add" data-role="button"></span></td>
+            <td class="quantity">
+                <div class="quantity_fr">
+                    <input class="input" name="quantity" type="number" min="0" step="0.01" maxlength="10" max="{tag:dispersion_quantity_left}" value="{tag:quantity}" data-save="1" data-mask="999999.99999" data-placeholder="10.0" placeholder="10.0">
+                    <input class="input" name="units_short_name" type="text" value="{tag:reagent:units:short_name}">
+                </div>
+            </td>
         </tr>
     </table>
 </div>
