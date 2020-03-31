@@ -25,12 +25,15 @@ class using
 
         $_dates = array();
         $_dates[] = 'date';
+        $_dates[] = 'exp_date';
 
         foreach( $_dates as $_date )
         {
             $data[$_date]       = isset($data[$_date])      ? common::en_date( $data[$_date], 'd.m.Y' ) : date( 'd.m.Y' );
             if( strpos( $data[$_date], '.197' ) !== false ){ $data[$_date] = ''; }
         }
+
+        //var_export($data);exit;
 
         $tpl = new tpl;
 

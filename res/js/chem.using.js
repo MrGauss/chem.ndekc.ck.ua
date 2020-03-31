@@ -114,6 +114,33 @@ chem['using'] = new function()
 
                 autocomplete.init( $('#'+did+'') );
 
+                $('#'+did+'').find('select[name="purpose_id"]').on('change', function()
+                {
+                    $('#'+did).find('.elem[data-purpose]')
+                        .removeClass('dnone')
+                        .addClass('dnone')
+                        .find('.input')
+                        .each( function()
+                        {
+                            $(this).attr( 'data-save', false );
+                            $(this).attr( 'data-important', false );
+                        } );
+
+
+                    $('#'+did).find('.elem[data-purpose="'+$(this).find('option:selected')
+                        .attr( 'data-attr' )+'"]')
+                        .removeClass('dnone')
+                        .find('.input')
+                        .each( function()
+                        {
+                            $(this).attr( 'data-save', '1' );
+                            if( !$(this).hasClass('noimportant') ){ $(this).attr( 'data-important', '1' ) }
+                        } );
+
+
+
+                }).trigger( "change" );
+
                 $('#'+did+'').find('select[data-value]')    .each(function(){ $(this).val( $(this).attr('data-value') ).trigger( "change" ); });
                 $('#'+did+'').find('input[name*="date"]')   .each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]')                   .each(function(){ chem.init_mask( $(this) ); });

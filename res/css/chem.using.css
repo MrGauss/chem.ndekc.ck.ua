@@ -4,13 +4,35 @@
 .default_editor .sides .side .list{ width: 100%; }
 .default_editor .sides .side .listline{ border: 1px solid #3F3F3F; padding: 5px; height: 200px; width: 100%; overflow: hidden; overflow-y: scroll; }
 
+.default_editor .elem.exp_date .input[data-important="1"]{ padding-left: 22px; }
+
+.default_editor .elem.dnone{ display: none; }
 
 .default_editor .elem.purpose{ width: 50%;  }
+.default_editor .elem.tech_info{ width: 50%;  }
 
-.default_editor .elem.exp_date{ width: 15%;  }
+.default_editor .elem.date{ width: 20%;  }
+.default_editor .elem.user_id{ width: 40%;  }
+.default_editor .elem.ucomment{ width: 40%;  }
+
+.default_editor .elem.exp_date{ width: 13%;  }
 .default_editor .elem.exp_number{ width: 25%;  }
-.default_editor .elem.obj_count{ width: 10%;  }
+.default_editor .elem.obj_count{ width: 12%;  }
 
 .default_editor .elem.reactiv_menu_id{ width: 33%;  }
 .default_editor .elem.quantity_inc{ width: 11%;  }
 .default_editor .elem.units_short_name{ width: 6%;  }
+
+
+.default_editor .listline .consume{ width: 100%; padding: 3px 5px 2px 5px; border: 1px solid #3F3F3F; }
+.default_editor .listline .consume table{ width: 100%; }
+.default_editor .listline .consume table td{ width: auto; }
+.default_editor .listline .consume table td.name{ width: auto; }
+.default_editor .listline .consume table td.name .reagent_name_fr{ width: 280px; overflow: hidden; background: red; }
+.default_editor .listline .consume table td.name .reagent_name{ width: 100%; overflow: hidden; }
+.default_editor .listline .consume table td.name .inc_date{ display: block; width: 100%; overflow: hidden; }
+.default_editor .listline .consume table td.name .available{ display: block; width: 100%; overflow: hidden; }
+.default_editor .listline .consume table td.quantity{ width: auto; }
+.default_editor .listline .consume table td.quantity .input{ width: 40px; min-width: 10px; }
+.default_editor .listline .consume table td.quantity .reagent_units_short{ display: block; width: 30px; overflow: hidden; float: right; }
+.default_editor .listline .consume table td.button{ width: 18px; }
