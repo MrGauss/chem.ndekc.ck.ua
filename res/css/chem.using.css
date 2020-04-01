@@ -1,3 +1,7 @@
+#main_frame #page_frame #list_frame #list .line table td.numi{ width: 60px; text-align: center; }
+#main_frame #page_frame #list_frame #list .line table td.name{ width: 320px; text-align: left; }
+#main_frame #page_frame #list_frame #list .line table td.date{ width: 100px; text-align: center; }
+#main_frame #page_frame #list_frame #list .line table td.consume{ width: auto; text-align: left; }
 
 .default_editor .sides{  }
 .default_editor .sides .side{ float: left; width: 50%; }

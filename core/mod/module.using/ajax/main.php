@@ -25,7 +25,7 @@ switch ( _ACTION_ )
         }
         else
         {
-            ajax::set_data( 'id', $using->save( isset($_POST['hash'])?common::filter_hash($_POST['hash']):false, isset($_POST['save'])?$_POST['save']:false ) );
+            ajax::set_data( 'hash', $using->save( isset($_POST['hash'])?common::filter_hash($_POST['hash']):false, isset($_POST['save'])?$_POST['save']:false ) );
         }
 
     break;

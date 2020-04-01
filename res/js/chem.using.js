@@ -100,7 +100,7 @@ chem['using'] = new function()
             post['action'] = 1;
             post['subaction'] = 1;
             post['mod']     = $('body').attr('data-mod');
-            post['hash']      = line_hash;
+            post['hash']    = line_hash;
             post['rand']    = Math.floor((Math.random() * 1000000) + 1);
 
         $.ajax({ data: post }).done(function( _r )
@@ -137,13 +137,14 @@ chem['using'] = new function()
                             if( !$(this).hasClass('noimportant') ){ $(this).attr( 'data-important', '1' ) }
                         } );
 
-
-
                 }).trigger( "change" );
 
                 $('#'+did+'').find('select[data-value]')    .each(function(){ $(this).val( $(this).attr('data-value') ).trigger( "change" ); });
                 $('#'+did+'').find('input[name*="date"]')   .each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]')                   .each(function(){ chem.init_mask( $(this) ); });
+
+                if( line_hash != '' )   { $('#'+did).find('select[name="purpose_id"]').attr( 'disabled', 'disabled' ); }
+                else                    { $('#'+did).find('select[name="purpose_id"] option[data-attr="reactiv"]').css( 'display', 'none' );     }
 
                 var bi = 0;
                 var dialog = {};
@@ -264,35 +265,39 @@ chem['using'] = new function()
                     dialog["buttons"][bi]["data-role"] = "close_button";
                     bi++;
 
-                    dialog["buttons"][bi] = {};
-                    dialog["buttons"][bi]["text"]  = "Видалити";
-                    dialog["buttons"][bi]["click"] = function()
+                    if( line_hash != '' )
                     {
-                        var post = {};
-                            post['ajax'] = 1;
-                            post['action'] = 3;
-                            post['subaction'] = 1;
-                            post['mod']         = $('body').attr('data-mod');
-                            post['hash']        = $('#'+did).find('input[name="hash"]').val();
-                            post['key']         = $('#'+did).find('input[name="key"]').val();
-                            post['rand']        = Math.floor((Math.random() * 1000000) + 1);
-
-                        $.ajax({ data: post }).done(function( _r )
+                        dialog["buttons"][bi] = {};
+                        dialog["buttons"][bi]["text"]  = "Видалити";
+                        dialog["buttons"][bi]["click"] = function()
                         {
-                            _r = chem.txt2json( _r );
+                            var post = {};
+                                post['ajax'] = 1;
+                                post['action'] = 3;
+                                post['subaction'] = 1;
+                                post['mod']         = $('body').attr('data-mod');
+                                post['hash']        = $('#'+did).find('input[name="hash"]').val();
+                                post['key']         = $('#'+did).find('input[name="key"]').val();
+                                post['rand']        = Math.floor((Math.random() * 1000000) + 1);
 
-                            if( _r['hash'] != '' )
+                            $.ajax({ data: post }).done(function( _r )
                             {
-                                $('#list .line[data-hash="'+_r['hash']+'"]').remove();
-                                chem.close_it( $('#'+did) );
+                                _r = chem.txt2json( _r );
 
-                                chem.using.reload();
-                            }
-                        });
-                    };
-                    dialog["buttons"][bi]["class"] = "type5 right";
-                    dialog["buttons"][bi]["data-role"] = "delete_button";
-                    bi++;
+                                if( _r['hash'] != '' )
+                                {
+                                    $('#list .line[data-hash="'+_r['hash']+'"]').remove();
+                                    chem.close_it( $('#'+did) );
+
+                                    chem.using.reload();
+                                }
+                            });
+                        };
+                        dialog["buttons"][bi]["class"] = "type5 right";
+                        dialog["buttons"][bi]["data-role"] = "delete_button";
+                        bi++;
+                    }
+
 
                 $('#'+did).dialog( dialog );
             }

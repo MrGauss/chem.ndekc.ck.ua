@@ -23,8 +23,6 @@ class using
 
         if( !is_array($data) ){ return false; }
 
-        // var_export($data);exit;
-
         $_dates = array();
         $_dates[] = 'date';
         $_dates[] = 'exp_date';
@@ -40,6 +38,8 @@ class using
         $tpl->load( $skin );
 
         $data['key'] = common::key_gen( $line_hash );
+
+        if( !$data['purpose_id'] ){ $data['purpose_id'] = 1; }
 
         $tags = array();
 
@@ -197,11 +197,18 @@ class using
 
     public final function get_html( $filters = array(), $skin = false )
     {
-        $data = $this->get_raw( $filters );
+        $_dates = array();
+        $_dates[] = 'date';
+        $_dates[] = 'exp_date';
 
+        $data = $this->get_raw( $filters );
         $data = is_array($data) ? $data : array();
 
-        $_dates = array();
+        if( !count($data) ){ return false; }
+
+        $purpose = ( new spr_manager( 'purpose' )   )->get_raw();
+        $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
+        $recipes = ( new recipes() )->get_raw();
 
         $tpl = new tpl;
 
@@ -210,11 +217,44 @@ class using
         {
             $tpl->load( $skin );
 
+            $line['numi'] = $I--;
+
+            $tags = array();
+
+            foreach( $_dates as $_date )
+            {
+                if( !isset($line[$_date]) ){ continue; }
+                $line[$_date] = common::en_date( $line[$_date], 'd.m.Y' );
+                if( strpos( $line[$_date], '.197' ) !== false ){ $line[$_date] = ''; }
+            }
+
             foreach( $line as $key => $value )
             {
                 if( is_array($value) ){ continue; }
+                $tags[] = '{tag:'.$key.'} : \''.common::db2html( $value ).'\'';
                 $tpl->set( '{tag:'.$key.'}', common::db2html( $value ) );
             }
+            $tpl->set_block( '!\{tag:(\w+?)\}!is', '' );
+
+            foreach( isset($purpose[$line['purpose_id']])?$purpose[$line['purpose_id']]:array() as $key => $value )
+            {
+                if( is_array($value) ){ continue; }
+                $tags[] = '{tag:purpose:'.$key.'} : \''.common::db2html( $value ).'\'';
+                $tpl->set( '{tag:purpose:'.$key.'}', common::db2html( $value ) );
+            }
+            $tpl->set_block( '!\{tag:purpose:(\w+?)\}!is', '' );
+
+            foreach( isset($recipes[$line['reactiv_menu_id']])?$recipes[$line['reactiv_menu_id']]:array() as $key => $value )
+            {
+                if( is_array($value) ){ continue; }
+                $tags[] = '{tag:recipe:'.$key.'} : \''.common::db2html( $value ).'\'';
+                $tpl->set( '{tag:recipe:'.$key.'}', common::db2html( $value ) );
+            }
+            $tpl->set_block( '!\{tag:recipe:(\w+?)\}!is', '' );
+
+            $tpl->set( '{consume:list}', $this->get_html_consume( isset($line['consume'])?$line['consume']:array(), 'using/consume_elem' ) );
+
+            // echo implode( "\n", $tags ); echo "\n\n\n"; var_export($line);exit;
 
             $tpl->compile( $skin );
         }
@@ -229,7 +269,7 @@ class using
 
         if( isset($filters['hash']) )
         {
-            $filters['hash'] = common::filter_hash( $filters['hash'] );
+            $filters['hash'] = common::filter_hash( $filters['hash']?$filters['hash']:'' );
             $filters['hash'] = is_array($filters['hash']) ? $filters['hash'] : array( $filters['hash'] );
 
             $filters['hash'] = array_unique($filters['hash']);
@@ -258,6 +298,7 @@ class using
                 "using"
                 LEFT JOIN reactiv ON( reactiv.using_hash = "using".hash )
             '.$WHERE.'
+            ORDER BY "using"."date" DESC
             ;';
 
         $cache_var = 'using-'.md5( $SQL ).'-raw';
@@ -272,13 +313,14 @@ class using
 
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
-            $row['hash']            = common::filter_hash( $row['hash'] );
-            $row['reactiv_hash']    = common::filter_hash( $row['reactiv_hash'] );
+            $row['hash']            = common::filter_hash( $row['hash'] ? $row['hash'] : '' );
+            $row['reactiv_hash']    = common::filter_hash( $row['reactiv_hash'] ? $row['reactiv_hash'] : '' );
             $row['reactiv_menu_id'] = common::integer( $row['reactiv_menu_id'] );
 
             $reactives[$row['hash']] = $row['reactiv_hash'];
 
             $data[$row['hash']] = $row;
+            $data[$row['hash']]['ucomment'] = common::decode_string( common::stripslashes( $data[$row['hash']]['ucomment'] ) );
             $data[$row['hash']]['consume']            = array();
             $data[$row['hash']]['reactiv_consume']    = array();
             $data[$row['hash']]['cooked_reactives']   = array();
@@ -357,35 +399,123 @@ class using
         /////////
 
         if( !isset($purpose['id']) || !$purpose['id'] ) { return self::error( 'Системна помилка! Не вдалося визначити мету використання!', false ); }
+        if( $purpose['attr'] == 'reactiv' ){ return self::error( 'Редагування даного запису заборонено!', false ); }
 
         /////////
 
-        $SQL[] = array();
+        $SQL = array();
         $SQL['using'] = array();
-        $SQL['using']['date']       = date( 'Y-m-d', common::integer( isset($data['data']) ? strtotime($data['data']) : 0 ) );
+        $SQL['using']['date']       = date( 'Y-m-d', common::integer( isset($data['date']) ? strtotime($data['date']) : 0 ) );
         $SQL['using']['purpose_id'] = common::integer( isset($data['purpose_id']) ? $data['purpose_id'] : false );
         $SQL['using']['group_id']   = CURRENT_GROUP_ID;
-        $SQL['using']['exp_number'] = CURRENT_GROUP_ID;
-        $SQL['using']['exp_date']   = CURRENT_GROUP_ID;
-        $SQL['using']['obj_count']  = CURRENT_GROUP_ID;
+        $SQL['using']['exp_number'] = common::filter( isset($data['exp_number']) ? $data['exp_number'] : '' );
+        $SQL['using']['exp_date']   = date( 'Y-m-d', common::integer( isset($data['exp_date']) ? strtotime($data['exp_date']) : 0 ) );
+        $SQL['using']['obj_count']  = common::integer( isset($data['obj_count']) ? $data['obj_count'] : false );
         $SQL['using']['tech_info']  = common::filter( isset($data['tech_info']) ? $data['tech_info'] : '' );
-        $SQL['using']['ucomment']   = common::filter( isset($data['comment'])   ? $data['comment'] : '' );
+        $SQL['using']['ucomment']   = common::encode_string( common::trim( common::filter( isset($data['comment']) ? $data['comment'] : '' ) ) );
+
+        ///////////////////////
+
+        if( $purpose['attr'] != 'expertise' )
+        {
+            unset( $SQL['using']['exp_number'] );
+            unset( $SQL['using']['exp_date'] );
+            unset( $SQL['using']['obj_count'] );
+        }
+
+        if( $purpose['attr'] != 'reactiv' )
+        {
+
+        }
+
+        if( $purpose['attr'] != 'maintenance' )
+        {
+            unset( $SQL['using']['tech_info'] );
+        }
+
+        ///////////////////////
+
+        $USING_QUERY = false;
+        if( $using_hash )
+        {
+            $USING_QUERY = array();
+            foreach( array_map( array( &$this->db, 'safesql' ), $SQL['using'] ) as $k=>$v )
+            {
+                $USING_QUERY[] = '"'.$k.'"=\''.$v.'\'';
+            }
+            $USING_QUERY = 'UPDATE "using" SET '.implode( ', ', $USING_QUERY ).' WHERE "hash"=\''.$this->db->safesql( $using_hash ).'\' RETURNING "hash";';
+        }
+        else
+        {
+            $USING_QUERY = array_map( array( &$this->db, 'safesql' ), $SQL['using'] );
+            $USING_QUERY = 'INSERT INTO "using" ("'.implode( '", "', array_keys( $USING_QUERY ) ).'") VALUES( \''.implode( '\', \'', array_values( $USING_QUERY ) ).'\' ) RETURNING "hash";';
+        }
+
+        /////////////////
+
+        $CONSUME_QUERY = array();
+        $SQL['consume'] = array();
+        foreach( isset($data['consume'])?$data['consume']:array() as $k=>$consume_data )
+        {
+            $consume_hash = common::filter_hash( isset($consume_data['consume_hash']) ? $consume_data['consume_hash'] : false );
+            $consume_data['key'] = isset($consume_data['key']) ? $consume_data['key'] : false;
+
+            if( !common::key_check( $consume_hash, $consume_data['key'] ) )
+            {
+                return self::error( 'Помилка даних! Виявлено розбіжності в ідентифікаторах!', false );
+            }
+
+            $SQL['consume'][$k] = array();
+            $SQL['consume'][$k]['dispersion_id']    = common::integer( isset($consume_data['dispersion_id']) ? $consume_data['dispersion_id'] : false );
+            $SQL['consume'][$k]['quantity']         = common::float( isset($consume_data['quantity']) ? $consume_data['quantity'] : false );
+            $SQL['consume'][$k]['inc_expert_id']    = CURRENT_USER_ID;
+            $SQL['consume'][$k]['using_hash']       = '%USING_HASH%';
+            $SQL['consume'][$k]['date']             = $SQL['using']['date'];
+
+            if( $consume_hash )
+            {
+                $CONSUME_QUERY[$k] = array();
+                foreach( array_map( array( &$this->db, 'safesql' ), $SQL['consume'][$k] ) as $tag=>$v )
+                {
+                    $CONSUME_QUERY[$k][] = '"'.$tag.'"=\''.$v.'\'';
+                }
+                $CONSUME_QUERY[$k] = 'UPDATE "consume" SET '.implode( ', ', $CONSUME_QUERY[$k] ).' WHERE "hash"=\''.$this->db->safesql( $consume_hash ).'\' AND "using_hash"=\'%USING_HASH%\';';
+            }
+            else
+            {
+                $CONSUME_QUERY[$k] = array_map( array( &$this->db, 'safesql' ), $SQL['consume'][$k] );
+                $CONSUME_QUERY[$k] = 'INSERT INTO "consume" ("'.implode( '", "', array_keys( $USING_QUERY ) ).'") VALUES( \''.implode( '\', \'', array_values( $CONSUME_QUERY[$k] ) ).'\' );';
+            }
+        }
 
 
+        ////////////////
 
-/*
-    'purpose_id' => 3,
-    'reactiv_menu_id' => '29',
-    'quantity_inc' => '20',
-    'obj_count' => 'мл',
-    'date' => '02.03.2020',
-    'user_id' => '1',
-    'comment' => '',
-*/
+        $err = false;
+        $this->db->query( 'BEGIN;' );
 
-        var_export($data);exit;
+        /////////////////
 
+        $USING_HASH_FROM_DB = $this->db->super_query( $USING_QUERY )['hash'];
 
+        if( $using_hash && $using_hash != $USING_HASH_FROM_DB ) { return self::error( 'Помилка збереження даних!', false ); }
+
+        if( !$err && count($CONSUME_QUERY) )
+        {
+            $CONSUME_QUERY = implode( "\n", $CONSUME_QUERY );
+            $CONSUME_QUERY = str_replace( '%USING_HASH%', $USING_HASH_FROM_DB, $CONSUME_QUERY );
+            $this->db->query( $CONSUME_QUERY );
+        }
+
+        if( !$err )
+        {
+            $this->db->query( 'COMMIT;' );
+            cache::clean();
+            return $USING_HASH_FROM_DB;
+        }
+
+        $this->db->query( 'ROLLBACK;' );
+        return self::error( $err, false );
     }
 
 

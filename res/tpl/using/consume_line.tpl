@@ -1,6 +1,6 @@
             <div class="consume"
-                    data-dispersion_id="{tag:dispersion_id}"
                     data-consume_hash="{tag:consume_hash}"
+                    data-dispersion_id="{tag:dispersion_id}"
                     data-key="{tag:key}"
             >
                 <table>
