@@ -2,7 +2,7 @@
 .default_editor .sides{  }
 .default_editor .sides .side{ float: left; width: 50%; }
 .default_editor .sides .side .list{ width: 100%; }
-.default_editor .sides .side .listline{ border: 1px solid #3F3F3F; padding: 5px; height: 200px; width: 100%; overflow: hidden; overflow-y: scroll; }
+.default_editor .sides .side .listline{ border: 1px solid #3F3F3F; padding: 5px; height: 300px; width: 100%; overflow: hidden; overflow-y: scroll; }
 
 .default_editor .elem.exp_date .input[data-important="1"]{ padding-left: 22px; }
 
@@ -24,7 +24,8 @@
 .default_editor .elem.units_short_name{ width: 6%;  }
 
 
-.default_editor .listline .consume{ width: 100%; padding: 3px 5px 2px 5px; border: 1px solid #3F3F3F; background: #DDFFDB; }
+.default_editor .listline .consume{ width: 100%; padding: 5px 5px 5px 5px; margin: 3px 0px 2px 0px; border: 1px solid #3F3F3F; background: #DDFFDB; opacity: 0.75; cursor: pointer; }
+.default_editor .listline .consume:hover{ opacity: 1.0; }
 .default_editor .listline .consume table{ width: 100%; }
 .default_editor .listline .consume table td{ width: auto; padding: 10px 0px 10px 0px; }
 .default_editor .listline .consume table td.name{ width: auto;  }
@@ -41,6 +42,6 @@
 
 
 .default_editor .listline .consume table td.quantity{ text-align: left; padding-left: 5px; }
-.default_editor .listline .consume table td.quantity .input[name="quantity"]{            width: 70px;               text-align: left; padding-left: 5px; }
+.default_editor .listline .consume table td.quantity .input[name="consume_quantity"]{            width: 70px;               text-align: left; padding-left: 5px; }
 .default_editor .listline .consume table td.quantity .input[name="units_short_name"]{    width: 30px; border: none; text-align: left; background: none; }
 .default_editor .listline .consume table td.quantity .reagent_units_short{ display: block; width: 30px; overflow: hidden; float: right; text-align: center; }

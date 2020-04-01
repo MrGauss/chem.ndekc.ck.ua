@@ -46,7 +46,7 @@ class reactiv_consume
         $SQL = '
             SELECT
                 reactiv_consume.hash        as consume_hash,
-                reactiv_consume.hash 	    as reactiv_hash,
+                reactiv.hash 	            as reactiv_hash,
                 "using".hash 	            as using_hash,
 
                 reactiv_consume.quantity,
@@ -74,7 +74,7 @@ class reactiv_consume
 
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
-            $row['consume_hash'] = common::filter_hash( $row['consume_hash'] );   
+            $row['consume_hash'] = common::filter_hash( $row['consume_hash'] );
             $data[$row['consume_hash']] = $row;
         }
         return $data;

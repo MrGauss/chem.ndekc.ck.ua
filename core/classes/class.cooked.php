@@ -126,25 +126,22 @@ class cooked
         $SQL['reactiv']['inc_expert_id']   = common::integer( isset($data['inc_expert_id']) ? $data['inc_expert_id'] : false );
         $SQL['reactiv']['inc_expert_id']   = $reactiv_hash ? $SQL['reactiv']['inc_expert_id'] : CURRENT_USER_ID;
         $SQL['reactiv']['group_id']        = CURRENT_GROUP_ID;
-        $SQL['reactiv']['inc_date']        = date( 'Y-m-d', common::integer( isset($data['inc_date']) ?  ( $data['inc_date_unix']  = strtotime($data['inc_date'] ) ) : ( $data['inc_date_unix']  = 0 ) ) );
-        $SQL['reactiv']['dead_date']       = date( 'Y-m-d', common::integer( isset($data['dead_date']) ? ( $data['dead_date_unix'] = strtotime($data['dead_date']) ) : ( $data['dead_date_unix'] = 0 ) ) );
+        $SQL['reactiv']['inc_date']        = date( 'Y-m-d', common::integer( isset($data['inc_date']) ? strtotime($data['inc_date']) : 0 ) );
+        $SQL['reactiv']['dead_date']       = date( 'Y-m-d', common::integer( isset($data['dead_date']) ? strtotime($data['dead_date']) : 0 ) );
         $SQL['reactiv']['using_hash']      = common::filter_hash( isset($data['using_hash']) ? $data['using_hash'] : false );
         $SQL['reactiv']['safe_place']      = common::filter( isset($data['safe_place']) ? $data['safe_place'] : false );
         $SQL['reactiv']['safe_needs']      = common::filter( isset($data['safe_needs']) ? $data['safe_needs'] : false );
         $SQL['reactiv']['comment']         = common::filter( isset($data['comment']) ? $data['comment'] : false );
 
-        $data['inc_date_unix']  = $data['inc_date_unix']  ? $data['inc_date_unix']  : 0;
-        $data['dead_date_unix'] = $data['dead_date_unix'] ? $data['dead_date_unix'] : 0;
-
         $_USING_HASH = $SQL['reactiv']['using_hash'];
 
         if( !$SQL['reactiv']['reactiv_menu_id'] )                                   { return self::error( 'Рецепт приготування не визначено!',              'reactiv_menu_id' ); }
         if( !$SQL['reactiv']['quantity_inc'] )                                      { return self::error( 'Не визначена кількість приготованого реактиву!', 'quantity_inc' ); }
-        if( $data['inc_date_unix'] > $data['inc_date_unix'] )                       { return self::error( 'Дата приготування не може бути з майбутнього!',   'inc_date' ); }
-        if( $data['inc_date_unix'] < ( $data['inc_date_unix'] - $date_diap ) )      { return self::error( 'Дата приготування занадто давня!',   'inc_date' ); }
+        if( strtotime($SQL['reactiv']['inc_date']) > time() )                       { return self::error( 'Дата приготування не може бути з майбутнього!',   'inc_date' ); }
+        if( strtotime($SQL['reactiv']['inc_date']) < ( time() - $date_diap ) )      { return self::error( 'Дата приготування занадто давня!',   'inc_date' ); }
 
-        if( $data['dead_date_unix'] < $data['inc_date_unix'] )                      { return self::error( 'Дата зберігання не може бути більшою ніж дата приготування!',   'inc_date|dead_date' ); }
-        if( $data['dead_date_unix'] > ( $data['inc_date_unix'] + $date_diap ) )     { return self::error( 'Дата зберігання занадто оптимістична! Ця херня стільки не стоятиме!',   'dead_date' ); }
+        if( strtotime($SQL['reactiv']['dead_date']) < strtotime($SQL['reactiv']['inc_date']) )  { return self::error( 'Дата зберігання не може бути більшою ніж дата приготування!',   'inc_date|dead_date' ); }
+        if( strtotime($SQL['reactiv']['dead_date']) > ( time() + $date_diap ) )                 { return self::error( 'Дата зберігання занадто оптимістична! Ця херня стільки не стоятиме!',   'dead_date' ); }
 
         if( strlen($SQL['reactiv']['safe_place']) > 250 )   { return self::error( 'Місце зберігання занадто довге!',   'safe_place' ); }
         if( strlen($SQL['reactiv']['safe_place']) < 3 )     { return self::error( 'Місце зберігання занадто коротке!', 'safe_place' ); }
@@ -228,7 +225,7 @@ class cooked
             }
 
             if( $SQL['consume'][$ingridient['dispersion_id']]['quantity'] > ( common::float($_disp['quantity_left']) + $uq ) )   { return self::error( 'Збавте свій апетит! Такої кількості реактиву в лабораторії немає!' ); }
-            if( $data['inc_date_unix'] > strtotime($_disp['dead_date']) )   { return self::error( 'Реактив "'.common::trim($reagent[$_disp['reagent_id']]['name']).' ['.common::db2html( $_disp['reagent_number'] ).']" зіпсувався! Його неможна використати!' ); }
+            if( time() > strtotime($_disp['dead_date']) )   { return self::error( 'Реактив "'.common::trim($reagent[$_disp['reagent_id']]['name']).' ['.common::db2html( $_disp['reagent_number'] ).']" зіпсувався! Його неможна використати!' ); }
 
             if( !isset( $reactiv_menu['ingredients'][$_disp['reagent_id']] ) ){ return self::error( 'Реактив відсутній в рецепті!' ); }
 
@@ -467,7 +464,7 @@ class cooked
 
         $data = is_array($data) ? $data : array();
 
-        $purpose        = ( new spr_manager( 'purpose' ) )    ->get_raw();
+        $purpose        = ( new spr_manager( 'purpose' ) )  ->get_raw();
         $units          = ( new spr_manager( 'units' ) )    ->get_raw();
         $reagent        = ( new spr_manager( 'reagent' ) )  ->get_raw();
         $reactiv_menu   = ( new recipes )                   ->get_raw();

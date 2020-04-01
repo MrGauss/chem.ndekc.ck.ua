@@ -23,6 +23,8 @@ class using
 
         if( !is_array($data) ){ return false; }
 
+        // var_export($data);exit;
+
         $_dates = array();
         $_dates[] = 'date';
         $_dates[] = 'exp_date';
@@ -32,8 +34,6 @@ class using
             $data[$_date]       = isset($data[$_date])      ? common::en_date( $data[$_date], 'd.m.Y' ) : date( 'd.m.Y' );
             if( strpos( $data[$_date], '.197' ) !== false ){ $data[$_date] = ''; }
         }
-
-        //var_export($data);exit;
 
         $tpl = new tpl;
 
@@ -68,13 +68,132 @@ class using
         }
 
         $tpl->set( '{autocomplete:table}', 'stock' );
+        $tpl->set( '{consume:list}', $this->get_html_consume( $data['consume'], 'using/consume_line' ) );
+        $tpl->set( '{reactiv_consume:list}', $this->get_html_consume( $data['reactiv_consume'], 'using/reactiv_consume_line' ) );
 
         $tpl->compile( $skin );
 
-        //var_export($tags);exit;
+        return $tpl->result( $skin );
+    }
+
+
+    public final function get_html_consume( $data = array(), $skin = false )
+    {
+        $data = is_array($data) ? $data : array();
+
+        if( !count($data) ){ return ''; }
+
+        $_dates = array();
+        $_dates[] = 'consume_ts';
+        $_dates[] = 'consume_date';
+        $_dates[] = 'using_date';
+        $_dates[] = 'dispersion_inc_date';
+        $_dates[] = 'reactiv_inc_date';
+        $_dates[] = 'reactiv_dead_date';
+        $_dates[] = 'using_date';
+        $_dates[] = 'consume_date';
+
+        $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
+        $units   = ( new spr_manager( 'units' )   )->get_raw();
+
+        $tpl = new tpl;
+
+        $I = count( $data );
+
+        $reactives_filters                  = array();
+        $reactives_filters['hash']          = array();
+        $reactives_filters['using_hash']    = array();
+
+        foreach( $data as $line )
+        {
+            $tpl->load( $skin );
+
+            if( isset($line['reactiv_hash']) ){ $reactives_filters['hash'][]        = $line['reactiv_hash']; }
+            if( isset($line['reactiv_hash']) ){ $reactives_filters['using_hash'][]  = $line['using_hash']; }
+
+            $line['key'] = common::key_gen( $line['consume_hash'] );
+
+            $tags = array();
+
+            foreach( $_dates as $_date )
+            {
+                if( !isset($line[$_date]) ){ continue; }
+
+                $line[$_date] = common::en_date( $line[$_date], 'd.m.Y' );
+                if( strpos( $line[$_date], '.197' ) !== false ){ $line[$_date] = ''; }
+            }
+
+            $line['numi'] = $I--;
+
+
+            foreach( $line as $key => $value )
+            {
+                if( is_array($value) ){ continue; }
+
+                $tags[] = '{tag:'.$key.'}';
+                $tpl->set( '{tag:'.$key.'}', common::db2html( $value ) );
+            }
+
+            if( isset($line['reagent_id']) )
+            {
+                foreach( isset($reagent[$line['reagent_id']]) ? $reagent[$line['reagent_id']] : array() as $key => $value )
+                {
+                    if( is_array($value) ){ continue; }
+
+                    $tags[] = '{tag:reagent:'.$key.'}';
+                    $tpl->set( '{tag:reagent:'.$key.'}', common::db2html( $value ) );
+                }
+
+                if( isset($reagent[$line['reagent_id']]) && isset($reagent[$line['reagent_id']]['units_id']) && $reagent[$line['reagent_id']]['units_id'] )
+                {
+                    foreach( isset($units[$reagent[$line['reagent_id']]['units_id']]) ? $units[$reagent[$line['reagent_id']]['units_id']] : array() as $key => $value )
+                    {
+                        if( is_array($value) ){ continue; }
+
+                        $tags[] = '{tag:reagent:units:'.$key.'}';
+                        $tpl->set( '{tag:reagent:units:'.$key.'}', common::db2html( $value ) );
+                    }
+                }
+            }
+
+            if( count($reactives_filters['hash']) && count($reactives_filters['using_hash']) )
+            {
+                foreach( (new cooked)->get_raw( $reactives_filters ) as $reactive )
+                {
+                    $reactive['inc_date_unix']  = strtotime( $reactive['inc_date'] );
+                    $reactive['dead_date_unix'] = strtotime( $reactive['dead_date'] );
+
+                    $reactive['inc_date'] = common::en_date( $reactive['inc_date'], 'd.m.Y' );
+                    $reactive['dead_date'] = common::en_date( $reactive['dead_date'], 'd.m.Y' );
+
+                    foreach( $reactive as $key => $value )
+                    {
+                        if( is_array($value) ){ continue; }
+
+                        $tags[] = '{cooked:'.$key.'}';
+                        $tpl->set( '{cooked:'.$key.'}', common::db2html( $value ) );
+                    }
+
+                    if( isset($units[$reactive['reactiv_units_id']]) )
+                    {
+                        foreach( $units[$reactive['reactiv_units_id']] as $key => $value )
+                        {
+                            if( is_array($value) ){ continue; }
+
+                            $tags[] = '{cooked:units:'.$key.'}';
+                            $tpl->set( '{cooked:units:'.$key.'}', common::db2html( $value ) );
+                        }
+                    }
+
+                }
+            }
+
+            $tpl->compile( $skin );
+        }
 
         return $tpl->result( $skin );
     }
+
 
     public final function get_html( $filters = array(), $skin = false )
     {
@@ -198,7 +317,76 @@ class using
         return $data;
     }
 
+    public final static function error( $error, $error_area = false )
+    {
+        if( $error != false )
+        {
+            if( _AJAX_ )
+            {
+                ajax::set_error( rand(10,99), $error );
+                ajax::set_data( 'err_area', isset($error_area) ? $error_area : '' );
+                return false;
+            }
+            else
+            {
+                common::err( $error );
+                return false;
+            }
+        }
+        return true;
+    }
 
+    public final function save( $using_hash = false, $data = array() )
+    {
+        $error = false;
+        $using_hash = common::filter_hash( $using_hash );
+
+        if( !is_array($data) )            { return self::error( 'Помилка передачі даних!' ); }
+        //if( !isset($data['composition']) || !is_array($data['composition']) || !count(($data['composition'])) ){ return self::error( 'Відсутня інформація про компоненти!' ); }
+
+        $date_diap = (60*60*24*356*10);
+
+        /////////
+        $data['purpose_id'] = common::integer( isset($data['purpose_id'])?$data['purpose_id']:0 );
+
+        $purpose = ( ( new spr_manager( 'purpose' )   )->get_raw()[$data['purpose_id']] );
+        $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
+
+
+
+        /////////
+
+        if( !isset($purpose['id']) || !$purpose['id'] ) { return self::error( 'Системна помилка! Не вдалося визначити мету використання!', false ); }
+
+        /////////
+
+        $SQL[] = array();
+        $SQL['using'] = array();
+        $SQL['using']['date']       = date( 'Y-m-d', common::integer( isset($data['data']) ? strtotime($data['data']) : 0 ) );
+        $SQL['using']['purpose_id'] = common::integer( isset($data['purpose_id']) ? $data['purpose_id'] : false );
+        $SQL['using']['group_id']   = CURRENT_GROUP_ID;
+        $SQL['using']['exp_number'] = CURRENT_GROUP_ID;
+        $SQL['using']['exp_date']   = CURRENT_GROUP_ID;
+        $SQL['using']['obj_count']  = CURRENT_GROUP_ID;
+        $SQL['using']['tech_info']  = common::filter( isset($data['tech_info']) ? $data['tech_info'] : '' );
+        $SQL['using']['ucomment']   = common::filter( isset($data['comment'])   ? $data['comment'] : '' );
+
+
+
+/*
+    'purpose_id' => 3,
+    'reactiv_menu_id' => '29',
+    'quantity_inc' => '20',
+    'obj_count' => 'мл',
+    'date' => '02.03.2020',
+    'user_id' => '1',
+    'comment' => '',
+*/
+
+        var_export($data);exit;
+
+
+    }
 
 
 

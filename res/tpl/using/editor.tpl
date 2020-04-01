@@ -3,7 +3,7 @@
     <div class="good_area dnone"></div>
     <div class="clear"></div>
 
-    <input type="hidden" name="id" value="{tag:id}" />
+    <input type="hidden" name="hash" value="{tag:hash}" />
     <input type="hidden" name="key" value="{tag:key}" />
 
     <div class="elem purpose">
@@ -13,20 +13,18 @@
 
     <div class="elem reactiv_menu_id" data-purpose="reactiv">
         <label class="label">Рецепт приготування</label>
-        <select disabled="disabled" class="input select" data-value="{tag:reactiv_menu_id}" value="{tag:reactiv_menu_id}" name="reactiv_menu_id"><option value="0">--</option>{select:recipes}</select>
+        <select disabled="disabled" class="input select" disabled="disabled" data-value="{tag:reactiv_menu_id}" value="{tag:reactiv_menu_id}" name="reactiv_menu_id"><option value="0">--</option>{select:recipes}</select>
     </div>
 
     <div class="elem quantity_inc" data-purpose="reactiv">
         <label class="label">Кількість</label>
-        <input class="input" type="text"  name="obj_count" value="{tag:reactiv:quantity_inc}"  disabled="disabled">
+        <input class="input" type="text" name="quantity_inc" value="{tag:reactiv:quantity_inc}" disabled="disabled">
     </div>
 
     <div class="elem units_short_name" data-purpose="reactiv">
         <label class="label">&nbsp;</label>
         <input class="input noimportant" type="text" name="obj_count" value="{tag:reactiv:units:short_name}"  disabled="disabled">
     </div>
-
-
 
     <div class="elem exp_number" data-purpose="expertise">
         <label class="label">Номер висновку</label>
@@ -43,8 +41,6 @@
         <input data-important="1" class="input" type="number" min="0" step="1" maxlength="5" max="1000000000" name="obj_count" value="{tag:obj_count}" data-save="1" data-mask="99999" data-placeholder="" placeholder="">
     </div>
 
-
-
     <div class="elem tech_info" data-purpose="maintenance">
         <label class="label">Деталі використання</label>
         <input class="input" type="text" name="tech_info" value="{tag:tech_info}" data-save="1">
@@ -59,7 +55,7 @@
 
     <div class="elem user_id">
         <label class="label">Використав</label>
-        <select disabled="disabled" class="input select" data-value="{CURRENT_USER_ID}" value="{CURRENT_USER_ID}" name="user_id"><option value="0">--</option>{select:user}</select>
+        <select disabled="disabled" class="input select" data-value="{CURRENT_USER_ID}" value="{CURRENT_USER_ID}" name="user_id" data-save="1" data-important="1"><option value="0">--</option>{select:user}</select>
     </div>
 
     <div class="elem ucomment">
@@ -75,40 +71,8 @@
         <div class="side side1">
             <div class="elem list">
                 <label class="label">Реактиви</label>
-                <div class="listline">
-
-
-
-<div class="consume"
-        data-dispersion_id="{tag:dispersion_id}"
-        data-consume_hash="{tag:consume_hash}"
-        data-reagent_name="{tag:reagent:name}"
-        data-quantity_left="{tag:dispersion_quantity_left}"
-        data-reagent_id="{tag:reagent_id}"
-        data-reactiv_hash="{tag:reactiv_hash}"
-        data-quantity="{tag:quantity}"
-        data-reagent_units_short="{tag:reagent:units:short_name}"
->
-    <table>
-        <tr>
-            <td class="name">
-                <div class="reagent_name_fr">
-                    <span class="reagent_name">{tag:reagent:name}</span>
-                    <span class="reagent_number">[{tag:reagent_number}]</span>
-                </div>
-            </td>
-            <td class="quantity">
-                <div class="quantity_fr">
-                    <input class="input" name="quantity" type="number" min="0" step="0.01" maxlength="10" max="{tag:dispersion_quantity_left}" value="{tag:quantity}" data-save="1" data-mask="999999.99999" data-placeholder="10.0" placeholder="10.0">
-                    <input class="input" name="units_short_name" type="text" value="{tag:reagent:units:short_name}">
-                </div>
-            </td>
-        </tr>
-    </table>
-</div>
-
-
-
+                <div id="consume_list" class="listline">
+                    {consume:list}
                 </div>
             </div>
 
@@ -116,13 +80,8 @@
         <div class="side side2">
             <div class="elem list">
                 <label class="label">Приготовані реактиви</label>
-                <div class="listline">
-
-
-
-
-
-
+                <div id="reactiv_consume_list" class="listline">
+                    {reactiv_consume:list}
                 </div>
             </div>
         </div>

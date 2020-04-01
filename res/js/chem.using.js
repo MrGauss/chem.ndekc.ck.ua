@@ -179,7 +179,42 @@ chem['using'] = new function()
                                 post['key']         = $('#'+did).find('input[name="key"]').val();
                                 post['save']        = {};
 
-                            $('#'+did).find('[data-save="1"]').each( function(){ post['save'][$(this).attr('name').toString()] = $(this).val().toString(); } );
+                            $( '#'+did ).find( '[data-save="1"]' ).each( function()
+                            {
+                                post['save'][$(this).attr('name').toString()] = $(this).val().toString();
+                            } );
+
+                            /////////////////
+
+                            post['save']['consume'] = new Array();
+                            $('#'+did).find('#consume_list .consume').each(function()
+                            {
+                                post['save']['consume'].push
+                                (
+                                    {
+                                        'key':              $(this).attr('data-key'),
+                                        'consume_hash':     $(this).attr('data-consume_hash'),
+                                        'dispersion_id':    $(this).attr('data-dispersion_id'),
+                                        'quantity':         $(this).find('input[name="consume_quantity"]').val()
+                                    }
+                                );
+                            });
+
+                            post['save']['reactiv_consume'] = new Array();
+                            $('#'+did).find('#reactiv_consume_list .consume').each(function()
+                            {
+                                post['save']['reactiv_consume_list'].push
+                                (
+                                    {
+                                        'key':              $(this).attr('data-key'),
+                                        'consume_hash':     $(this).attr('data-consume_hash'),
+                                        'reactiv_hash':     $(this).attr('data-reactiv_hash'),
+                                        'quantity':         $(this).find('input[name="consume_quantity"]').val()
+                                    }
+                                );
+                            });
+
+                            /////////////////
 
                             $.ajax({ data: post }).done(function( _r )
                             {
