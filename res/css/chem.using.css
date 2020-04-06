@@ -6,7 +6,7 @@
 .default_editor .sides{  }
 .default_editor .sides .side{ float: left; width: 50%; }
 .default_editor .sides .side .list{ width: 100%; }
-.default_editor .sides .side .listline{ border: 1px solid #3F3F3F; padding: 5px; height: 300px; width: 100%; overflow: hidden; overflow-y: scroll; }
+.default_editor .sides .side .listline{ border: 1px solid #3F3F3F; padding: 5px; height: 200px; width: 100%; overflow: hidden; overflow-y: scroll; }
 
 .default_editor .elem.exp_date .input[data-important="1"]{ padding-left: 22px; }
 
@@ -49,3 +49,28 @@
 .default_editor .listline .consume table td.quantity .input[name="consume_quantity"]{            width: 70px;               text-align: left; padding-left: 5px; }
 .default_editor .listline .consume table td.quantity .input[name="units_short_name"]{    width: 30px; border: none; text-align: left; background: none; }
 .default_editor .listline .consume table td.quantity .reagent_units_short{ display: block; width: 30px; overflow: hidden; float: right; text-align: center; }
+
+.default_editor .selectable_list{ border: 1px solid #3F3F3F; margin: 10px 0px 0px 0px; padding: 5px; height: 200px; width: 100%; overflow: hidden; overflow-y: scroll; }
+.default_editor .selectable_list .line{ width: 100%; padding: 7px 5px 7px 5px; margin: 3px 0px 2px 0px; border: 1px solid #3F3F3F; background: #FFF9E5; opacity: 0.75; cursor: pointer; }
+.default_editor .selectable_list .line:hover{ opacity: 1.0; }
+.default_editor .selectable_list .line:active{ opacity: 1.0; background-color: #FFE4DB; }
+.default_editor .selectable_list .line table{ width: 100%; }
+.default_editor .selectable_list .line table td{ width: auto; text-align: center; }
+.default_editor .selectable_list .line table td.reagent{ text-align: left; }
+.default_editor .selectable_list .line table td.reagent .name{ display: block; }
+.default_editor .selectable_list .line table td.reagent .quantity_left{ display: block; }
+.default_editor .selectable_list .line table td.number{ width: 60px; }
+.default_editor .selectable_list .line table td.inc_date{ width: 80px; }
+.default_editor .selectable_list .line table td.dead_date{ width: 80px; }
+.default_editor .selectable_list .line table td.date{ width: 80px; }
+.default_editor .selectable_list .line table td span{ display: block; font-weight: bold; }
+.default_editor .selectable_list .line table td span label{ display: block; font-size: 0.85em; text-transform: uppercase;  opacity: 0.75; }
+.default_editor .selectable_list .line table td span.dead_date{ margin-top: 5px; color: #3D0000 }
+.default_editor .selectable_list .line table td span.quantity_left{ font-weight: normal; }
+
+
+
+
+
+
+

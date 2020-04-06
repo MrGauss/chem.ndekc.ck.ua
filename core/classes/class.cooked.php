@@ -579,20 +579,56 @@ class cooked
 
     public final function get_raw( $filters = array() )
     {
+        $WHERE = array();
+
+        $WHERE['reactiv.hash'] = 'reactiv.hash != \'\'';
+        $WHERE['reactiv.group_id'] = '( reactiv.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR reactiv.group_id = 0 )';
+
         if( is_array($filters) )
         {
             if( isset($filters['hash']) )
             {
                 $filters['hash'] = common::filter_hash( $filters['hash'] );
                 $filters['hash'] = is_array($filters['hash']) ? $filters['hash'] : array( $filters['hash'] );
+
+                if( count($filters['hash']) )
+                {
+                    $WHERE['reactiv.hash']   = 'reactiv.hash IN (\''.implode( '\', \'', $filters['hash'] ).'\')';
+                }
             }
 
             if( isset($filters['using_hash']) )
             {
                 $filters['using_hash'] = common::filter_hash( $filters['using_hash'] );
                 $filters['using_hash'] = is_array($filters['using_hash']) ? $filters['using_hash'] : array( $filters['using_hash'] );
+
+                if( count($filters['using_hash']) )
+                {
+                    $WHERE['using.hash']   = '"using".hash IN (\''.implode( '\', \'', $filters['using_hash'] ).'\')';
+                }
             }
+
+            if( isset($filters['quantity_left:more']) )
+            {
+                $filters['quantity_left:more'] = common::float( $filters['quantity_left:more'] );
+                $WHERE['quantity_left:more'] = ' reactiv.quantity_left > \''.$filters['quantity_left:more'].'\'::FLOAT';
+            }
+
+            if( isset($filters['quantity_left:less']) )
+            {
+                $filters['quantity_left:less'] = common::float( $filters['quantity_left:less'] );
+                $WHERE['quantity_left:less'] = ' reactiv.quantity_left < \''.$filters['quantity_left:less'].'\'::FLOAT';
+            }
+
+            if( isset($filters['quantity_left:is']) )
+            {
+                $filters['quantity_left:is'] = common::float( $filters['quantity_left:is'] );
+                $WHERE['quantity_left:is'] = ' reactiv.quantity_left = \''.$filters['quantity_left:is'].'\'::FLOAT';
+            }
+
         }
+
+        $WHERE = count($WHERE) ? 'WHERE '.implode( ' AND ', $WHERE ) : '';
 
         $SQL = '
             SELECT
@@ -606,10 +642,7 @@ class cooked
                 reactiv
                     LEFT JOIN reactiv_menu ON ( reactiv_menu.id = reactiv.reactiv_menu_id )
                     LEFT JOIN "using" ON ( "using".hash = reactiv.using_hash AND reactiv.group_id = "using".group_id )
-            WHERE
-                '.(( isset($filters['hash'])        && count($filters['hash'])       ) ? 'reactiv.hash IN (\''.implode( '\', \'', $filters['hash'] ).'\')'       : 'reactiv.hash != \'\'').'
-                '.(( isset($filters['using_hash'])  && count($filters['using_hash']) ) ? 'AND "using".hash IN (\''.implode( '\', \'', $filters['using_hash'] ).'\')' : '').'
-                AND ( reactiv.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR reactiv.group_id = 0 )
+            '.$WHERE.'
             ORDER by
                 reactiv.inc_date DESC;
                 '.db::CACHED;

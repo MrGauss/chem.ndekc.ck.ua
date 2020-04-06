@@ -212,7 +212,9 @@ class dispersion
             $line['numi'] = $I--;
 
             $line['inc_date_unix'] = strtotime( $line['inc_date'] );
-            $line['inc_date'] = date( 'Y.m.d', $line['inc_date_unix'] );
+            $line['inc_date'] = date( 'd.m.Y', $line['inc_date_unix'] );
+
+            $line['dead_date'] = date( 'd.m.Y', strtotime( $line['dead_date'] ) );
 
             $line = common::db2html( $line );
 
@@ -298,11 +300,42 @@ class dispersion
 
     public final function get_raw( $filters = array() )
     {
+
+        $WHERE = array();
+        $WHERE['dispersion.group_id'] = '( dispersion.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR dispersion.group_id = 0 )';
+
         if( is_array($filters) )
         {
-            if( isset($filters['id']) ){ $filters['id'] = common::integer( $filters['id'] ); }
+            if( isset($filters['id']) )
+            {
+                $filters['id'] = common::integer( $filters['id'] );
+                $WHERE['dispersion.id'] = 'dispersion.id = '.$filters['id'].'';
+            }
+            else
+            {
+                $WHERE['dispersion.id'] = 'dispersion.id > 0';
+            }
+
+            if( isset($filters['quantity_left:more']) )
+            {
+                $filters['quantity_left:more'] = common::float( $filters['quantity_left:more'] );
+                $WHERE['quantity_left:more'] = ' dispersion.quantity_left > \''.$filters['quantity_left:more'].'\'::FLOAT';
+            }
+
+            if( isset($filters['quantity_left:less']) )
+            {
+                $filters['quantity_left:less'] = common::float( $filters['quantity_left:less'] );
+                $WHERE['quantity_left:less'] = ' dispersion.quantity_left < \''.$filters['quantity_left:less'].'\'::FLOAT';
+            }
+
+            if( isset($filters['quantity_left:is']) )
+            {
+                $filters['quantity_left:is'] = common::float( $filters['quantity_left:is'] );
+                $WHERE['quantity_left:is'] = ' dispersion.quantity_left = \''.$filters['quantity_left:is'].'\'::FLOAT';
+            }
         }
 
+        $WHERE = count($WHERE) ? 'WHERE '.implode( ' AND ', $WHERE ) : '';
 
         $SQL = '
             SELECT
@@ -330,9 +363,9 @@ class dispersion
                     LEFT JOIN expert  as out_expert ON( out_expert.id = dispersion.out_expert_id )
                     LEFT JOIN expert  as inc_expert ON( inc_expert.id = dispersion.inc_expert_id )
                     LEFT JOIN groups    ON ( dispersion.group_id = groups.id )
-            WHERE
-                '.(isset($filters['id']) ? 'dispersion.id = '.$filters['id'].'' : 'dispersion.id > 0').'
-                AND ( dispersion.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR dispersion.group_id = 0 )
+
+            '.$WHERE.'
+
             ORDER by
                 reagent.name ASC; '.db::CACHED;
 

@@ -63,8 +63,6 @@
         <input class="input" type="text" name="comment" value="{tag:ucomment}" data-save="1">
     </div>
 
-
-
     <div class="clear"></div>
 
     <div class="sides">
@@ -74,8 +72,8 @@
                 <div id="consume_list" class="listline">
                     {consume:list}
                 </div>
+                <div id="dispersion_list" class="selectable_list">{dispersion:list}</div>
             </div>
-
         </div>
         <div class="side side2">
             <div class="elem list">
@@ -83,6 +81,7 @@
                 <div id="reactiv_consume_list" class="listline">
                     {reactiv_consume:list}
                 </div>
+                <div id="cooked_list" class="selectable_list">{cooked:list}</div>
             </div>
         </div>
         <div class="clear"></div>

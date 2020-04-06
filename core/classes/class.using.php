@@ -71,6 +71,9 @@ class using
         $tpl->set( '{consume:list}', $this->get_html_consume( $data['consume'], 'using/consume_line' ) );
         $tpl->set( '{reactiv_consume:list}', $this->get_html_consume( $data['reactiv_consume'], 'using/reactiv_consume_line' ) );
 
+        $tpl->set( '{cooked:list}',  ( new cooked )->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_cooked' ) );
+        $tpl->set( '{dispersion:list}',  ( new dispersion )->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_dispersion' ) );
+
         $tpl->compile( $skin );
 
         return $tpl->result( $skin );

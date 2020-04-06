@@ -1161,9 +1161,9 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 --
 
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
+INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2020-03-24 17:12:38.05303', 'shinkarenko', '953adda3778dcf339f8debe9a72dcc34', '97ab313379ea5d8bdfde11ebe5d82be6', 1, '192.168.2.127');
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (2, 'Шкурдода', 'Сергій', 'Вікторович', 1, '2020-03-18 15:24:55.417367', 'shkurdoda', 'd80daf84242523a7c25c1162a314d3d3', '5a1b6334917e6194caf45ed52349475f', 1, '192.168.2.118');
-INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2020-03-24 17:12:38.05303', 'shinkarenko', '953adda3778dcf339f8debe9a72dcc34', '6b284c886374978d0465f71f31a3249b', 1, '192.168.2.127');
-INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '20ddda6541efe57c9c9744189d1fe1d6', 1, '46.255.34.254');
+INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '3638bcd565af1daea3f93755fc187fa7', 1, '192.168.137.168');
 
 
 --
@@ -1312,7 +1312,6 @@ INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "uni
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (87, '2020-03-18 18:20:35.233556', 'Галова кислота', 2, 2);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (88, '2020-03-19 10:33:04.64491', 'Поліетиленгліколь', 2, 1);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (90, '2020-03-19 10:39:52.749282', 'ізопропіламін', 2, 1);
-INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (91, '2020-03-19 10:43:04.659486', '1,4 динітробензол', 2, 2);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (93, '2020-03-19 11:41:30.12809', '4-диметиламінобензальдегід', 2, 2);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (11, '2020-01-02 15:39:01.529732', 'Ацетонітрил', 2, 1);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (12, '2020-01-02 15:39:01.529732', 'Барій сульфат', 2, 2);
@@ -1332,6 +1331,7 @@ INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "uni
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (94, '2020-03-19 12:16:55.578858', '00-Тестовий реактив 01', 1, 2);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (95, '2020-03-20 12:11:29.70994', '00-Тестовий реактив 02', 1, 1);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (97, '2020-03-24 16:44:54.767631', 'Ацетон 2/10-2019', 2, 1);
+INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (91, '2020-03-19 10:43:04.659486', '1,4-динітробензол', 3, 2);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (18, '2020-01-02 15:39:01.529732', 'Гліцерин', 2, 1);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (83, '2020-03-17 12:43:19.841877', 'Дистильована вода', 2, 1);
 INSERT INTO "public"."reagent" ("id", "ts", "name", "created_by_expert_id", "units_id") VALUES (19, '2020-01-02 15:39:01.529732', 'Дифенілкарбазон', 2, 2);
