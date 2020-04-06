@@ -85,6 +85,43 @@ chem['using'] = new function()
 
     }
 
+    this.add_to_list = function( obj )
+    {
+        var empty = obj.parents( '[data-role="dialog:window"]' ).find('[id="' + obj.parent().attr( 'data-empty' ) + '"] .consume');
+
+        empty.attr( 'data-consume_hash', '' );
+        empty.attr( 'data-reactiv_hash', obj.attr('data-hash') );
+        empty.attr( 'data-dispersion_id', obj.attr('data-id') );
+        empty.attr( 'data-key', '' );
+
+        empty.find('.reagent_name').html(               obj.find('.name').html() );
+        empty.find('.reagent_number').html(             obj.find('.number').html() );
+        empty.find('.cooked_dead_date').html(           obj.find('.dead_date b').html() );
+
+        empty.find('[name="consume_quantity"]').attr('max', obj.attr('data-quantity_left') ).attr( 'value', '0' ).val( '0' );
+        empty.find('[name="units_short_name"]').attr( 'value', obj.attr('data-units') ).val( obj.attr('data-units') );
+
+        empty
+            .clone()
+            .appendTo( obj.parents('.side').find( '.listline' ) );
+            /*.find( '[data-role="button"]' )
+            .on('click',function()
+            {
+                var p = $(this).parents('.reagent');
+                var d = $(this).parents('.default_editor');
+                d.find( '#ingridients [data-dispersion_id="' + p.attr( 'data-dispersion_id' ) + '"]' ).removeClass( 'dnone' );
+                p.remove();
+            })
+            .parents('.reagent')
+            .find( '[name="quantity"]' )
+            .off()
+            .on( 'change', function()
+            {
+                //chem.cooked.check_input_quantity(  );
+            });  */
+
+    }
+
     this.editor = function( obj )
     {
         chem.single_open( obj );
@@ -142,6 +179,12 @@ chem['using'] = new function()
                 $('#'+did+'').find('select[data-value]')    .each(function(){ $(this).val( $(this).attr('data-value') ).trigger( "change" ); });
                 $('#'+did+'').find('input[name*="date"]')   .each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]')                   .each(function(){ chem.init_mask( $(this) ); });
+
+
+                $('#'+did+' .selectable_list .line').on( "click", function( event, ui )
+                {
+                    chem.using.add_to_list( $(this) );
+                });
 
                 if( line_hash != '' )   { $('#'+did).find('select[name="purpose_id"]').attr( 'disabled', 'disabled' ); }
                 else                    { $('#'+did).find('select[name="purpose_id"] option[data-attr="reactiv"]').css( 'display', 'none' );     }

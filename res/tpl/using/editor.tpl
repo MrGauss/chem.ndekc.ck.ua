@@ -69,22 +69,26 @@
         <div class="side side1">
             <div class="elem list">
                 <label class="label">Реактиви</label>
-                <div id="consume_list" class="listline">
-                    {consume:list}
-                </div>
-                <div id="dispersion_list" class="selectable_list">{dispersion:list}</div>
+                <div id="consume_list" class="listline">{consume:list}</div>
+                <div id="dispersion_list" class="selectable_list" data-empty="empty_dispersion">{dispersion:list}</div>
             </div>
         </div>
         <div class="side side2">
             <div class="elem list">
                 <label class="label">Приготовані реактиви</label>
-                <div id="reactiv_consume_list" class="listline">
-                    {reactiv_consume:list}
-                </div>
-                <div id="cooked_list" class="selectable_list">{cooked:list}</div>
+                <div id="reactiv_consume_list" class="listline">{reactiv_consume:list}</div>
+                <div id="cooked_list" class="selectable_list" data-empty="empty_reactiv">{cooked:list}</div>
             </div>
         </div>
         <div class="clear"></div>
+    </div>
+
+    <div id="empty_dispersion" class="dnone">
+        {@include=using/consume_line}
+    </div>
+
+    <div id="empty_reactiv" class="dnone">
+        {@include=using/reactiv_consume_line}
     </div>
 
     <div class="clear"></div>

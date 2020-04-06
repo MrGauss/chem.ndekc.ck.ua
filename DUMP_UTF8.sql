@@ -1162,8 +1162,8 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2020-03-24 17:12:38.05303', 'shinkarenko', '953adda3778dcf339f8debe9a72dcc34', '97ab313379ea5d8bdfde11ebe5d82be6', 1, '192.168.2.127');
-INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (2, 'Шкурдода', 'Сергій', 'Вікторович', 1, '2020-03-18 15:24:55.417367', 'shkurdoda', 'd80daf84242523a7c25c1162a314d3d3', '5a1b6334917e6194caf45ed52349475f', 1, '192.168.2.118');
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '3638bcd565af1daea3f93755fc187fa7', 1, '192.168.137.168');
+INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (2, 'Шкурдода', 'Сергій', 'Вікторович', 1, '2020-03-18 15:24:55.417367', 'shkurdoda', 'd80daf84242523a7c25c1162a314d3d3', '5a1b6334917e6194caf45ed52349475f', 1, '192.168.2.118');
 
 
 --
@@ -1425,7 +1425,7 @@ INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (2,
 -- Data for Name: using; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('77fdeb9ffde2556d4b82fbac0fefc0e4', 1, '2020-03-31', 1, 'тест-01', '2020-03-31', 12, '', 'PTh1NGdEeTdnTCtzdkR1NHpDeTdpUDc3Z0RpNHorTzQ%3D');
+INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('77fdeb9ffde2556d4b82fbac0fefc0e4', 1, '2020-03-31', 1, 'тест-01', '2020-03-31', 12, '', 'PTh1NGdEeTdnTCtzdkR1NHpDeU15RXo3aVA3N2dEaTR6K080');
 INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('', 0, '1970-01-01', 0, '', '1970-01-01', 0, '', '');
 INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('551d21f8f4ee2efaf5507d1f2ba92c10', 3, '2020-03-02', 1, '', '1970-01-01', 0, '', '');
 
