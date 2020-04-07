@@ -364,7 +364,7 @@ class stock
                 '.(isset($filters['id'])?'stock.id = \''.$filters['id'].'\'::INTEGER':'stock.id > 0').'
                 AND ( stock.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR stock.group_id = 0 )
             ORDER by
-                stock.inc_date DESC; '.db::CACHED;
+                date_trunc( \'year\', stock.inc_date ) DESC, split_part(stock.reagent_number, \'-\', 1)::INTEGER DESC, reagent.name ASC; '.db::CACHED;
 
         //echo $SQL;exit;
 

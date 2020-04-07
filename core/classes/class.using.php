@@ -68,11 +68,11 @@ class using
         }
 
         $tpl->set( '{autocomplete:table}', 'stock' );
-        $tpl->set( '{consume:list}', $this->get_html_consume( $data['consume'], 'using/consume_line' ) );
+        $tpl->set( '{consume:list}',         $this->get_html_consume( $data['consume'], 'using/consume_line' ) );
         $tpl->set( '{reactiv_consume:list}', $this->get_html_consume( $data['reactiv_consume'], 'using/reactiv_consume_line' ) );
 
-        $tpl->set( '{cooked:list}',  ( new cooked )->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_cooked' ) );
-        $tpl->set( '{dispersion:list}',  ( new dispersion )->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_dispersion' ) );
+        $tpl->set( '{cooked:list}',      ( new cooked )     ->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_cooked' ) );
+        $tpl->set( '{dispersion:list}',  ( new dispersion ) ->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_dispersion' ) );
 
         $tpl->compile( $skin );
 
@@ -128,6 +128,7 @@ class using
 
             $line['numi'] = $I--;
 
+            $line['dispersion_quantity_left'] = common::float( $line['dispersion_quantity_left'] ) + common::float( $line['quantity'] );
 
             foreach( $line as $key => $value )
             {
@@ -450,8 +451,6 @@ class using
             unset( $SQL['using']['tech_info'] );
         }
 
-        var_export( $SQL['using'] ); exit;
-
         ///////////////////////
 
         $USING_QUERY = false;
@@ -474,6 +473,7 @@ class using
 
         $CONSUME_QUERY = array();
         $SQL['consume'] = array();
+
         foreach( isset($data['consume'])?$data['consume']:array() as $k=>$consume_data )
         {
             $consume_hash = common::filter_hash( isset($consume_data['consume_hash']) ? $consume_data['consume_hash'] : false );
@@ -490,6 +490,24 @@ class using
             $SQL['consume'][$k]['inc_expert_id']    = CURRENT_USER_ID;
             $SQL['consume'][$k]['using_hash']       = '%USING_HASH%';
             $SQL['consume'][$k]['date']             = $SQL['using']['date'];
+
+            if( !$SQL['consume'][$k]['dispersion_id'] )
+            {
+                return self::error( 'Помилка даних! Реактив не знайдено!', false );
+            }
+
+            $reactive = ( new dispersion )->get_raw( array( 'id' => $SQL['consume'][$k]['dispersion_id'] ) )[$SQL['consume'][$k]['dispersion_id']];
+            $consume  = $consume_hash ? ( new consume )->get_raw( array( 'hash' => $consume_hash ) ) : array();
+            $consume  = isset($consume[$consume_hash])?$consume[$consume_hash] : array();
+
+            if( !isset($reactive['reagent_id']) || !isset($reagent[$reactive['reagent_id']]) )  { return self::error( 'Реактив не знайдено!', false ); }
+            if( strtotime($SQL['using']['date']) > strtotime( $reactive['dead_date'] ) )        { return self::error( 'Реактив "'. ( $reagent[$reactive['reagent_id']]['name'] ) .'" зіпсований!', false ); }
+
+            if( common::float( $consume_data['quantity'] ) > common::float( $reactive['quantity_left'] ) + common::float( isset($consume['quantity']) ? $consume['quantity'] : 0 )  ){ return self::error( 'Ви намагаєтесь використати забагато реактиву!', false ); }
+
+            if( common::integer( $reactive['group_id'] ) != CURRENT_GROUP_ID ){ return self::error( 'Реактив знаходиться в іншій лабораторії!', false ); }
+
+            // echo "consume_data:\n"; var_export($consume_data); echo "\n\nconsume:\n"; var_export($consume); echo "\n\nreactive:\n"; var_export($reactive); exit;
 
             if( $consume_hash )
             {
