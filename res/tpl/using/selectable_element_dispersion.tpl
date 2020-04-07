@@ -10,11 +10,3 @@
         </tr>
     </table>
 </div>
-<!--
-    data-id="{tag:id}"
-    data-inc_date="{tag:inc_date_unix}"
-    data-lifetime="{tag:lifetime}"
-    data-quantity_inc="{tag:quantity_inc}"
-    data-quantity_left="{tag:quantity_left}"
-    data-not_used_perc="{tag:not_used_perc}"
--->

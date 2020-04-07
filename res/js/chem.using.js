@@ -89,6 +89,10 @@ chem['using'] = new function()
     {
         var empty = obj.parents( '[data-role="dialog:window"]' ).find('[id="' + obj.parent().attr( 'data-empty' ) + '"] .consume');
 
+        obj
+            .removeClass('dnone')
+            .addClass( 'dnone' );
+
         empty.attr( 'data-consume_hash', '' );
         empty.attr( 'data-reactiv_hash', obj.attr('data-hash') );
         empty.attr( 'data-dispersion_id', obj.attr('data-id') );
@@ -104,6 +108,19 @@ chem['using'] = new function()
         empty
             .clone()
             .appendTo( obj.parents('.side').find( '.listline' ) );
+
+        obj.parents('.side').find( '.listline .consume .remove' )
+            .off()
+            .on( 'click', function()
+            {
+                var parent = $(this).parent();
+
+                $(this).parents('.side').find('.selectable_list [data-id="' + parent.attr('data-dispersion_id') + '"]').removeClass( 'dnone' );
+                $(this).parents('.side').find('.selectable_list [data-hash="' + parent.attr('data-reactiv_hash') + '"]').removeClass( 'dnone' );
+
+                $(this).parent().remove();
+            } );
+
             /*.find( '[data-role="button"]' )
             .on('click',function()
             {
@@ -181,6 +198,15 @@ chem['using'] = new function()
                 $('#'+did+' [data-mask]')                   .each(function(){ chem.init_mask( $(this) ); });
 
 
+                $('#'+did+' .listline .consume').each(function()
+                {
+                    $(this)
+                        .parents('.side')
+                        .find('.selectable_list [data-id="' + $(this).attr('data-dispersion_id') + '"]')
+                        .removeClass( 'dnone' )
+                        .addClass( 'dnone' );
+                });
+
                 $('#'+did+' .selectable_list .line').on( "click", function( event, ui )
                 {
                     chem.using.add_to_list( $(this) );
@@ -247,7 +273,7 @@ chem['using'] = new function()
                             post['save']['reactiv_consume'] = new Array();
                             $('#'+did).find('#reactiv_consume_list .consume').each(function()
                             {
-                                post['save']['reactiv_consume_list'].push
+                                post['save']['reactiv_consume'].push
                                 (
                                     {
                                         'key':              $(this).attr('data-key'),

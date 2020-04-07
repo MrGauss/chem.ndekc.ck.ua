@@ -19,4 +19,5 @@
                         </td>
                     </tr>
                 </table>
+                <div class="remove"></div>
             </div>

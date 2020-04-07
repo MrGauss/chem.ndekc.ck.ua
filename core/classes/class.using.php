@@ -329,6 +329,8 @@ class using
             $data[$row['hash']]['cooked_reactives']   = array();
         }
 
+
+
         foreach( (new consume)->get_raw( array(  'using_hash' => array_keys( $data ) ) ) as $consume )
         {
             if( !isset($data[$consume['using_hash']]) || !is_array($data[$consume['using_hash']]['consume']) )
@@ -397,8 +399,6 @@ class using
         $purpose = ( ( new spr_manager( 'purpose' )   )->get_raw()[$data['purpose_id']] );
         $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
 
-
-
         /////////
 
         if( !isset($purpose['id']) || !$purpose['id'] ) { return self::error( 'Системна помилка! Не вдалося визначити мету використання!', false ); }
@@ -419,11 +419,25 @@ class using
 
         ///////////////////////
 
+        if( strtotime($SQL['using']['date']) > time() ){ return self::error( 'Ви не можете створювати записи в майбутньому!', 'date' ); }
+        if( strtotime($SQL['using']['date']) < ( time() - $date_diap ) ){ return self::error( 'Дуууже давня дата!', 'date' ); }
+
+        ///////////////////////
+
         if( $purpose['attr'] != 'expertise' )
         {
             unset( $SQL['using']['exp_number'] );
             unset( $SQL['using']['exp_date'] );
             unset( $SQL['using']['obj_count'] );
+        }
+        else
+        {
+            if( strtotime($SQL['using']['exp_date']) < strtotime($SQL['using']['date']) ){ return self::error( 'Дата експертизи не може бути меншою за дату використання!', 'date|exp_date' ); }
+            if( strtotime($SQL['using']['exp_date']) > time() ){ return self::error( 'Ви не можете створювати записи в майбутньому!', 'exp_date' ); }
+            if( strtotime($SQL['using']['exp_date']) < ( time() - $date_diap ) ){ return self::error( 'Дуууже давня дата експертизи!', 'exp_date' ); }
+
+            if( !$SQL['using']['obj_count'] ){ return self::error( 'Зазначте кількість об\'єктів!', 'obj_count' ); }
+            if( strlen($SQL['using']['exp_number']) < 2 ){ return self::error( 'Зазначте номер висновку!', 'exp_number' ); }
         }
 
         if( $purpose['attr'] != 'reactiv' )
@@ -435,6 +449,8 @@ class using
         {
             unset( $SQL['using']['tech_info'] );
         }
+
+        var_export( $SQL['using'] ); exit;
 
         ///////////////////////
 
@@ -463,7 +479,7 @@ class using
             $consume_hash = common::filter_hash( isset($consume_data['consume_hash']) ? $consume_data['consume_hash'] : false );
             $consume_data['key'] = isset($consume_data['key']) ? $consume_data['key'] : false;
 
-            if( !common::key_check( $consume_hash, $consume_data['key'] ) )
+            if( $consume_hash && $consume_data['key'] && !common::key_check( $consume_hash, $consume_data['key'] ) )
             {
                 return self::error( 'Помилка даних! Виявлено розбіжності в ідентифікаторах!', false );
             }
@@ -487,10 +503,9 @@ class using
             else
             {
                 $CONSUME_QUERY[$k] = array_map( array( &$this->db, 'safesql' ), $SQL['consume'][$k] );
-                $CONSUME_QUERY[$k] = 'INSERT INTO "consume" ("'.implode( '", "', array_keys( $USING_QUERY ) ).'") VALUES( \''.implode( '\', \'', array_values( $CONSUME_QUERY[$k] ) ).'\' );';
+                $CONSUME_QUERY[$k] = 'INSERT INTO "consume" ("'.implode( '", "', array_keys( $CONSUME_QUERY[$k] ) ).'") VALUES( \''.implode( '\', \'', array_values( $CONSUME_QUERY[$k] ) ).'\' );';
             }
         }
-
 
         ////////////////
 
