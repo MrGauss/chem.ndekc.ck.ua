@@ -664,7 +664,9 @@ CREATE TABLE "public"."reactiv_consume" (
     "quantity" double precision DEFAULT 0 NOT NULL,
     "inc_expert_id" bigint DEFAULT 0 NOT NULL,
     "using_hash" character varying(32) DEFAULT ''::character varying NOT NULL,
-    "consume_ts" timestamp(0) without time zone DEFAULT ("now"())::timestamp without time zone NOT NULL
+    "consume_ts" timestamp(6) without time zone DEFAULT ("now"())::timestamp without time zone NOT NULL,
+    "ts" timestamp(6) without time zone DEFAULT ("now"())::timestamp without time zone NOT NULL,
+    "date" "date" DEFAULT '1970-01-01'::"date" NOT NULL
 );
 
 
@@ -1140,9 +1142,9 @@ INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (11, 'Фар�
 -- Data for Name: consume; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts", "date") VALUES ('315576ac138b884e9e0cd5aeaeb7fe2f', '2020-03-31 08:34:43.728464', 12, 1, 17, '551d21f8f4ee2efaf5507d1f2ba92c10', '2020-03-31 08:34:43.728464', '2020-03-02');
-INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts", "date") VALUES ('16dbf90fb163a21e856011676c040eaa', '2020-03-31 08:34:43.728464', 10, 1, 2, '551d21f8f4ee2efaf5507d1f2ba92c10', '2020-03-31 08:34:43.728464', '2020-03-02');
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts", "date") VALUES ('', '2020-01-02 15:37:30.168681', 0, 0, 0, '', '2020-03-18 16:07:51.03563', '1970-01-01');
+INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts", "date") VALUES ('16dbf90fb163a21e856011676c040eaa', '2020-03-31 08:34:43.728464', 10, 1, 2, '551d21f8f4ee2efaf5507d1f2ba92c10', '2020-03-31 08:34:43.728464', '2020-03-02');
+INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts", "date") VALUES ('315576ac138b884e9e0cd5aeaeb7fe2f', '2020-03-31 08:34:43.728464', 12, 1, 17, '551d21f8f4ee2efaf5507d1f2ba92c10', '2020-03-31 08:34:43.728464', '2020-03-02');
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts", "date") VALUES ('39d2f2837e713de42d2c979a70ca85e0', '2020-04-07 11:44:57.630357', 10, 1, 5, '77fdeb9ffde2556d4b82fbac0fefc0e4', '2020-04-07 11:44:57.630357', '2020-03-31');
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts", "date") VALUES ('8d16b41458ba2c813cbe8e7b7f361ae6', '2020-04-07 11:44:57.630357', 12, 1, 13, '77fdeb9ffde2556d4b82fbac0fefc0e4', '2020-04-07 11:44:57.630357', '2020-03-31');
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "using_hash", "consume_ts", "date") VALUES ('769b2012e6eef9cbdf880cdab44bf87a', '2020-04-07 11:48:27.287099', 11, 1, 1, '77fdeb9ffde2556d4b82fbac0fefc0e4', '2020-04-07 11:48:27.287099', '2020-03-31');
@@ -1176,8 +1178,8 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 --
 
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
+INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2020-03-24 17:12:38.05303', 'shinkarenko', '953adda3778dcf339f8debe9a72dcc34', 'd84fefde240add622374147136d29a87', 1, '192.168.2.127');
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '3638bcd565af1daea3f93755fc187fa7', 1, '192.168.137.168');
-INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2020-03-24 17:12:38.05303', 'shinkarenko', '953adda3778dcf339f8debe9a72dcc34', '853d4d2ca21b2808034a53c56aeb1a3e', 1, '192.168.2.127');
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (2, 'Шкурдода', 'Сергій', 'Вікторович', 1, '2020-03-18 15:24:55.417367', 'shkurdoda', 'd80daf84242523a7c25c1162a314d3d3', '5a1b6334917e6194caf45ed52349475f', 1, '192.168.2.118');
 
 
@@ -1210,7 +1212,7 @@ INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (2, 'Техн
 -- Data for Name: reactiv; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "group_id", "inc_date", "dead_date", "safe_place", "safe_needs", "comment", "using_hash") VALUES ('33ea3d303eb0f672b349a30b2613f9e5', 29, 20, 20, 1, 1, '2020-03-02', '2020-03-03', 'тест', 'тест', 'тест', '551d21f8f4ee2efaf5507d1f2ba92c10');
+INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "group_id", "inc_date", "dead_date", "safe_place", "safe_needs", "comment", "using_hash") VALUES ('33ea3d303eb0f672b349a30b2613f9e5', 29, 20, 15, 1, 1, '2020-03-02', '2020-05-03', 'тест', 'тест', 'тест', '551d21f8f4ee2efaf5507d1f2ba92c10');
 INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "group_id", "inc_date", "dead_date", "safe_place", "safe_needs", "comment", "using_hash") VALUES ('', 0, 0, 0, 0, 0, '1970-01-01', '1970-01-01', '', '', '', '');
 
 
@@ -1218,6 +1220,7 @@ INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quan
 -- Data for Name: reactiv_consume; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO "public"."reactiv_consume" ("hash", "reactive_hash", "quantity", "inc_expert_id", "using_hash", "consume_ts", "ts", "date") VALUES ('395e659df57165d95628cd445b797226', '33ea3d303eb0f672b349a30b2613f9e5', 5, 1, '77fdeb9ffde2556d4b82fbac0fefc0e4', '2020-04-08 12:56:15.793824', '2020-04-08 12:56:15.793824', '2020-03-31');
 
 
 --
@@ -1539,12 +1542,12 @@ INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_dat
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (72, '2020-04-07 17:19:57.81801', 46, 100, '2016-04-06', 3, 1, 100, 7, '2015-12-01', '2018-12-01', 1, 'Сфера СІМ', 2, 5, 1, '', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-07 17:19:57.81801', '53-2016');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (73, '2020-04-07 17:22:05.548014', 155, 2000, '2016-04-06', 3, 1, 2000, 11, '2015-06-01', '2017-06-01', 1, 'Сфера СІМ', 1, 5, 1, '', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-07 17:22:05.548014', '54-2016');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (74, '2020-04-07 17:25:50.892422', 156, 5000, '2016-04-06', 3, 1, 5000, 2, '2016-03-01', '2018-03-01', 1, 'Сфера СІМ', 2, 5, 1, '', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-07 17:25:50.892422', '55-2016');
-INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (11, '2020-03-20 12:26:04.515197', 96, 15, '2020-03-20', 1, 1, 12, 1, '2020-01-01', '2028-03-26', 1, 'Тестовий виробник 03', 1, 4, 1, 'Тест 03', 'тестове місце', 'тестові умови', '2020-03-20 12:26:04.515197', '4-2020');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (75, '2020-04-07 17:31:32.500673', 157, 50, '2016-04-06', 3, 1, 50, 2, '2016-01-01', '2019-01-01', 1, 'Сфера СІМ', 2, 5, 1, '', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-07 17:31:32.500673', '56-2016');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (76, '2020-04-07 17:33:23.816878', 158, 100, '2016-04-06', 3, 1, 100, 2, '2016-02-01', '2019-02-01', 1, 'Сфера СІМ', 2, 5, 1, '', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-07 17:33:23.816878', '57-2016');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (77, '2020-04-07 17:35:05.37929', 159, 30, '2016-04-06', 3, 1, 30, 7, '2016-03-01', '2019-03-01', 1, 'Сфера СІМ', 2, 5, 1, '', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-07 17:35:05.37929', '58-2016');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (78, '2020-04-07 17:36:51.307268', 138, 100, '2016-04-06', 3, 1, 100, 7, '2016-03-01', '2018-03-01', 1, 'Сфера СІМ', 2, 5, 1, '', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-07 17:36:51.307268', '59-2016');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (79, '2020-04-07 17:40:08.209606', 56, 500, '2016-04-06', 3, 1, 500, 7, '2016-02-01', '2018-02-01', 1, 'Сфера СІМ', 2, 5, 1, '', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-07 17:40:08.209606', '60-2016');
+INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number") VALUES (11, '2020-03-20 12:26:04.515197', 96, 15, '2020-03-20', 1, 1, 12, 1, '2020-01-01', '2028-03-26', 1, 'Тестовий виробник 03', 1, 4, 1, 'Тест 03', 'тестове місце', 'тестові умови', '2020-03-20 12:26:04.515197', '4-2020');
 
 
 --
@@ -1562,8 +1565,8 @@ INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (2,
 --
 
 INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('', 0, '1970-01-01', 0, '', '1970-01-01', 0, '', '');
-INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('77fdeb9ffde2556d4b82fbac0fefc0e4', 1, '2020-03-31', 1, 'тест-01', '2020-03-31', 12, '', 'PTh1NGdEeTdnTCtzdkR1NHpDeU15RXo3aVA3N2dEaTR6K080');
 INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('551d21f8f4ee2efaf5507d1f2ba92c10', 3, '2020-03-02', 1, '', '1970-01-01', 0, '', '');
+INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('77fdeb9ffde2556d4b82fbac0fefc0e4', 1, '2020-03-31', 1, 'тест-01', '2020-03-31', 12, '', 'PTh1NGdEeTdnTCtzdkR1NHpDeU15RXo3aVA3N2dEaTR6K080');
 
 
 --
@@ -1863,6 +1866,20 @@ ALTER TABLE ONLY "public"."using"
 --
 
 CREATE UNIQUE INDEX "reactiv_menu_ingredients_unique_index_idx" ON "public"."reactiv_menu_ingredients" USING "btree" ("unique_index");
+
+
+--
+-- Name: stock_inc_date_year_indx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "stock_inc_date_year_indx" ON "public"."stock" USING "btree" ((("date_part"('year'::"text", "inc_date"))::integer) DESC NULLS LAST);
+
+
+--
+-- Name: stock_reagent_number_indx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX "stock_reagent_number_indx" ON "public"."stock" USING "btree" ((("split_part"(("reagent_number")::"text", '-'::"text", 1))::integer) DESC NULLS LAST);
 
 
 --

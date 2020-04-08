@@ -361,10 +361,12 @@ class stock
                 LEFT JOIN expert    ON ( expert.id = stock.inc_expert_id )
                 LEFT JOIN groups    ON ( stock.group_id = groups.id )
             WHERE
-                '.(isset($filters['id'])?'stock.id = \''.$filters['id'].'\'::INTEGER':'stock.id > 0').'
+                '.(isset($filters['id'])?'stock.id = \''.$filters['id'].'\'::INTEGER':'stock.id > 0 AND stock.quantity_left > 0').'
                 AND ( stock.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR stock.group_id = 0 )
             ORDER by
-                date_trunc( \'year\', stock.inc_date ) DESC, split_part(stock.reagent_number, \'-\', 1)::INTEGER DESC, reagent.name ASC; '.db::CACHED;
+                ( date_part( \'year\',  inc_date )::integer ) DESC,
+                ( split_part(stock.reagent_number, \'-\', 1)::INTEGER ) DESC,
+                reagent.name ASC;'.db::CACHED;
 
         //echo $SQL;exit;
 

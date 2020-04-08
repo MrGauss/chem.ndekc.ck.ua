@@ -647,6 +647,8 @@ class cooked
                 reactiv.inc_date DESC;
                 '.db::CACHED;
 
+        echo $SQL;exit;
+
         $cache_var = 'spr-reactiv-'.md5( $SQL ).'-raw';
         $data = false;
         $data = cache::get( $cache_var );

@@ -205,6 +205,12 @@ chem['using'] = new function()
                         .find('.selectable_list [data-id="' + $(this).attr('data-dispersion_id') + '"]')
                         .removeClass( 'dnone' )
                         .addClass( 'dnone' );
+
+                    $(this)
+                        .parents('.side')
+                        .find('.selectable_list [data-hash="' + $(this).attr('data-reactiv_hash') + '"]')
+                        .removeClass( 'dnone' )
+                        .addClass( 'dnone' );
                 });
 
                 $('#'+did+' .selectable_list .line').on( "click", function( event, ui )

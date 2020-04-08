@@ -40,6 +40,9 @@
 .default_editor .elem option[data-quantity_left="0"]{ display: none; }
 .default_editor .elem option[data-quantity_left="0"][seleted]{ display: default; }
 
+.ui-dialog .ui-dialog-buttonpane button.ui-button.dispersion[data-role="from_mem"]{ left: 200px;  }
+.ui-dialog .ui-dialog-buttonpane button.ui-button.dispersion[data-role="to_mem"]{ left: 150px; }
+
 
 
 

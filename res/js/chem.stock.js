@@ -128,23 +128,23 @@ chem['stock'] = new function()
 
                 var bi = 0;
                 var dialog = {};
-                    dialog["zIndex"]  = 2001;
-                    dialog["modal"]   = true;
-                    dialog["autoOpen"]   = true;
-                    dialog["width"]   = '800';
-                    dialog["resizable"]   = false;
-                    dialog["buttons"] = {};
+                    dialog["zIndex"]        = 2001;
+                    dialog["modal"]         = true;
+                    dialog["autoOpen"]      = true;
+                    dialog["width"]         = '800';
+                    dialog["resizable"]     = false;
+                    dialog["buttons"]       = {};
 
-                    dialog["buttons"][bi] = {};
-                    dialog["buttons"][bi]["text"]  = "Скасувати";
-                    dialog["buttons"][bi]["click"] = function(){ chem.close_it( $('#'+did) ); };
-                    dialog["buttons"][bi]["class"] = "type1";
-                    dialog["buttons"][bi]["data-role"] = "close_button";
+                    dialog["buttons"][bi]               = {};
+                    dialog["buttons"][bi]["text"]       = "Скасувати";
+                    dialog["buttons"][bi]["click"]      = function(){ chem.close_it( $('#'+did) ); };
+                    dialog["buttons"][bi]["class"]      = "type1";
+                    dialog["buttons"][bi]["data-role"]  = "close_button";
                     bi++;
 
-                    dialog["buttons"][bi] = {};
-                    dialog["buttons"][bi]["text"]  = "Зберегти";
-                    dialog["buttons"][bi]["click"] = function()
+                    dialog["buttons"][bi]               = {};
+                    dialog["buttons"][bi]["text"]       = "Зберегти";
+                    dialog["buttons"][bi]["click"]      = function()
                     {
 
                         if( !$('#'+did+' .error_area').hasClass('dnone') ){ $('#'+did+' .error_area').addClass('dnone'); }
@@ -210,6 +210,59 @@ chem['stock'] = new function()
                     dialog["buttons"][bi]["class"] = "type2";
                     dialog["buttons"][bi]["data-role"] = "close_button";
                     bi++;
+
+                    /////////////////////////////////////////////
+                    // MEMORY
+                    dialog["buttons"][bi] = {};
+                    dialog["buttons"][bi]["text"]  = " ";
+                    dialog["buttons"][bi]["class"] = "type1";
+                    dialog["buttons"][bi]["data-role"] = "to_mem";
+                    dialog["buttons"][bi]["click"] = function()
+                    {
+                        var mem_post = {};
+                            mem_post['ajax']        = 1;
+                            mem_post['action']      = 1;
+                            mem_post['subaction']   = 1;
+                            mem_post['mod']         = 'memory';
+                            mem_post['area']        = $('body').attr('data-mod');
+                            mem_post['save']        = {};
+
+                        $( '#'+did+'' ).find( '[data-save="1"]' ).not('[type="hidden"]').each(function()
+                        {
+                            mem_post['save'][$(this).attr('name')] = $(this).val();
+                        });
+
+                        $.ajax({ data: mem_post }).done(function( _r )
+                        {
+                            _r = chem.txt2json( _r );
+                        });
+                    };
+                    bi++;
+
+                    dialog["buttons"][bi] = {};
+                    dialog["buttons"][bi]["text"]  = " ";
+                    dialog["buttons"][bi]["click"] = function()
+                    {
+                        var mem_post = {};
+                            mem_post['ajax']        = 1;
+                            mem_post['action']      = 2;
+                            mem_post['subaction']   = 1;
+                            mem_post['mod']         = 'memory';
+                            mem_post['area']        = $('body').attr('data-mod');
+
+                        $.ajax({ data: mem_post }).done(function( _r )
+                        {
+                            _r = chem.txt2json( _r );
+                            if( _r['saved'] )
+                            {
+                                for( k in _r['saved'] ){ $( '#'+did+'' ).find( '[data-save="1"][name="' + k + '"]' ).val( _r['saved'][k] ).trigger( "change" ); }
+                            }
+                        });
+                    };
+                    dialog["buttons"][bi]["class"] = "type1";
+                    dialog["buttons"][bi]["data-role"] = "from_mem";
+                    bi++;
+                    /////////////////////////////////////////////
 
                     dialog["buttons"][bi] = {};
                     dialog["buttons"][bi]["text"]  = "Видалити";

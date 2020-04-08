@@ -140,7 +140,7 @@ chem['dispersion'] = new function()
                     dialog["zIndex"]  = 2001;
                     dialog["modal"]   = true;
                     dialog["autoOpen"]   = true;
-                    dialog["width"]   = '513';
+                    dialog["width"]   = '553';
                     dialog["resizable"]   = false;
                     dialog["buttons"] = {};
 
@@ -256,6 +256,59 @@ chem['dispersion'] = new function()
                     dialog["buttons"][bi]["class"] = "type5 right";
                     dialog["buttons"][bi]["data-role"] = "delete_button";
                     bi++;
+
+                    /////////////////////////////////////////////
+                    // MEMORY
+                    dialog["buttons"][bi] = {};
+                    dialog["buttons"][bi]["text"]  = " ";
+                    dialog["buttons"][bi]["class"] = "type1 dispersion";
+                    dialog["buttons"][bi]["data-role"] = "to_mem";
+                    dialog["buttons"][bi]["click"] = function()
+                    {
+                        var mem_post = {};
+                            mem_post['ajax']        = 1;
+                            mem_post['action']      = 1;
+                            mem_post['subaction']   = 1;
+                            mem_post['mod']         = 'memory';
+                            mem_post['area']        = $('body').attr('data-mod');
+                            mem_post['save']        = {};
+
+                        $( '#'+did+'' ).find( '[data-save="1"]' ).not('[type="hidden"]').each(function()
+                        {
+                            mem_post['save'][$(this).attr('name')] = $(this).val();
+                        });
+
+                        $.ajax({ data: mem_post }).done(function( _r )
+                        {
+                            _r = chem.txt2json( _r );
+                        });
+                    };
+                    bi++;
+
+                    dialog["buttons"][bi] = {};
+                    dialog["buttons"][bi]["text"]  = " ";
+                    dialog["buttons"][bi]["click"] = function()
+                    {
+                        var mem_post = {};
+                            mem_post['ajax']        = 1;
+                            mem_post['action']      = 2;
+                            mem_post['subaction']   = 1;
+                            mem_post['mod']         = 'memory';
+                            mem_post['area']        = $('body').attr('data-mod');
+
+                        $.ajax({ data: mem_post }).done(function( _r )
+                        {
+                            _r = chem.txt2json( _r );
+                            if( _r['saved'] )
+                            {
+                                for( k in _r['saved'] ){ $( '#'+did+'' ).find( '[data-save="1"][name="' + k + '"]' ).val( _r['saved'][k] ).trigger( "change" ); }
+                            }
+                        });
+                    };
+                    dialog["buttons"][bi]["class"] = "type1 dispersion";
+                    dialog["buttons"][bi]["data-role"] = "from_mem";
+                    bi++;
+                    /////////////////////////////////////////////
 
                 $('#'+did).dialog( dialog );
             }
