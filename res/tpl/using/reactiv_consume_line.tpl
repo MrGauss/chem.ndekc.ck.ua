@@ -7,7 +7,7 @@
                     <tr>
                         <td class="name">
                             <div class="reagent_name_fr">
-                                <span class="reagent_name">{tag:reagent:name}</span>
+                                <span class="reagent_name">{cooked:reactiv_name}</span>
                                 <span class="reagent_number">Зіпсується: <b class="cooked_dead_date">{cooked:dead_date}</b></span>
                             </div>
                         </td>

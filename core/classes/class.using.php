@@ -68,8 +68,8 @@ class using
         }
 
         $tpl->set( '{autocomplete:table}', 'stock' );
-        //$tpl->set( '{consume:list}',         $this->get_html_consume( $data['consume'], 'using/consume_line' ) );
         $tpl->set( '{reactiv_consume:list}', $this->get_html_consume( $data['reactiv_consume'], 'using/reactiv_consume_line' ) );
+        $tpl->set( '{consume:list}',         $this->get_html_consume( $data['consume'], 'using/consume_line' ) );
 
         $tpl->set( '{cooked:list}',      ( new cooked )     ->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_cooked' ) );
         $tpl->set( '{dispersion:list}',  ( new dispersion ) ->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_dispersion' ) );
@@ -111,8 +111,7 @@ class using
         {
             $tpl->load( $skin );
 
-            if( isset($line['reactiv_hash']) ){ $reactives_filters['hash'][]        = $line['reactiv_hash']; }
-            if( isset($line['using_hash']) )  { $reactives_filters['using_hash'][]  = $line['using_hash']; }
+            if( isset($line['reactiv_hash']) ){ $reactives_filters['hash'][]        = common::filter_hash( $line['reactiv_hash'] ); }
 
             $line['key'] = common::key_gen( $line['consume_hash'] );
 
@@ -160,8 +159,8 @@ class using
                 }
             }
 
-            if( count($reactives_filters['hash']) && count($reactives_filters['using_hash']) )
-            {                                                                       var_export($reactives_filters);exit;
+            if( count($reactives_filters['hash']) )
+            {
                 foreach( (new cooked)->get_raw( $reactives_filters ) as $reactive )
                 {
                     $reactive['inc_date_unix']  = strtotime( $reactive['inc_date'] );
@@ -192,7 +191,7 @@ class using
                 }
             }
 
-            var_export($tags);exit;
+            // var_export($tags);exit;
 
             $tpl->compile( $skin );
         }
