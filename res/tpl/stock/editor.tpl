@@ -62,7 +62,12 @@
 
     <div class="elem creator">
         <label class="label">Виробник</label>
-        <input data-important="1" class="input" type="text" name="creator" value="{tag:creator}" data-save="1" data-autocomplete="1" data-key="{autocomplete:creator:key}" data-table="{autocomplete:table}" data-column="creator">
+        <input class="input" type="text" name="creator" value="{tag:creator}" data-save="1" data-autocomplete="1" data-key="{autocomplete:creator:key}" data-table="{autocomplete:table}" data-column="creator">
+    </div>
+
+    <div class="elem provider">
+        <label class="label">Постачальник</label>
+        <input data-important="1" class="input" type="text" name="provider" value="{tag:provider}" data-save="1" data-autocomplete="1" data-key="{autocomplete:provider:key}" data-table="{autocomplete:table}" data-column="provider">
     </div>
 
     <div class="clear"></div>

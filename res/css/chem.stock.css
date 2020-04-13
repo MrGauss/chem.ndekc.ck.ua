@@ -8,6 +8,7 @@
 #main_frame #page_frame #list_frame.stock #list .line table td.quantity_dispersed{ width: 100px; text-align: center; }
 #main_frame #page_frame #list_frame.stock #list .line table td.quantity_not_used{ width: 100px; text-align: center; }
 #main_frame #page_frame #list_frame.stock #list .line table td.inc_date{ width: 150px; text-align: center; }
+#main_frame #page_frame #list_frame.stock #list .line table td.dead_date{ width: 150px; text-align: center; }
 
 
 
@@ -32,7 +33,8 @@
 .default_editor .elem.safe_needs    { width: 40%;  }
 .default_editor .elem.safe_place    { width: 30%;  }
 
-.default_editor .elem.creator       { width: 100%; }
+.default_editor .elem.creator       { width: 50%; }
+.default_editor .elem.provider      { width: 50%; }
 .default_editor .elem.comment       { width: 100%; }
 .default_editor .elem.expert        { width: 100%; }
 
@@ -46,6 +48,7 @@
 .default_editor .elem.dead_date{ background: #FFE5E0 }
 .default_editor .elem.create_date,
 .default_editor .elem.creator{ background: #E5F0FF }
+.default_editor .elem.provider{ background: #E5F0FF }
 .default_editor .elem.certif,
 .default_editor .elem.is_suitability{ background: #F8E5FF }
 

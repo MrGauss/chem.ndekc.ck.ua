@@ -64,8 +64,11 @@ class stock
 
         ///////////
 
-        if( !$error && common::strlen($data4save['creator']) <= 3 )      { $error = 'Зазначте виробника!'; $error_area = 'creator'; }
-        if( !$error && common::strlen($data4save['creator']) >= 250 )    { $error = 'Назва виробника занадто довга! До 250 символів будь ласка!'; $error_area = 'creator'; }
+        if( !$error && common::strlen($data4save['creator']) > 0 && common::strlen($data4save['creator']) <= 3 )      { $error = 'Зазначте виробника!'; $error_area = 'creator'; }
+        if( !$error && common::strlen($data4save['creator']) > 0 && common::strlen($data4save['creator']) >= 250 )    { $error = 'Назва виробника занадто довга! До 250 символів будь ласка!'; $error_area = 'creator'; }
+
+        if( !$error && common::strlen($data4save['provider']) <= 3 )      { $error = 'Зазначте постачальник!'; $error_area = 'provider'; }
+        if( !$error && common::strlen($data4save['provider']) >= 250 )    { $error = 'Назва постачальник занадто довга! До 250 символів будь ласка!'; $error_area = 'provider'; }
 
         if( !$error && common::strlen($data4save['safe_place']) <= 3 )      { $error = 'Зазначте місце зберігання!'; $error_area = 'safe_place'; }
         if( !$error && common::strlen($data4save['safe_place']) >= 250 )    { $error = 'Місце зберігання занадто довге! До 250 символів будь ласка!'; $error_area = 'safe_place'; }
@@ -148,7 +151,8 @@ class stock
         $SQL['create_date']         = common::en_date($data['create_date']  ,'Y-m-d');
         $SQL['dead_date']           = common::en_date($data['dead_date']    ,'Y-m-d');
 
-        $SQL['creator']             = common::filter($data['creator']);
+        $SQL['creator']             = common::filter( isset($data['creator'])?$data['creator']:'' );
+        $SQL['provider']            = common::filter( isset($data['provider'])?$data['provider']:'' );
         $SQL['safe_needs']          = common::filter($data['safe_needs']);
         $SQL['safe_place']          = common::filter($data['safe_place']);
         $SQL['comment']             = common::filter($data['comment']);
@@ -281,8 +285,9 @@ class stock
                 $line['lifetime'] = floor( $line['lifetime'] / ( 60*60*24 ) );
             }
 
-            $line['inc_date_unix'] = strtotime( $line['inc_date'] );
-            $line['inc_date'] = date( 'Y.m.d', $line['inc_date_unix'] );
+            $line['inc_date_unix']  = strtotime( $line['inc_date'] );
+            $line['inc_date']       = date( 'Y.m.d', $line['inc_date_unix'] );
+            $line['dead_date']      = date( 'Y.m.d', strtotime( $line['dead_date'] ) );
 
             $tpl->set( '{tag:inc_date}', common::db2html( date( 'Y.m.d', $line['inc_date_unix'] ) ) );
             $tpl->set( '{tag:inc_date:Y}', common::db2html( date( 'Y', $line['inc_date_unix'] ) ) );

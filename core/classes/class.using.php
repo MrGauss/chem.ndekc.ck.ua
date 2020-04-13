@@ -415,7 +415,7 @@ class using
         $SQL['using']['purpose_id'] = common::integer( isset($data['purpose_id']) ? $data['purpose_id'] : false );
         $SQL['using']['group_id']   = CURRENT_GROUP_ID;
         $SQL['using']['exp_number'] = common::filter( isset($data['exp_number']) ? $data['exp_number'] : '' );
-        $SQL['using']['exp_date']   = date( 'Y-m-d', common::integer( isset($data['exp_date']) ? strtotime($data['exp_date']) : 0 ) );
+        //$SQL['using']['exp_date']   = date( 'Y-m-d', common::integer( isset($data['exp_date']) ? strtotime($data['exp_date']) : 0 ) );
         $SQL['using']['obj_count']  = common::integer( isset($data['obj_count']) ? $data['obj_count'] : false );
         $SQL['using']['tech_info']  = common::filter( isset($data['tech_info']) ? $data['tech_info'] : '' );
         $SQL['using']['ucomment']   = common::encode_string( common::trim( common::filter( isset($data['comment']) ? $data['comment'] : '' ) ) );
@@ -430,14 +430,14 @@ class using
         if( $purpose['attr'] != 'expertise' )
         {
             unset( $SQL['using']['exp_number'] );
-            unset( $SQL['using']['exp_date'] );
+            //unset( $SQL['using']['exp_date'] );
             unset( $SQL['using']['obj_count'] );
         }
         else
         {
-            if( strtotime($SQL['using']['exp_date']) < strtotime($SQL['using']['date']) ){ return self::error( 'Дата експертизи не може бути меншою за дату використання!', 'date|exp_date' ); }
-            if( strtotime($SQL['using']['exp_date']) > time() ){ return self::error( 'Ви не можете створювати записи в майбутньому!', 'exp_date' ); }
-            if( strtotime($SQL['using']['exp_date']) < ( time() - $date_diap ) ){ return self::error( 'Дуууже давня дата експертизи!', 'exp_date' ); }
+            // if( strtotime($SQL['using']['exp_date']) < strtotime($SQL['using']['date']) ){ return self::error( 'Дата експертизи не може бути меншою за дату використання!', 'date|exp_date' ); }
+            // if( strtotime($SQL['using']['exp_date']) > time() ){ return self::error( 'Ви не можете створювати записи в майбутньому!', 'exp_date' ); }
+            // if( strtotime($SQL['using']['exp_date']) < ( time() - $date_diap ) ){ return self::error( 'Дуууже давня дата експертизи!', 'exp_date' ); }
 
             if( !$SQL['using']['obj_count'] ){ return self::error( 'Зазначте кількість об\'єктів!', 'obj_count' ); }
             if( strlen($SQL['using']['exp_number']) < 2 ){ return self::error( 'Зазначте номер висновку!', 'exp_number' ); }

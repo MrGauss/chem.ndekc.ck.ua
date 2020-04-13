@@ -19,9 +19,9 @@
 .default_editor .elem.user_id{ width: 40%;  }
 .default_editor .elem.ucomment{ width: 40%;  }
 
-.default_editor .elem.exp_date{ width: 13%;  }
-.default_editor .elem.exp_number{ width: 25%;  }
-.default_editor .elem.obj_count{ width: 12%;  }
+
+.default_editor .elem.exp_number{ width: 30%;  }
+.default_editor .elem.obj_count{ width: 20%;  }
 
 .default_editor .elem.reactiv_menu_id{ width: 33%; }
 .default_editor .elem.quantity_inc{ width: 11%; }

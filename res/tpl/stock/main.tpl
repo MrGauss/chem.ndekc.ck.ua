@@ -22,6 +22,7 @@
                     <td class="quantity_left">На складі</td>
                     <td class="quantity_dispersed">Видано</td>
                     <td class="quantity_not_used">Використано</td>
+                    <td class="dead_date">Кінцева дата</td>    
                     <td></td>
                 </tr>
             </table>

@@ -31,10 +31,10 @@
         <input data-important="1" class="input" type="text" name="exp_number" value="{tag:exp_number}" data-save="1">
     </div>
 
-    <div class="elem exp_date" data-purpose="expertise">
+    <!-- div class="elem exp_date" data-purpose="expertise">
         <label class="label">Дата</label>
         <input data-important="1" class="input" type="text" autocomplete="off" name="exp_date" value="{tag:exp_date}" data-save="1" data-mask="99.99.9999" data-placeholder="__.__.____" placeholder="__.__.____" maxlength="10" data-mindate="-1y" data-maxdate="+1y">
-    </div>
+    </div -->
 
     <div class="elem obj_count" data-purpose="expertise">
         <label class="label">Об'єктів</label>
