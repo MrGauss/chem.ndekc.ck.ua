@@ -38,7 +38,7 @@ class stock
 
         ///////////
 
-        $_date_areas = array( 'inc_date', 'create_date', 'dead_date' );
+        $_date_areas = array( 'inc_date', 'create_date', 'dead_date', 'nakladna_date' );
 
         foreach( $_date_areas as $_date_area )
         {
@@ -67,14 +67,17 @@ class stock
         if( !$error && common::strlen($data4save['creator']) > 0 && common::strlen($data4save['creator']) <= 3 )      { $error = 'Зазначте виробника!'; $error_area = 'creator'; }
         if( !$error && common::strlen($data4save['creator']) > 0 && common::strlen($data4save['creator']) >= 250 )    { $error = 'Назва виробника занадто довга! До 250 символів будь ласка!'; $error_area = 'creator'; }
 
-        if( !$error && common::strlen($data4save['provider']) <= 3 )      { $error = 'Зазначте постачальник!'; $error_area = 'provider'; }
-        if( !$error && common::strlen($data4save['provider']) >= 250 )    { $error = 'Назва постачальник занадто довга! До 250 символів будь ласка!'; $error_area = 'provider'; }
+        if( !$error && common::strlen($data4save['provider']) <= 3 )        { $error = 'Зазначте постачальник!'; $error_area = 'provider'; }
+        if( !$error && common::strlen($data4save['provider']) >= 250 )      { $error = 'Назва постачальник занадто довга! До 250 символів будь ласка!'; $error_area = 'provider'; }
 
         if( !$error && common::strlen($data4save['safe_place']) <= 3 )      { $error = 'Зазначте місце зберігання!'; $error_area = 'safe_place'; }
         if( !$error && common::strlen($data4save['safe_place']) >= 250 )    { $error = 'Місце зберігання занадто довге! До 250 символів будь ласка!'; $error_area = 'safe_place'; }
 
         if( !$error && common::strlen($data4save['safe_needs']) <= 3 )      { $error = 'Зазначте умови зберігання!'; $error_area = 'safe_needs'; }
         if( !$error && common::strlen($data4save['safe_needs']) >= 250 )    { $error = 'Умови зберігання занадто довгі! До 250 символів будь ласка!'; $error_area = 'safe_needs'; }
+
+        if( !$error && common::strlen($data4save['nakladna_num']) <= 3 )    { $error = 'Зазначте номер накладної!'; $error_area = 'nakladna_num'; }
+        if( !$error && common::strlen($data4save['nakladna_num']) >= 32 )   { $error = 'Номер накладної занадто довгий! До 32 символів будь ласка!'; $error_area = 'nakladna_num'; }
 
         ///////////
 
@@ -151,8 +154,12 @@ class stock
         $SQL['create_date']         = common::en_date($data['create_date']  ,'Y-m-d');
         $SQL['dead_date']           = common::en_date($data['dead_date']    ,'Y-m-d');
 
+        $SQL['nakladna_date']       = common::en_date($data['nakladna_date']    ,'Y-m-d');
+        $SQL['nakladna_num']        = common::filter( isset($data['nakladna_num'])?$data['nakladna_num']:'' );
+
         $SQL['creator']             = common::filter( isset($data['creator'])?$data['creator']:'' );
         $SQL['provider']            = common::filter( isset($data['provider'])?$data['provider']:'' );
+
         $SQL['safe_needs']          = common::filter($data['safe_needs']);
         $SQL['safe_place']          = common::filter($data['safe_place']);
         $SQL['comment']             = common::filter($data['comment']);
@@ -204,6 +211,7 @@ class stock
         $_dates[] = 'inc_date';
         $_dates[] = 'create_date';
         $_dates[] = 'dead_date';
+        $_dates[] = 'nakladna_date';
 
         foreach( $_dates as $_date )
         {

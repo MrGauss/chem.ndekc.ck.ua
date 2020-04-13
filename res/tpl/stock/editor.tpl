@@ -89,6 +89,19 @@
 
     <div class="clear"></div>
 
+    <div class="elem nakladna_num">
+        <label class="label">Номер видаткової накладної</label>
+        <input data-important="1" class="input" type="text" name="nakladna_num" value="{tag:nakladna_num}" data-save="1" data-autocomplete="1" data-key="{autocomplete:nakladna_num:key}" data-table="{autocomplete:table}" data-column="nakladna_num">
+    </div>
+
+    <div class="elem nakladna_date">
+        <label class="label">Дата накладної</label>
+        <input data-important="1" class="input" type="text" autocomplete="off" name="nakladna_date" value="{tag:nakladna_date}" data-save="1" data-mask="99.99.9999" data-placeholder="__.__.____" placeholder="__.__.____" maxlength="10">
+    </div>
+
+    <div class="clear"></div>
+
+
     <div class="elem comment">
         <label class="label">Примітки</label>
         <input class="input" type="text" name="comment" value="{tag:comment}" data-save="1">

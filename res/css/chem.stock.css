@@ -15,6 +15,9 @@
 
 
 
+.default_editor .elem.nakladna_num       { width: 70%;  }
+.default_editor .elem.nakladna_date      { width: 30%;  }
+
 .default_editor .elem.reagent       { width: 75%;  }
 .default_editor .elem.quantity      { width: 15%;  }
 .default_editor .elem.units         { width: 10%;  }
