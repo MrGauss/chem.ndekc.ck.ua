@@ -1235,6 +1235,7 @@ INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (0, '--', '20
 INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (3, 'Приготування робочого реактиву', '2020-03-18 16:12:38.948107', 'reactiv');
 INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (1, 'Проведення дослідження (експертизи)', '2020-03-17 14:02:01.806052', 'expertise');
 INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (2, 'Технічне обслуговування обладнання', '2020-03-17 14:06:40.671071', 'maintenance');
+INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (4, 'Інше', '2020-04-23 08:47:35.867644', '');
 
 
 --
@@ -1980,7 +1981,7 @@ INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_dat
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (401, '2020-04-17 14:56:01.659497', 51, 3000, '2020-03-17', 3, 1, 3000, 7, '2019-03-18', '2021-03-17', 1, 'Китай', 1, 5, 1, '3 пляшок із прозорою рідиною по 1 л (по 1,0 кг)', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-17 14:56:01.659497', '91-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (402, '2020-04-17 14:59:52.039402', 50, 2000, '2020-03-17', 3, 1, 2000, 11, '2019-04-15', '2021-04-04', 1, 'Китай', 1, 5, 1, '2 пляшок із прозорою рідиною по 1 л (по 1,8 кг)', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-17 14:59:52.039402', '92-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (403, '2020-04-17 15:09:15.393344', 141, 2000, '2020-03-17', 3, 1, 2000, 11, '2020-01-10', '2020-07-10', 1, 'Польща', 1, 5, 1, '2 пляшок із прозорою рідиною по 1 л (по 1,15 кг)', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-17 15:09:15.393344', '93-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
-INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (404, '2020-04-17 15:12:43.530091', 7, 5000, '2020-03-17', 3, 1, 5000, 7, '2020-01-09', '2021-01-09', 1, 'Україна', 1, 5, 1, '5 пляшок із прозорою рідиною по 1 л (по 0,9 кг)', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-17 15:12:43.530091', '94-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
+INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (404, '2020-04-17 15:12:43.530091', 7, 5000, '2020-03-17', 2, 1, 5000, 7, '2020-01-09', '2021-01-09', 1, 'Україна', 1, 5, 1, '5 пляшок із прозорою рідиною по 1 л (по 0,9 кг)', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-17 15:12:43.530091', '94-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
 
 
 --
@@ -2053,7 +2054,7 @@ SELECT pg_catalog.setval('"public"."groups_id_seq"', 1, true);
 -- Name: purpose_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."purpose_id_seq"', 3, true);
+SELECT pg_catalog.setval('"public"."purpose_id_seq"', 4, true);
 
 
 --
