@@ -11,10 +11,6 @@
 #main_frame #page_frame #list_frame.stock #list .line table td.dead_date{ width: 150px; text-align: center; }
 
 
-
-
-
-
 .default_editor .elem.nakladna_num       { width: 70%;  }
 .default_editor .elem.nakladna_date      { width: 30%;  }
 
@@ -59,6 +55,9 @@
 .default_editor .elem.safe_needs{ background: #FFDDDB }
 .default_editor .elem.safe_place{ background: #FFE7E5 }
 
+
+.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="terms"]{ display: block; width: 80px; height: 40px; overflow: hidden; position: absolute; top: 0px; left: 400px; border: none; background: #8500CC url(../img/date_terms.png) no-repeat 50% 50%; opacity: 0.6; }
+.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="terms"]:hover{ opacity: 1.0; }
 
 
 

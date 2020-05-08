@@ -265,6 +265,18 @@ chem['stock'] = new function()
                     /////////////////////////////////////////////
 
                     dialog["buttons"][bi] = {};
+                    dialog["buttons"][bi]["text"]  = "";
+                    dialog["buttons"][bi]["click"] = function()
+                    {
+
+                    };
+                    dialog["buttons"][bi]["class"] = "type6";
+                    dialog["buttons"][bi]["data-role"] = "terms";
+                    bi++;
+
+                    /////////////////////////////////////////////
+
+                    dialog["buttons"][bi] = {};
                     dialog["buttons"][bi]["text"]  = "Видалити";
                     dialog["buttons"][bi]["click"] = function()
                     {
