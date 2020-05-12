@@ -264,15 +264,18 @@ chem['stock'] = new function()
                     bi++;
                     /////////////////////////////////////////////
 
-                    dialog["buttons"][bi] = {};
-                    dialog["buttons"][bi]["text"]  = "";
-                    dialog["buttons"][bi]["click"] = function()
+                    if( line_id )
                     {
-
-                    };
-                    dialog["buttons"][bi]["class"] = "type6";
-                    dialog["buttons"][bi]["data-role"] = "terms";
-                    bi++;
+                        dialog["buttons"][bi] = {};
+                        dialog["buttons"][bi]["text"]  = "";
+                        dialog["buttons"][bi]["click"] = function()
+                        {
+                            chem.stock.prolongation( $( '#'+did+'' ) );
+                        };
+                        dialog["buttons"][bi]["class"] = "type6";
+                        dialog["buttons"][bi]["data-role"] = "terms";
+                        bi++;
+                    }
 
                     /////////////////////////////////////////////
 
@@ -308,6 +311,101 @@ chem['stock'] = new function()
                 $('#'+did).dialog( dialog );
             }
         });
+    }
+
+    this.prolongation = function( obj )
+    {
+        chem.single_open( obj );
+
+        var stock_id  = obj.find('[name="id"]').val();
+        var stock_key = obj.find('[name="key"]').val();
+
+        var did_pref = 'stock-prolongation-form';
+        var did = did_pref + '-' + stock_id + '-' + Math.floor((Math.random() * 1000000) + 1);
+
+        var post = {};
+            post['ajax'] = 1;
+            post['action'] = 1;
+            post['subaction'] = 1;
+            post['mod'] = 'prolongation';
+            post['id']  = stock_id;
+            post['key'] = stock_key;
+
+        $.ajax({ data: post }).done(function( _r )
+        {
+            _r = chem.txt2json( _r );
+            if( _r['error'] ){ console.log( _r['error_text'] ); return false; }
+
+            if( _r['form'] )
+            {
+
+                $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Подовження термінів придатності">'+_r['form']+'</div>' );
+
+                autocomplete.init( $('#'+did+'') );
+
+                $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ); });
+                $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
+                $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
+
+                $('#'+did+' .show_add_panel').on( 'click', function()
+                {
+                    $(this).remove();
+                    $('#'+did+'').find('.add_new').removeClass('dnone');
+                    $('#'+did+'').dialog("widget").position({ "my": "top middle", "at": "top middle", "of": $(window) });
+                });
+
+                $('#'+did+' #add_prolong').on( 'click', function()
+                {
+                    var post = {};
+                        post['ajax'] = 1;
+                        post['action'] = 2;
+                        post['subaction'] = 1;
+                        post['mod']  = 'prolongation';
+                        post['id']   = stock_id;
+                        post['key']  = stock_key;
+                        post['save'] = {};
+                        post['save']['stock_id'] = stock_id;
+
+                    if( chem.stock.check_before_save( $('#'+did) ) )
+                    {
+                        $('#'+did+'').find('[data-save="1"]').each(function()
+                        {
+                            post['save'][$(this).attr('name')] = $(this).val();
+                        });
+
+                        $.ajax({ data: post }).done(function( _r )
+                        {
+                            _r = chem.txt2json( _r );
+                            if( _r['error'] ){ console.log( _r['error_text'] ); return false; }
+                        });
+                    }
+                });
+
+
+
+                var bi = 0;
+                var dialog = {};
+                    dialog["zIndex"]        = 2010;
+                    dialog["modal"]         = true;
+                    dialog["autoOpen"]      = true;
+                    dialog["width"]         = '840';
+                    dialog["resizable"]     = false;
+                    dialog["buttons"]       = {};
+
+                    dialog["buttons"][bi]               = {};
+                    dialog["buttons"][bi]["text"]       = "Скасувати";
+                    dialog["buttons"][bi]["click"]      = function(){ chem.close_it( $('#'+did) ); };
+                    dialog["buttons"][bi]["class"]      = "type1";
+                    dialog["buttons"][bi]["data-role"]  = "close_button";
+                    bi++;
+
+                $('#'+did).dialog( dialog );
+            }
+        });
+
+        // dialog["zIndex"]        = 2001;
+
+
     }
 
     this.init = function()

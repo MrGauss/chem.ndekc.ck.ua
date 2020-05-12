@@ -292,7 +292,7 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #list_frame #list .line.fully_used{ border-color: #3F3F3F; background-color: #EFEFEF; filter: grayscale(100%); }
 #main_frame #page_frame #list_frame #list .line.almost_used{ background-color: #FFDBDB; border-color: #8A0000;  }
 
-.default_editor                 { position: relative; min-height: 200px; width: 100%; padding: 0px; margin: 0px; font-size: 1.0em;  }
+.default_editor                 { position: relative; min-height: 200px; width: 100%; padding: 0px; margin: 0px; font-size: 1.0em;   }
 .default_editor select          { text-transform: uppercase; letter-spacing: 1px; }
 .default_editor select,
 .default_editor select option   { font-size: 1.0em; cursor: pointer; }

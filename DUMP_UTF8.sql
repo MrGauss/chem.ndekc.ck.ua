@@ -607,6 +607,23 @@ ALTER SEQUENCE "public"."groups_id_seq" OWNED BY "public"."groups"."id";
 
 
 --
+-- Name: prolongation; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE "public"."prolongation" (
+    "hash" character varying(32) DEFAULT "public"."generate_hash"('prolongation'::"text") NOT NULL,
+    "stock_id" bigint DEFAULT 0 NOT NULL,
+    "date_before_prolong" "date" DEFAULT '1970-01-01'::"date" NOT NULL,
+    "date_after_prolong" "date" DEFAULT '1970-01-01'::"date" NOT NULL,
+    "ts" timestamp(6) without time zone DEFAULT ("now"())::timestamp without time zone NOT NULL,
+    "expert_id" bigint DEFAULT 0 NOT NULL,
+    "date_prolong" "date" DEFAULT ("now"())::"date" NOT NULL,
+    "act_number" character varying(32) DEFAULT ''::character varying NOT NULL,
+    "act_date" "date" DEFAULT '1970-01-01'::"date" NOT NULL
+);
+
+
+--
 -- Name: purpose; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1208,7 +1225,7 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0');
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (2, 'Шкурдода', 'Сергій', 'Вікторович', 1, '2020-03-18 15:24:55.417367', 'shkurdoda', 'd80daf84242523a7c25c1162a314d3d3', '5a1b6334917e6194caf45ed52349475f', 1, '192.168.2.118');
-INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', '8846878476ce5c09b9511602c036c1c0', 1, '185.41.192.218');
+INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2019-12-29 23:17:39.53982', 'root', '855cb86bd065112c52899ef9ea7b9918', 'b2e4f22bd595778c1caf36f795569f56', 1, '192.168.137.168');
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2020-03-24 17:12:38.05303', 'shinkarenko', '953adda3778dcf339f8debe9a72dcc34', '59ff126d954f7ba397a8f5904eb37ebe', 1, '192.168.2.127');
 
 
@@ -1225,6 +1242,14 @@ INSERT INTO "public"."expertise" ("id", "region_id", "eint", "inc_date") VALUES 
 
 INSERT INTO "public"."groups" ("id", "ts", "name", "full_name", "region_id") VALUES (0, '2019-12-28 11:09:48.499219', '--', '--', 0);
 INSERT INTO "public"."groups" ("id", "ts", "name", "full_name", "region_id") VALUES (1, '2019-12-29 23:20:15.009224', 'root', 'root', 1);
+
+
+--
+-- Data for Name: prolongation; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+INSERT INTO "public"."prolongation" ("hash", "stock_id", "date_before_prolong", "date_after_prolong", "ts", "expert_id", "date_prolong", "act_number", "act_date") VALUES ('17f0d7051f9e8dd5adf8d4090759c0e1', 404, '2020-05-12', '2020-05-19', '2020-05-12 14:22:44.340631', 1, '2020-05-12', 'test', '2020-05-07');
+INSERT INTO "public"."prolongation" ("hash", "stock_id", "date_before_prolong", "date_after_prolong", "ts", "expert_id", "date_prolong", "act_number", "act_date") VALUES ('c34ac7067bb61df09fe2f0b2363f617c', 404, '2020-05-12', '2020-05-19', '2020-05-12 14:23:17.116451', 1, '2020-05-12', 'test', '2020-05-07');
 
 
 --
@@ -2212,6 +2237,14 @@ ALTER TABLE ONLY "public"."groups"
 
 
 --
+-- Name: prolongation prolongation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."prolongation"
+    ADD CONSTRAINT "prolongation_pkey" PRIMARY KEY ("hash");
+
+
+--
 -- Name: purpose purpose_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2454,6 +2487,22 @@ ALTER TABLE ONLY "public"."expert"
 
 ALTER TABLE ONLY "public"."groups"
     ADD CONSTRAINT "groups_region_id_fkey" FOREIGN KEY ("region_id") REFERENCES "public"."region"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: prolongation prolongation_expert_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."prolongation"
+    ADD CONSTRAINT "prolongation_expert_id_fkey" FOREIGN KEY ("expert_id") REFERENCES "public"."expert"("id") ON UPDATE CASCADE ON DELETE SET DEFAULT;
+
+
+--
+-- Name: prolongation prolongation_stock_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."prolongation"
+    ADD CONSTRAINT "prolongation_stock_id_fkey" FOREIGN KEY ("stock_id") REFERENCES "public"."stock"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
