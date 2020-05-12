@@ -313,6 +313,31 @@ chem['stock'] = new function()
         });
     }
 
+    this.prolongation_remove = function( obj )
+    {
+        var hash        = obj.attr('data-hash');
+        var stock_key   = obj.attr('data-key');
+        var stock_id    = obj.attr('data-stock_id');
+
+        var post = {};
+            post['ajax'] = 1;
+            post['action'] = 3;
+            post['subaction'] = 1;
+            post['mod']   = 'prolongation';
+            post['hash']  = hash;
+            post['key']   = stock_key;
+            post['id']    = stock_id;
+
+
+
+        $.ajax({ data: post }).done(function( _r )
+        {
+            _r = chem.txt2json( _r );
+            if( _r['error'] ){ console.log( _r['error_text'] ); return false; }
+            obj.remove();
+         });
+    }
+
     this.prolongation = function( obj )
     {
         chem.single_open( obj );
@@ -341,11 +366,20 @@ chem['stock'] = new function()
 
                 $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Подовження термінів придатності">'+_r['form']+'</div>' );
 
+                $('#'+did+'').find('[name="date_before_prolong"]').val( obj.find( '[name="dead_date"]' ).val() );
+
                 autocomplete.init( $('#'+did+'') );
 
                 $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ); });
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
+
+                $('#'+did+'').find('#prolongation_history .list .line [data-role="remove"]')
+                .off('click')
+                .on('click', function()
+                {
+                    chem.stock.prolongation_remove( $(this).parents('.line') );
+                });
 
                 $('#'+did+' .show_add_panel').on( 'click', function()
                 {
@@ -375,8 +409,49 @@ chem['stock'] = new function()
 
                         $.ajax({ data: post }).done(function( _r )
                         {
-                            _r = chem.txt2json( _r );
-                            if( _r['error'] ){ console.log( _r['error_text'] ); return false; }
+                           try{ _r = jQuery.parseJSON( _r ); }catch(err){ chem.err( 'ERROR: '+err+"\n\n"+_r ); return false; }
+
+                            _r['error'] = parseInt(_r['error']);
+                            _r['id'] = parseInt(_r['id']);
+
+                            if( parseInt(_r['error'])>0 )
+                            {
+                                chem.animate_opacity( $('#'+did+' .error_area'), _r['error_text'], 3000 );
+
+                                if( _r['err_area'] )
+                                {
+                                    _r['err_area'] = _r['err_area'].toString().split ( '|'.toString() );
+
+                                    $.each( _r['err_area'], function( index, value )
+                                    {
+                                        chem.BL( $('#'+did+'').find('[name="'+value+'"]'), 15, 'blred' );
+                                    } );
+                                }
+                            }
+                            else
+                            {
+                                if( _r['lines'] )
+                                {
+                                    $('#'+did+'').find('[data-save="1"]').val( '' );
+
+                                    obj.find( '[name="dead_date"]' ).val( _r['new_dead_date'] );
+
+                                    chem.stock.reload( _r['id'] );
+
+                                    $('#'+did+'').find('#prolongation_history .list').html( _r['lines'] );
+
+                                    $('#'+did+'').find('#prolongation_history .list .line [data-role="remove"]')
+                                    .off('click')
+                                    .on('click', function()
+                                    {
+                                        chem.stock.prolongation_remove( $(this).parents('.line') );
+                                    });
+                                }
+                            }
+
+
+
+
                         });
                     }
                 });
@@ -388,7 +463,7 @@ chem['stock'] = new function()
                     dialog["zIndex"]        = 2010;
                     dialog["modal"]         = true;
                     dialog["autoOpen"]      = true;
-                    dialog["width"]         = '840';
+                    dialog["width"]         = '740';
                     dialog["resizable"]     = false;
                     dialog["buttons"]       = {};
 

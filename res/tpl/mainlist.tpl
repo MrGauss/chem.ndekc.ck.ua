@@ -1,18 +1,17 @@
 <div id="mainlist">
-    <div class="element i01"><a href="/index.php?mod=stock"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Склад<br>реактивів</span></a></div>
-    <div class="element i02"><a href="/index.php?mod=dispersion"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Реактиви в лабораторії</span></a></div>
+    [access:users:edit]<div class="element i01"><a href="/index.php?mod=stock"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Склад<br>реактивів</span></a></div>[/access]
+    [access:users:edit]<div class="element i02"><a href="/index.php?mod=dispersion"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Реактиви в лабораторії</span></a></div>[/access]
     <div class="hr_vertval"></div>
-    <div class="element i07"><a href="/index.php?mod=cooked"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Приготовані<br>реактиви</span></a></div>
+    [access:users:edit]<div class="element i07"><a href="/index.php?mod=cooked"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Приготовані<br>реактиви</span></a></div[/access]
     <div class="hr_vertval"></div>
-    <div class="element i06"><a href="/index.php?mod=using"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Використання реактивів</span></a></div>
+    [access:users:edit]<div class="element i06"><a href="/index.php?mod=using"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Використання реактивів</span></a></div>[/access]
 
     <hr>
 
     <div class="element i05"><a href="/index.php?mod=stats_main"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Терміни<br>придатності</span></a></div>
     <div class="element i04"><a href="/index.php?mod=stats_consume"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Статистика<br>використання</span></a></div>
-    <div class="hr_vertval"></div>
-    <div class="element i03"><a href="/index.php?mod=users"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Експерти<br>(користувачі)</span></a></div>
-    <div class="hr_vertval"></div>
+    [access:users:edit]<div class="hr_vertval"></div><div class="element i03"><a href="/index.php?mod=users"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Експерти<br>(користувачі)</span></a></div>[/access]
+    [access:admin:access]<div class="element i21"><a href="/index.php?mod=access"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Рівні<br>доступу</span></a></div><div class="hr_vertval"></div>[/access]
     <div class="element i13"><a href="/index.php?mod=pink_shkurdoda"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Пофарбуй<br>Шкурдоду</span></a></div>
 
     <hr>

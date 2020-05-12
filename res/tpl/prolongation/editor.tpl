@@ -1,5 +1,9 @@
 <div class="default_editor prolongation" dara-rand="{RAND}">
 
+    <div class="error_area dnone"></div>
+    <div class="good_area dnone"></div>
+    <div class="clear"></div>
+
     <div class="elem reagent_name">
         <label class="label">Назва реактиву чи витратного матеріалу</label>
         <input class="input" type="text" name="name" value="[{stock:reagent_number}] {reagent:name}" data-save="0" disabled="disabled">

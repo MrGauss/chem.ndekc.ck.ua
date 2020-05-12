@@ -589,6 +589,7 @@ button.ui-button::-moz-focus-inner {
     float: left;
     margin: .1em 0;
     white-space: nowrap;
+    font-size: 12px;
     width: 90%;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1906,7 +1907,7 @@ button.ui-button::-moz-focus-inner {
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: left;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: bold;
     text-transform: uppercase;
     color: #000000;
@@ -2227,7 +2228,7 @@ body .ui-tooltip {
 ----------------------------------*/
 .ui-widget {
     font-family: 'Open Sans', Arial, sans-serif;
-    font-size: 12px;  
+    font-size: 12px;
     position: absolute;
 }
 .ui-widget .ui-widget {

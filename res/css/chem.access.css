@@ -1,0 +1,9 @@
+#access_editor{ padding: 5px; height: 100%; overflow: scroll; overflow-x: hidden; }
+#access_editor .access_level{ margin: 0px 0px 10px 0px; padding: 10px; border: 1px solid #FFFFFF; }
+#access_editor .access_level:hover{ border-color: #666666; background: #FFFFDB; }
+#access_editor .access_level h2{ border-bottom: 1px solid #444444; padding: 0px 0px 5px 0px; margin: 0px 0px 0px 0px; font-size: 14px; text-transform: uppercase; }
+#access_editor .access_level .list{ padding: 5px 5px 5px 5px; }
+#access_editor .access_level .action{ display: inline-block; width: 360px; padding: 5px 5px 5px 5px; overflow: hidden; }
+#access_editor .access_level .action:hover{ background: #C7FFC7; }
+#access_editor .access_level .action label{ display: inline-block; padding-left: 5px; cursor: pointer; }
+#access_editor .access_level .action input{ cursor: pointer; border: 1px solid #94FF94; }

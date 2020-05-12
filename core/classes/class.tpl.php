@@ -183,6 +183,8 @@ class tpl
             $data = self::str_replace_if_exist( '{user:'.$uk.'}', $uv, $data );
         }
 
+        $data = $this->parse_tags_access( $data );
+
         $data = $this->parse_tags_include( $data );
         $data = $this->parse_tags_login_nologin( $data );
         $data = $this->parse_tags_mod( $data ); 
@@ -190,6 +192,38 @@ class tpl
         $data = $this->parse_tags_group( $data );
         $data = $this->parse_tags_region( $data );
         $data = $this->parse_table_select( $data );
+
+        return $data;
+    }
+
+    private final function parse_tags_access( $data )
+    {
+        if( preg_match_all( '!\[access:(.+?)\](.+?)\[\/access\]!is', $data, $tag ) )
+        {
+            foreach( $tag[1] as $t )
+            {
+                $subtags = explode( '|', $t );
+                $subtags = common::trim( $subtags );
+                $has_access = false;
+
+                foreach( $subtags as $subtag )
+                {
+                    $subtag = explode( ':', $subtag, 2 );
+                    if( access::allow( $subtag[0], $subtag[1] ) )
+                    {
+                        $has_access = true;
+                        break;
+                    }
+                }
+
+                if( $has_access )
+                {
+                    $data = preg_replace( '!\[access:'.preg_quote($t,'!').'\](.+?)\[\/access\]!is', '$1', $data );
+                }
+
+                $data = preg_replace( '!\[access:'.preg_quote($t,'!').'\](.+?)\[\/access\]!is', '', $data );
+            }
+        }
 
         return $data;
     }

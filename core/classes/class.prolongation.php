@@ -14,6 +14,25 @@ class prolongation
 {
     use basic, spr, db_connect;
 
+    public final static function error( $error, $error_area = false )
+    {
+        if( $error != false )
+        {
+            if( _AJAX_ )
+            {
+                ajax::set_error( rand(10,99), $error );
+                ajax::set_data( 'err_area', isset($error_area) ? $error_area : '' );
+                return false;
+            }
+            else
+            {
+                common::err( $error );
+                return false;
+            }
+        }
+        return true;
+    }
+
     public final function editor( $stock_id = false, $skin = false )
     {
         $skin       = $skin ? $skin : 'prolongation/editor';
@@ -69,8 +88,34 @@ class prolongation
     }
 
 
+    public final function remove( $stock_id, $line_hash )
+    {
+        $stock_id  = common::integer( $stock_id );
+        $line_hash = common::filter_hash($line_hash);
+
+        if( !$line_hash ){ return false; }
+        if( !$stock_id ) { return false; }
+
+        $stock   = ( new stock )->get_raw( array( 'id' => $stock_id ) )[$stock_id];
+        if( !is_array($stock) || !count($stock) ){ self::error( 'Запис не знадений на складі!' ); }
+
+        if( common::integer($stock['group_id']) != CURRENT_GROUP_ID )
+        {
+            return self::error( 'Доступ заборонено!' );
+        }
+
+        $SQL = 'DELETE FROM prolongation WHERE expert_id = '.CURRENT_USER_ID.' AND hash = \''.$line_hash.'\' AND stock_id = \''.$stock_id.'\';';
+        $this->db->query( $SQL );
+
+        cache::clean();
+
+        return $line_hash;
+    }
+
     public final function save( $raw_data )
     {
+        if( !is_array($raw_data) ){ return self::error( 'Помилка передачі даних!' ); }
+
         $_2db = array();
         $_2db['stock_id']               = common::integer( isset($raw_data['stock_id'])             ? $raw_data['stock_id']             : false );
         $_2db['date_before_prolong']    = common::en_date( isset($raw_data['date_before_prolong'])  ? $raw_data['date_before_prolong']  : false ,'Y-m-d');
@@ -79,23 +124,63 @@ class prolongation
         $_2db['act_date']               = common::en_date( isset($raw_data['act_date'])             ? $raw_data['act_date']             : false ,'Y-m-d');
         $_2db['act_number']             = common::filter(  isset($raw_data['act_number']) ? $raw_data['act_number'] : '' );
 
-        $SQL = 'INSERT INTO prolongation ("'.implode('", "', array_keys($_2db) ).'") VALUES ( \''. implode( '\', \'', array_values($_2db) ) .'\' ) RETURNING hash;';
+        $stock   = ( new stock )->get_raw( array( 'id' => $_2db['stock_id'] ) )[$_2db['stock_id']];
+        if( !is_array($stock) || !count($stock) ){ self::error( 'Запис не знадений на складі!' ); }
+
+        if( common::integer($stock['group_id']) != CURRENT_GROUP_ID )
+        {
+            return self::error( 'Доступ заборонено!' );
+        }
+
+        if( strtotime( $stock['dead_date'] ) > strtotime( $_2db['date_after_prolong'] ) )
+        {
+            return self::error( 'Поточна кінцева дата більша за запропоновану!', 'date_after_prolong' );
+        }
+
+        if( strtotime( $_2db['date_before_prolong'] ) > strtotime( $_2db['date_after_prolong'] ) )
+        {
+            return self::error( 'Помилка в датах!', 'date_after_prolong|date_before_prolong' );
+        }
+
+        if( strtotime( $_2db['act_date'] ) > time() )
+        {
+            return self::error( 'Дата акту в майбутньому!', 'act_date' );
+        }
+
+        if( strlen( $_2db['act_number'] ) > 30 )
+        {
+            return self::error( 'Номер акту занадто довгий!', 'act_number' );
+        }
+
+        //
+        $max_date_after_prolong = $this->db->super_query( 'SELECT date_after_prolong FROM prolongation WHERE stock_id = '.$_2db['stock_id'].' ORDER BY date_after_prolong DESC LIMIT 1;' );
+        if( isset($max_date_after_prolong) && isset($max_date_after_prolong['date_after_prolong']) )
+        {
+            $max_date_after_prolong = strtotime( $max_date_after_prolong['date_after_prolong'] );
+            if( $max_date_after_prolong > strtotime( $_2db['date_after_prolong'] ) )
+            {
+                return self::error( 'Вже існує запис з кінцевою датою більшою за запропоновану ('.date('Y.m.d',$max_date_after_prolong).')!', 'date_after_prolong' );
+            }
+        }
+        //
+
+        $SQL = 'INSERT INTO prolongation ("'.implode('", "', array_keys($_2db) ).'") VALUES ( \''. implode( '\', \'', array_values($_2db) ) .'\' ) RETURNING stock_id, hash;';
 
                $this->db->query( 'BEGIN;' );
         $SQL = $this->db->query( $SQL );
         $SQL = $this->db->get_row( $SQL );
 
-        if( is_array($SQL) && isset($SQL['hash']) && strlen($SQL['hash']) == 32 )
+        if( is_array($SQL) && isset($SQL['hash']) && isset($SQL['stock_id']) && strlen($SQL['hash']) == 32 )
         {
             $this->db->query( 'COMMIT;' );
+            $dead_date = $this->db->super_query( 'UPDATE stock SET dead_date = ( SELECT date_after_prolong FROM prolongation WHERE stock_id = stock.id ORDER BY date_after_prolong DESC LIMIT 1 ) WHERE id = '.$SQL['stock_id'].' RETURNING dead_date;' );
 
             cache::clean();
 
-            return $SQL['hash'];
+            return array( 'hash' => $SQL['hash'], 'stock_id' => $SQL['stock_id'], 'dead_date' => $dead_date['dead_date'] );
         }
 
         $this->db->query( 'ROLLBACK;' );
-
         return false;
     }
 
@@ -104,14 +189,34 @@ class prolongation
     public final function get_prolongation_list_html( $stock_id )
     {
         $stock_id   = common::integer( $stock_id );
-        $data       = $this->get_raw( array( 'stock_id' => common::integer( $stock_id ) ) );
+        $data       = $this->get_raw( array( 'stock_id' => array( common::integer( $stock_id ) ) ) );
 
         if( !is_array($data) || !count($data) ){ return false; }
+
+        $skin = 'prolongation/editor_line';
+
         $tpl = new tpl;
 
+        foreach( $data as $hash => $line )
+        {
+            $tpl->load( $skin );
 
+            $line['date_before_prolong'] = common::en_date( $line['date_before_prolong'],'Y.m.d');
+            $line['date_after_prolong']  = common::en_date( $line['date_after_prolong'],'Y.m.d');
+            $line['act_date']            = common::en_date( $line['act_date'],'Y.m.d');
+            $line['date_prolong']        = common::en_date( $line['date_prolong'],'Y.m.d');
 
-        return 'fuck!';
+            $line['key'] = common::key_gen( $line['stock_id'] . $line['hash'] );
+
+            foreach( $line as $k => $v )
+            {
+                $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
+            }
+
+            $tpl->compile( $skin );
+        }
+
+        return $tpl->result( $skin );
     }
 
     public final function get_raw( $filters = array() )
@@ -123,7 +228,7 @@ class prolongation
 
         if( isset($filters['stock_id']) && is_array($filters['stock_id']) && count($filters['stock_id']) )
         {
-            $WHERE['stock_id'] = 'stock_id IN('. implode( ',', common::integer($WHERE['stock_id']) ) .')';
+            $WHERE['stock_id'] = 'stock_id IN('. implode( ',', common::integer($filters['stock_id']) ) .')';
         }
 
 
