@@ -48,6 +48,8 @@ class prolongation
         $reagent = ( new spr_manager( 'reagent' ) )->get_raw()[$stock['reagent_id']];
         if( !is_array($reagent) || !count($reagent) ){ return false; }
 
+        // var_export($reagent);exit;
+
         $units   = ( new spr_manager( 'units' ) )->get_raw()[$reagent['units_id']];
         if( !is_array($units) || !count($units) ){ return false; }
 

@@ -233,6 +233,114 @@ $('.ui-dialog-content').dialog("option", "position", {my: "center", at: "center"
 
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+
+var sort = new function()
+{
+    this.STILL_SORT = false;
+
+    this.renum = function( obj )
+    {
+        obj = obj.find( '.line' );
+        var i = obj.length;
+
+        obj.each(function()
+        {
+            $(this).find('.numi').text( i );
+            i = i - 1;
+        });
+
+    }
+    this.init = function( obj )
+    {
+        var sorter_name = obj.attr( 'data-sort' );
+        var sorter_type = obj.attr( 'data-type' );
+
+        var list = obj.parents('#list_frame').find('#list');
+
+        if( sort.STILL_SORT )
+        {
+            return false;
+        }
+        sort.STILL_SORT = true;
+        ///////////////////////////////////
+
+        if( !sorter_name )
+        {
+            sort.STILL_SORT = false;
+            return false;
+        }
+
+        ///////////////////////////////////
+
+        var direction = obj.attr( 'data-direction' );
+        if( !direction )
+        {
+            direction = 'asc';
+        }
+        else
+        {
+            if( direction == 'asc' ){ direction = 'desc'; }
+            else                    { direction = 'asc';  }
+        }
+        obj.attr( 'data-direction', direction );
+
+        ///////////////////////////////////
+
+        $('[data-sorter="1"]').removeClass('active');
+        obj.addClass('active');
+
+        ///////////////////////////////////
+
+        list.find('.line').sort(function(a,b)
+        {
+            sort.STILL_SORT = true;
+
+            var _a = $(a).find('[data-role="sort"][name="'+sorter_name+'"]').val();
+            var _b = $(b).find('[data-role="sort"][name="'+sorter_name+'"]').val();
+
+            if( sorter_type == 'txt' )
+            {
+                if( direction == 'asc' )
+                {
+                    return _a.localeCompare( _b );
+                }
+                else
+                {
+                    return _b.localeCompare( _a );
+                }
+            }
+
+            if( sorter_type == 'int' )
+            {
+                _a = parseFloat( _a );
+                _b = parseFloat( _b );
+
+                if( _a == _b )
+                {
+                    return 0;
+                }
+                if( _a > _b )
+                {
+                    if( direction == 'asc' ){ return 1; }else{ return -1; }
+                }
+                else
+                {
+                    if( direction == 'asc' ){ return -1; }else{ return 1; }
+                }
+                return 0;
+            }
+
+
+        }).detach().appendTo( list );
+
+        sort.renum( list );
+
+        sort.STILL_SORT = false;
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 $(document).ready( function()
 {
@@ -267,6 +375,10 @@ $(document).ready( function()
     $('[data-mask]').each(function()        { chem.init_mask( $(this) ); });
     $('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
     $('select[data-value]').each(function() { chem.init_select( $(this) ); });
+
+    /////////////////////////////////////////////////////////////////////////
+
+    $('[data-sorter="1"]').on('click', function(){ sort.init( $(this) ); });
 
     /////////////////////////////////////////////////////////////////////////
 

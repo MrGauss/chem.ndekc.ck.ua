@@ -4,17 +4,18 @@
         <button id="search" type="button">Шукати</button>
     </div>
 
+    <div class="line header">
+        <table>
+            <tr>
+                <td class="numi">&nbsp;</td>
+                <td class="name">Назва</td>
+                <td class="units">Одиниця виміру</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
     <div id="list" class="list">
-        <div class="line header">
-            <table>
-                <tr>
-                    <td class="numi">&nbsp;</td>
-                    <td class="name">Назва</td>
-                    <td class="units">Одиниця виміру</td>
-                    <td></td>
-                </tr>
-            </table>
-        </div>
         {list}
     </div>
 </div>

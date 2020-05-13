@@ -301,6 +301,7 @@ class stock
             }
 
             $line['inc_date_unix']  = strtotime( $line['inc_date'] );
+            $line['dead_date_unix'] = strtotime( $line['dead_date'] );
             $line['inc_date']       = date( 'Y.m.d', $line['inc_date_unix'] );
             $line['dead_date']      = date( 'Y.m.d', strtotime( $line['dead_date'] ) );
 
@@ -309,11 +310,23 @@ class stock
 
             $line['quantity_used'] = common::float( $line['quantity_dispersed'] ) - common::float( $line['quantity_not_used'] );
 
+            $line['reagent_number_separete'] = explode( '-', $line['reagent_number'] );
+            $line['reagent_number_separete'] = common::integer( $line['reagent_number_separete'] );
+
+            $tpl->set( '{tag:reagent_number:0}', common::db2html( str_repeat( '0', 5-strlen($line['reagent_number_separete'][0]) ) ).$line['reagent_number_separete'][0] );
+            $tpl->set( '{tag:reagent_number:1}', common::db2html( $line['reagent_number_separete'][1] ) );
+
+
+            $tags = array(  );
             foreach( $line as $key => $value )
             {
                 if( is_array($value) ){ continue; }
-                $tpl->set( '{tag:'.$key.'}', common::db2html( $value ) );
+                $value = common::db2html( $value );
+                $tpl->set( '{tag:'.$key.'}', $value );
+                $tags['{tag:'.$key.'}'] = $value;
             }
+
+            //var_export($tags);exit;
 
             $tpl->compile( $skin );
         }

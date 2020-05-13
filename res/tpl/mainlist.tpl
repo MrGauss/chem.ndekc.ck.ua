@@ -1,14 +1,14 @@
 <div id="mainlist">
-    [access:stock:view]<div class="element i01"><a href="/index.php?mod=stock"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Склад<br>реактивів</span></a></div>[/access]
-    [access:dispersion:view]<div class="element i02"><a href="/index.php?mod=dispersion"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Реактиви в лабораторії</span></a></div>[/access]
+    [access:stock:view]<div class="element i01"><a href="/index.php?mod=stock"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Склад</span></a></div>[/access]
+    [access:dispersion:view]<div class="element i02"><a href="/index.php?mod=dispersion"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Лабораторія</span></a></div>[/access]
 
     [access:stock:view|dispersion:view]<div class="hr_vertval"></div>[/access]
 
-    [access:cooked:view]<div class="element i07"><a href="/index.php?mod=cooked"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Приготовані<br>реактиви</span></a></div>[/access]
+    [access:cooked:view]<div class="element i07"><a href="/index.php?mod=cooked"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Приготування</span></a></div>[/access]
 
     [access:using:view]<div class="hr_vertval"></div>[/access]
 
-    [access:using:view]<div class="element i06"><a href="/index.php?mod=using"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Використання реактивів</span></a></div>[/access]
+    [access:using:view]<div class="element i06"><a href="/index.php?mod=using"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Використання</span></a></div>[/access]
 
     <hr>
 
@@ -20,8 +20,8 @@
 
     [access:spr:edit]
     <hr>
-    <div class="element i08"><a href="/index.php?mod=spr_reactives"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Довідник<br>реактивів</span></a></div>
-    <div class="element i09"><a href="/index.php?mod=spr_recipes"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Довідник<br>рецептів</span></a></div>
+    <div class="element i08"><a href="/index.php?mod=spr_reactives"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Реактиви та матеріали</span></a></div>
+    <div class="element i09"><a href="/index.php?mod=spr_recipes"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Рецепти приготування</span></a></div>
     <div class="element i10"><a href="/index.php?mod=spr_dangerous"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Класи<br>небезпечності</span></a></div>
     <div class="element i11"><a href="/index.php?mod=spr_clearence"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Ступені<br>чистоти</span></a></div>
     <br>

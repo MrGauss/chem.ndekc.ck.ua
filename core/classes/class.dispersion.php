@@ -215,10 +215,17 @@ class dispersion
 
             $line['numi'] = $I--;
 
-            $line['inc_date_unix'] = strtotime( $line['inc_date'] );
+            $line['inc_date_unix']  = strtotime( $line['inc_date'] );
+            $line['dead_date_unix'] = strtotime( $line['dead_date'] );
             $line['inc_date'] = date( 'd.m.Y', $line['inc_date_unix'] );
 
             $line['dead_date'] = date( 'd.m.Y', strtotime( $line['dead_date'] ) );
+
+            $line['reagent_number_separete'] = explode( '-', $line['reagent_number'] );
+            $line['reagent_number_separete'] = common::integer( $line['reagent_number_separete'] );
+
+            $tpl->set( '{tag:reagent_number:0}', common::db2html( str_repeat( '0', 5-strlen($line['reagent_number_separete'][0]) ) ).$line['reagent_number_separete'][0] );
+            $tpl->set( '{tag:reagent_number:1}', common::db2html( $line['reagent_number_separete'][1] ) );
 
             $line = common::db2html( $line );
 
