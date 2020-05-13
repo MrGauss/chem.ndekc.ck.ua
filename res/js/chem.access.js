@@ -15,6 +15,13 @@ $(document).ready( function()
             post['grp_id']   = grp_id;
             post['act']      = act;
 
+        $(this).parent().removeClass('checked');
+
+        if( $(this).is(":checked") )
+        {
+            $(this).parent().addClass('checked');
+        }
+
         $.ajax({ data: post }).done(function( _r )
         {
             _r = chem.txt2json( _r );

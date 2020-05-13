@@ -138,10 +138,12 @@ class access
                 if( in_array( $action['id'], $access_actions[$access_group['id']] ) )
                 {
                     $tpl->set( '{action:checked}', 'checked="checked"' );
+                    $tpl->set( '{class:checked}', 'checked' );
                 }
                 else
                 {
                     $tpl->set( '{action:checked}', '' );
+                    $tpl->set( '{class:checked}', '' );
                 }
 
                 foreach( $action as $k => $v )

@@ -9,7 +9,6 @@ ini_set ( 'max_execution_time', 60 );
 //////////////////////////////////////////////////////////////////////////////////////////
 
 define ( 'DOMAIN',          strtolower( $_SERVER['Host'] ) );
-define ( 'DYNAMIC_SALT',    md5( date('Y.m') . DOMAIN ) );
 define ( 'TESTING_MODE',    ( strpos( DOMAIN, 'test' ) !== false ) ? true : false );
 define ( 'HOME',            '/' );
 define ( 'HOMEURL',        'https://'.DOMAIN.HOME );
@@ -28,6 +27,7 @@ define ( 'ENCODING',        'Windows-1251' );
 define ( 'CACHE_TYPE',      'FILE' );
 define ( 'LOGS_DIR',        dirname( ROOT_DIR ).DS.'logs' );
 define ( 'TEMP_DIR',        dirname( ROOT_DIR ).DS.'tmp' );
+define ( 'DYNAMIC_SALT',    md5( date('Y.m.d') . sha1( DOMAIN ) . USER_IP ) );
 
 //////////////////////////////////////////////////////////////////////////////////////////
 

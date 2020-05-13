@@ -125,7 +125,7 @@ trait login
 		$token = str_shuffle( sha1( mt_rand( 0, 99999 ) ) );
 		$token = self::passencode( $token.USER_IP.(isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:md5(date('Y.m.d'))) );
 
-		$SQL = 'UPDATE expert SET token=\''.$token.'\', last_ip=\''.USER_IP.'\' WHERE id = '.abs(intval(CURRENT_USER_ID)).';';
+		$SQL = 'UPDATE expert SET token=\''.$token.'\', last_ip=\''.USER_IP.'\', ts=NOW() WHERE id = '.abs(intval(CURRENT_USER_ID)).';';
 		$this->db->query( $SQL );
 
 		return $token;
@@ -160,7 +160,7 @@ trait login
 			define( 'CURRENT_REGION_ID',    abs(intval($id['region_id'])) );
             define( 'CURRENT_GROUP_ID',     self::integer( $id['group_id'] ) );
 
-			$SQL = 'UPDATE expert SET last_ip=\''.USER_IP.'\' WHERE id = '.abs(intval(CURRENT_USER_ID)).';';
+			$SQL = 'UPDATE expert SET last_ip=\''.USER_IP.'\', ts=NOW() WHERE id = '.abs(intval(CURRENT_USER_ID)).';';
 			$this->db->query( $SQL );
 		}
 		else

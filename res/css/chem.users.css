@@ -1,0 +1,26 @@
+#users_editor{ position: relative; height: 100%; width: 100%; overflow: scroll; overflow-x: hidden; font-size: 14px; }
+#users_editor .line_user{ margin: 5px 5px 5px 5px; border: 1px solid #111111; background: #D1E0FF; cursor: pointer; height: 60px; position: relative; opacity: 0.7; }
+#users_editor .line_user.add_user{ height: auto; text-align: center; padding: 10px; font-weight: bold; text-transform: uppercase; font-size: 0.8em; background: #008A00; color: #FFFFFF; }
+#users_editor .line_user:hover{ opacity: 1.0; }
+
+#users_editor .line_user.root{ background-color: #FFE5E5; }
+#users_editor .line_user.admin_region{ background-color: #DBDBFF; }
+#users_editor .line_user.admin_lab{ background-color: #FFEDD1; }
+#users_editor .line_user.expert{ background-color: #DBFFDB; }
+
+#users_editor .line_user.blink{ background-color: #00CC00; }
+
+#users_editor .line_user .username{ text-align: center; text-transform: uppercase; margin-top: 15px; font-weight: bold; }
+#users_editor .line_user .access{ text-align: center; text-transform: uppercase; color: #333333; font-size: 0.8em; }
+#users_editor .line_user .login{ position: absolute; top: 5px; left: 5px; text-transform: uppercase; font-size: 11px; width: 110px; text-align: left; }
+#users_editor .line_user .lastip{ position: absolute; bottom: 5px;     right: 5px; font-size: 0.75em; width: 110px; text-align: center; }
+#users_editor .line_user .lastlogin{ position: absolute;   bottom: 17px; right: 5px; font-size: 0.75em; width: 110px; text-align: center; }
+
+.default_editor.user_editor{  }
+.default_editor.user_editor .elem.login{ width: 100%; }
+.default_editor.user_editor .elem.password{ width: 100%; }
+.default_editor.user_editor .elem.surname{ width: 100%; }
+.default_editor.user_editor .elem.name{ width: 100%; }
+.default_editor.user_editor .elem.phname{ width: 100%; }
+.default_editor.user_editor .elem.lab{ width: 100%; }
+.default_editor.user_editor .elem.access{ width: 100%; }
