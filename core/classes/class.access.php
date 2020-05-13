@@ -99,6 +99,8 @@ class access
 
     public final function save( $action, $action_id, $group_id )
     {
+        access::check( 'admin', 'access' );
+
         $action_id = common::integer( $action_id );
         $group_id  = common::integer( $group_id );
 

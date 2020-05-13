@@ -6,6 +6,8 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+access::check( 'dispersion', 'view' );
+
 $_dispersion = new dispersion;
 
 $tpl->load( 'dispersion/main' );

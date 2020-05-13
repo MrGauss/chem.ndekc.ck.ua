@@ -35,6 +35,8 @@ class prolongation
 
     public final function editor( $stock_id = false, $skin = false )
     {
+        access::check( 'stock', 'view' );
+        
         $skin       = $skin ? $skin : 'prolongation/editor';
         $stock_id   = common::integer( $stock_id );
 
@@ -90,6 +92,8 @@ class prolongation
 
     public final function remove( $stock_id, $line_hash )
     {
+        access::check( 'stock', 'edit' );
+
         $stock_id  = common::integer( $stock_id );
         $line_hash = common::filter_hash($line_hash);
 
@@ -114,6 +118,8 @@ class prolongation
 
     public final function save( $raw_data )
     {
+        access::check( 'stock', 'edit' );
+
         if( !is_array($raw_data) ){ return self::error( 'Помилка передачі даних!' ); }
 
         $_2db = array();

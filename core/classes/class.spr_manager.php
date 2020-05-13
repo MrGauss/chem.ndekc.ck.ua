@@ -52,6 +52,8 @@ class spr_manager
 
     public final function editor( $line_id = 0, $skin = false )
     {
+        access::check( 'spr', 'edit' );
+
         $line_id = common::integer( $line_id );
 
         cache::clean( self::CACHE_CONST.'-'.$this->table );
@@ -152,6 +154,8 @@ class spr_manager
 
     public final function remove( $ID = 0 )
     {
+        access::check( 'spr', 'edit' );
+
         if( !$this->table ){ common::err( 'Не зазначена таблиця довідника!' ); };
 
         $ID = common::integer( $ID );
@@ -235,6 +239,8 @@ class spr_manager
 
     public final function save( $ID = 0, $data = array() )
     {
+        access::check( 'spr', 'edit' );
+
         if( !$this->table ){ common::err( 'Не зазначена таблиця довідника!' ); };
 
         $ID = common::integer( $ID );

@@ -6,6 +6,8 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+access::check( 'cooked', 'view' );     
+
 $cooked = new cooked;
 
 $tpl->load( 'cooked/main' );

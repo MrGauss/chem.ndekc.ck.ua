@@ -16,6 +16,8 @@ class dispersion
 
     public final function remove( $ID = 0 )
     {
+        access::check( 'dispersion', 'edit' );
+
         $ID = common::integer( $ID );
         $error = '';
 
@@ -123,6 +125,8 @@ class dispersion
 
     public final function save( $ID = 0, $data = array() )
     {
+        access::check( 'dispersion', 'edit' );
+
         $ID = common::integer( $ID );
 
         if( !is_array($data) ){ return false; }
@@ -244,6 +248,8 @@ class dispersion
 
     public final function editor( $line_id = 0, $skin = false )
     {
+        access::check( 'dispersion', 'view' );
+
         $line_id = common::integer( $line_id );
 
         $data = $this->get_raw( array( 'id' => $line_id ) );

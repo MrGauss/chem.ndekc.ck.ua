@@ -6,6 +6,8 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+access::check( 'stock', 'view' );
+
 $_stock = new stock;
 
 $tpl->load( 'stock/main' );

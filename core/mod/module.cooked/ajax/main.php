@@ -5,6 +5,8 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
+access::check( 'cooked', 'view' ); 
+
 switch ( _ACTION_ )
 {
     case 1:

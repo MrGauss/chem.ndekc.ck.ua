@@ -146,6 +146,8 @@ class recipes
 
     public final function save( $ID = 0, $data = array() )
     {
+        access::check( 'spr', 'edit' );
+
         $ID = common::integer( $ID );
 
         if( !is_array($data) ){ return false; }

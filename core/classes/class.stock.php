@@ -102,6 +102,8 @@ class stock
 
     public final function remove( $ID = 0 )
     {
+        access::check( 'stock', 'edit' );
+
         $ID = common::integer( $ID );
         $error = '';
 
@@ -134,6 +136,8 @@ class stock
 
     public final function save( $ID = 0, $data = array() )
     {
+        access::check( 'stock', 'edit' );
+
         $ID = common::integer( $ID );
 
         if( !is_array($data) ){ return false; }
@@ -202,6 +206,8 @@ class stock
     public final function editor( $line_id = 0, $skin = false )
     {
         $line_id = common::integer( $line_id );
+
+        access::check( 'stock', 'view' );
 
         $data = $this->get_raw( array( 'id' => $line_id ) );
         $data = isset( $data[$line_id] ) ? $data[$line_id] : false;

@@ -16,6 +16,8 @@ class using
 
     public final function editor( $line_hash = '', $skin = false )
     {
+        access::check( 'using', 'view' );
+
         $line_hash = common::filter_hash( $line_hash );
 
         $data = $this->get_raw( array( 'hash' => $line_hash ) );
@@ -387,6 +389,8 @@ class using
 
     public final function save( $using_hash = false, $data = array() )
     {
+        access::check( 'using', 'edit' );
+
         $error = false;
         $using_hash = common::filter_hash( $using_hash );
 
