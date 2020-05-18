@@ -11,7 +11,6 @@ if( !trait_exists( 'spr' ) )        { require( CLASSES_DIR.DS.'trait.spr.php' );
 if( !trait_exists( 'db_connect' ) ) { require( CLASSES_DIR.DS.'trait.db_connect.php' ); }
 if( !class_exists( 'spr_manager' ) ){ require( CLASSES_DIR.DS.'class.spr_manager.php' ); }
 
-
 class recipes
 {
     use basic, spr, db_connect;
@@ -114,7 +113,7 @@ class recipes
 
         $a = array();
         $a['1'] = array_unique($data4save['ingredients']);
-        $a['2'] = array_unique(array_keys($original_data['ingredients']));
+        $a['2'] = array_unique(array_keys( isset($original_data['ingredients']) ? $original_data['ingredients'] : array() ));
 
         if( $ID > 0 && ( count(array_diff( $a['1'], $a['2'] )) || count(array_diff( $a['2'], $a['1'] )) ) )
         {

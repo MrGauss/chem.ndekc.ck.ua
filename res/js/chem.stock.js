@@ -485,12 +485,10 @@ chem['stock'] = new function()
 
     this.init = function()
     {
-        $('#content .stock [data-id]').on( "click", function()
-        {
-            chem.stock.editor( $(this) );
-        });
+        $('#content .stock .line[data-id]') .off().on( "click", function(){ chem.stock.editor( $(this) ); });
+        $('#content .stock #create')        .off().on( "click", function(){ chem.stock.editor( $(this) ); });
 
-        $('#content .stock #filters #search').on( "click", function()
+        $('#content .stock #filters #search').off().on( "click", function()
         {
             chem.stock.reload();
         });

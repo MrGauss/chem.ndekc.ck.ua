@@ -1,12 +1,35 @@
 <div id="list_frame" class="stock">
 
     <div id="filters" class="filters">
-        <button id="create" type="button" data-id="0">Створити</button>
-        <div class="element">
-            <label class="label">Реактив</label>
-            <select class="input select" data-value="0" value="0" name="reagent_id" data-filter="1"><option value="0">--</option>{select:reagent}</select>
-        </div>
-        <button id="search" type="button">Шукати</button>
+        <table class="filters_header_frame">
+            <tr>
+                <td class="create_button"><button id="create" type="button" data-id="0">Створити</button></td>
+                <td class="filters_area">
+                    <div class="filters_list">
+
+                        <div class="fbox">
+                            <div class="filter">
+                                <label class="label">Назва</label>
+                                <select class="input select" data-value="0" value="0" name="reagent_id" data-filter="1"><option value="0">--</option>{select:reagent}</select>
+                            </div>
+                            <div class="filter">
+                                <label class="label">Клас небезпеки</label>
+                                <select class="input select" data-value="0" value="0" name="danger_class_id" data-filter="1"><option value="0">--</option>{select:danger_class}</select>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="fbox">
+                            <div class="filter fullheight">
+                                some shit
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+
+                    </div>
+                </td>
+                <td class="search_button"><button id="search" type="button">Шукати</button></td>
+            </tr>
+        </table>
     </div>
 
     <div id="table_header" class="line header">
