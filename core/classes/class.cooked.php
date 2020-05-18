@@ -686,8 +686,6 @@ class cooked
         }
         //////////////////////////////////////////////////////////////////////////////////
 
-        //var_export($data);exit;
-
         cache::set( $cache_var, $data );
         return $data;
     }

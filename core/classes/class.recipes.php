@@ -351,8 +351,8 @@ class recipes
         $SQL = '
                     SELECT
                         "'.self::DB_MAIN_TABLE.'".*,
-                        units.name      as reagent_units,
-                        units.short_name   as reagent_units_short
+                        units.name          as reagent_units,
+                        units.short_name    as reagent_units_short
                     FROM
                        "'.self::DB_MAIN_TABLE.'"
                        LEFT JOIN "units"     ON ( "units"."id" = "'.self::DB_MAIN_TABLE.'"."units_id" )
@@ -362,7 +362,8 @@ class recipes
 
         $cache_var = 'spr-'.self::DB_MAIN_TABLE.'-'.md5( md5( $SQL ) . md5( serialize( $filters ) ) ).'';
 
-        $data = cache::get( $cache_var );
+        $data = false;
+        //$data = cache::get( $cache_var );
         if( $data && is_array($data) && count($data) ){ return $data; }
         $data = array();
 
@@ -421,8 +422,10 @@ class recipes
 
                 WHERE reactiv_menu_ingredients.reactiv_menu_id IN( '. implode( ',', array_keys( $data ) ) .' )
                 ORDER BY
-                    reactiv_menu_ingredients.unique_index ASC,
-                    dispersion.quantity_left DESC; '.db::CACHED;
+                    reactiv_menu_ingredients.unique_index ASC NULLS LAST,
+                    dispersion.quantity_left DESC NULLS LAST; '.db::CACHED;
+
+            //echo($SQL);exit;
 
 
             $SQL = $this->db->query( $SQL );
@@ -450,7 +453,6 @@ class recipes
                 }
             }
         }
-
 
         cache::set( $cache_var, $data );
         return $data;

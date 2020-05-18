@@ -444,12 +444,12 @@ chem['cooked'] = new function()
 
     this.init = function()
     {
-        $('#content #list_frame [data-hash]').on( "click", function()
+        $('#list_frame [data-hash]').on( "click", function()
         {
             chem.cooked.editor( $(this) );
         });
 
-        $('#content #list_frame #filters #search').on( "click", function()
+        $('#list_frame #filters #search').on( "click", function()
         {
             chem.cooked.reload();
         });
