@@ -6,7 +6,7 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-access::check( 'cooked', 'view' );     
+access::check( 'cooked', 'view' );
 
 $cooked = new cooked;
 

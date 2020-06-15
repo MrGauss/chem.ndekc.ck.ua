@@ -13,7 +13,7 @@
     </table>
     <div class="lifetime_label lf_gone">Реактив зіпсувався</div>
     <div class="lifetime_label lf_today">Реактив зіпсується сьогодні</div>
-    <div class="lifetime_label lf_1day">Реактив зіпсується через 1 день</div>
+    <div class="lifetime_label lf_1day">Реактив скоро зіпсується</div>
 
     <div class="using_perc fully_used">Закінчився</div>
     <div class="using_perc almost_used">Закінчується</div>

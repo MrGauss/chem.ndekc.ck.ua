@@ -112,12 +112,16 @@ chem['cooked'] = new function()
         .detach().appendTo( obj );
     }
 
-    this.recipe_seleted = function( recipe_id, selected_opt, dialog_window )
+    this.recipe_selceted = function( recipe_id, selected_opt, dialog_window )
     {
         recipe_id = parseInt( recipe_id );
 
-        var ingridients = recipe_id
-                                ? selected_opt.attr('data-ingridients').toString().split( ','.toString() )
+        var ingredients_reagent = recipe_id
+                                ? selected_opt.attr('data-ingredients_reagent').toString().split( ','.toString() )
+                                : 0;
+
+        var ingredients_reactiv = recipe_id
+                                ? selected_opt.attr('data-ingredients_reactiv').toString().split( ','.toString() )
                                 : 0;
 
         ///
@@ -128,10 +132,25 @@ chem['cooked'] = new function()
                 .attr('data-position', 0 )
                 .prop('data-position', 0 );
 
-        for (var k in ingridients )
+        for (var k in ingredients_reagent )
         {
-            dialog_window.find('#ingridients').find('.reagent[data-reagent_id="'+ingridients[k]+'"]').addClass( 'needed' ).removeClass( 'not_needed' ).attr('data-position', 1 ).prop('data-position', 1 );
+            dialog_window.find('#ingridients')
+                .find('.reagent[data-role="reagent"][data-reagent_id="'+ingredients_reagent[k]+'"]')
+                    .addClass( 'needed' )
+                    .removeClass( 'not_needed' )
+                    .attr('data-position', 1 )
+                    .prop('data-position', 1 );
         };
+
+        /*for (var k in ingredients_reactiv )
+        {
+            dialog_window.find('#ingridients')
+                .find('.reagent[data-reagent_id="'+ingredients_reactiv[k]+'"]')
+                    .addClass( 'needed' )
+                    .removeClass( 'not_needed' )
+                    .attr('data-position', 1 )
+                    .prop('data-position', 1 );
+        };*/
         ///
 
         chem.cooked.sort_ingridients( dialog_window.find('#ingridients') );
@@ -292,7 +311,7 @@ chem['cooked'] = new function()
                 {
                     $('#'+did+' select[name="reactiv_menu_id"]').on( 'change', function()
                     {
-                        chem.cooked.recipe_seleted( $(this).val(), $(this).find('option:selected'), $('#'+did+'') );
+                        chem.cooked.recipe_selceted( $(this).val(), $(this).find('option:selected'), $('#'+did+'') );
                     } ).trigger( "change" );
 
                     $('#'+did+' #ingridients .reagent [data-role="button"]').on( "click", function( event, ui )

@@ -110,12 +110,16 @@ chem['spr_recipes'] = new function()
         {
            var list = $(this).parents('.default_editor').find('.ingredients');
            var empty = list.find('.ingredient[data-reagent_id="0"]');
+           var role = obj.find('option[value="'+obj.val()+'"]').parent().attr('data-role');
 
+           //alert( obj.find('option[value="'+obj.val()+'"]').parent().attr('data-role') );
+
+                                // data-ingr_type="reagent"
            empty
             .clone()
             .appendTo( list )
-            .prop( 'data-reagent_id', obj.val() )
-            .attr( 'data-reagent_id', obj.val() )
+            .prop( 'data-reagent_id', obj.val() ).attr( 'data-reagent_id', obj.val() )
+            .prop( 'data-ingr_type', role ).attr( 'data-ingr_type', role )
             .html( obj.find('option:selected').text() )
             .on( "click", function(){ $(this).off().remove(); });
 
@@ -152,7 +156,7 @@ chem['spr_recipes'] = new function()
 
                 autocomplete.init( $('#'+did+'') );
 
-
+                $('#'+did+'').find( 'select[name="reagent_id"] optgroup[data-role="reactiv"] option[value="'+line_id+'"]' ).remove();
 
                 if( line_id > 0 )
                 {
@@ -214,15 +218,26 @@ chem['spr_recipes'] = new function()
                                 save_post['save'][$(this).attr('name').toString()] = $(this).val().toString();
                             } );
 
-                            save_post['save']['ingredients'] = new Array;
+                            save_post['save']['ingredients_reagent'] = new Array;
+                            save_post['save']['ingredients_reactiv'] = new Array;
 
-                            $('#'+did).find('.ingredient[data-reagent_id]').each( function()
+                            $('#'+did).find('.ingredient[data-reagent_id][data-ingr_type="reagent"]').each( function()
                             {
                                 var reagent_id = parseInt( $(this).attr( 'data-reagent_id' ) );
 
                                 if( reagent_id > 0 )
                                 {
-                                    save_post['save']['ingredients'].push( reagent_id );
+                                    save_post['save']['ingredients_reagent'].push( reagent_id );
+                                }
+                            } );
+
+                            $('#'+did).find('.ingredient[data-reagent_id][data-ingr_type="reactiv"]').each( function()
+                            {
+                                var reagent_id = parseInt( $(this).attr( 'data-reagent_id' ) );
+
+                                if( reagent_id > 0 )
+                                {
+                                    save_post['save']['ingredients_reactiv'].push( reagent_id );
                                 }
                             } );
 

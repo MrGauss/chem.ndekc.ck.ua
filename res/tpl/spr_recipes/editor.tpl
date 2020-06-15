@@ -25,7 +25,15 @@
         </div>
 
         <div class="add_ingredient">
-            <select class="input select" data-value="0" value="0" name="reagent_id"><option value="0">--</option>{select:reagent}</select>
+            <select class="input select" data-value="0" value="0" name="reagent_id">
+                <option value="0">--</option>
+                <optgroup data-role="reactiv" label="Розчини">
+                    {select:recipes}
+                </optgroup>
+                <optgroup data-role="reagent" label="Реактиви">
+                    {select:reagent}
+                </optgroup>
+            </select>
         </div>
         <div class="ingredients">
             <div class="ingredient" data-reagent_id="0"></div>

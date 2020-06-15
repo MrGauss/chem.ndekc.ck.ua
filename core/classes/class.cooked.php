@@ -14,6 +14,28 @@ class cooked
 {
     use basic, spr, db_connect;
 
+    public final static function error( $error, $error_area = false )
+    {
+        if( $error != false )
+        {
+            if( _AJAX_ )
+            {
+                ajax::set_error( rand(10,99), $error );
+                ajax::set_data( 'err_area', isset($error_area) ? $error_area : '' );
+                return false;
+            }
+            else
+            {
+                common::err( $error );
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
+/*
     public final function remove( $reactiv_hash = 0 )
     {
         $reactiv_hash = common::filter_hash( $reactiv_hash );
@@ -69,24 +91,7 @@ class cooked
         return $reactiv_hash;
     }
 
-    public final static function error( $error, $error_area = false )
-    {
-        if( $error != false )
-        {
-            if( _AJAX_ )
-            {
-                ajax::set_error( rand(10,99), $error );
-                ajax::set_data( 'err_area', isset($error_area) ? $error_area : '' );
-                return false;
-            }
-            else
-            {
-                common::err( $error );
-                return false;
-            }
-        }
-        return true;
-    }
+
 
     public final function save( $reactiv_hash = false, $data = array() )
     {
@@ -338,56 +343,7 @@ class cooked
     }
 
 
-    public final function editor( $line_hash = false, $skin = false )
-    {
-        $line_hash = common::filter_hash( $line_hash );
 
-        $data = $this->get_raw( array( 'hash' => $line_hash ) );
-
-        $data = isset( $data[$line_hash] ) ? $data[$line_hash] : false;
-
-
-
-        if( !is_array($data) ){ return false; }
-
-        if( !$data['inc_expert_id'] ){ $data['inc_expert_id'] = CURRENT_USER_ID; }
-
-        $tpl = new tpl;
-
-        $tpl->load( $skin );
-
-        $_dates = array();
-        $_dates[] = 'inc_date';
-        $_dates[] = 'dead_date';
-
-        foreach( $_dates as $_date )
-        {
-            $data[$_date]       = isset($data[$_date])      ? common::en_date( $data[$_date], 'd.m.Y' ) : date( 'd.m.Y' );
-            if( strpos( $data[$_date], '.197' ) !== false ){ $data[$_date] = date('d.m.Y'); }
-        }
-
-        $data['key'] = common::key_gen( $line_hash );
-
-        foreach( $data as $k => $v )
-        {
-            if( is_array($v) ){ continue; }
-
-            $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
-            $tpl->set( '{autocomplete:'.$k.':key}', autocomplete::key( 'reactiv', $k ) );
-        }
-
-        /////////////
-        $dispersion = new dispersion;
-        $tpl->set( '{ingridients}', $dispersion->get_html( array(  ), 'cooked/ingridient' ) );
-        /////////////
-        $tpl->set( '{composition}', $this->get_html_composition( $data['composition'], 'cooked/composition' ) );
-        /////////////
-
-        $tpl->set( '{autocomplete:table}', 'reactiv' );
-        $tpl->compile( $skin );
-
-        return $tpl->result( $skin );
-    }
 
     public final function get_html_composition( $data = array(), $skin = false )
     {
@@ -456,7 +412,63 @@ class cooked
         }
 
         return $tpl->result( $skin );
+    }*/
+
+    public final function editor( $line_hash = false, $skin = false )
+    {
+        $line_hash = common::filter_hash( $line_hash );
+
+        $data = $this->get_raw( array( 'hash' => $line_hash ) );
+
+        $data = isset( $data[$line_hash] ) ? $data[$line_hash] : false;
+
+        if( !is_array($data) ){ return false; }
+
+        if( !$data['inc_expert_id'] ){ $data['inc_expert_id'] = CURRENT_USER_ID; }
+
+        $tpl = new tpl;
+
+        $tpl->load( $skin );
+
+        $_dates = array();
+        $_dates[] = 'inc_date';
+        $_dates[] = 'dead_date';
+
+        foreach( $_dates as $_date )
+        {
+            $data[$_date]       = isset($data[$_date])      ? common::en_date( $data[$_date], 'd.m.Y' ) : date( 'd.m.Y' );
+            if( strpos( $data[$_date], '.197' ) !== false ){ $data[$_date] = date('d.m.Y'); }
+        }
+
+        $data['key'] = common::key_gen( $line_hash );
+
+        foreach( $data as $k => $v )
+        {
+            if( is_array($v) ){ continue; }
+
+            $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
+            $tpl->set( '{autocomplete:'.$k.':key}', autocomplete::key( 'reactiv', $k ) );
+        }
+
+
+        /////////////
+        $tpl->set( '{ingridients}',
+                        $this->get_html( array(), 'cooked/ingridient_reactive' )."\n\n".
+                        ( new dispersion )->get_html( array(), 'cooked/ingridient_reagent' )
+        );
+        /*
+        /////////////
+        $tpl->set( '{composition}', $this->get_html_composition( $data['composition'], 'cooked/composition' ) );
+        /////////////
+        */
+
+        $tpl->set( '{autocomplete:table}', 'reactiv' );
+        $tpl->compile( $skin );
+
+        return $tpl->result( $skin );
     }
+
+
 
     public final function get_html( $filters = array(), $skin = false )
     {
@@ -481,6 +493,7 @@ class cooked
             $tags = array();
 
             $tpl->load( $skin );
+
 
             $line['not_used_perc'] = common::compare_perc( $line['quantity_inc'], $line['quantity_left'] );
 
@@ -510,11 +523,10 @@ class cooked
             foreach( $line as $key => $value )
             {
                 if( is_array($value) ){ continue; }
-
                 $tags[] = '{tag:'.$key.'}';
-
                 $tpl->set( '{tag:'.$key.'}', common::db2html( $value ) );
             }
+
 
             if( isset( $reactiv_menu[$line['reactiv_menu_id']] ) )
             {
@@ -527,9 +539,9 @@ class cooked
                 }
             }
 
-            if( isset( $units[$line['reactiv_units_id']] ) )
+            if( isset( $units[$line['units_id']] ) )
             {
-                foreach( $units[$line['reactiv_units_id']] as $key => $value )
+                foreach( $units[$line['units_id']] as $key => $value )
                 {
                     if( is_array($value) ){ continue; }
 
@@ -537,7 +549,7 @@ class cooked
                     $tpl->set( '{tag:units:'.$key.'}', common::db2html( $value ) );
                 }
             }
-
+            /*
             if( isset( $purpose[$line['purpose_id']] ) )
             {
                 foreach( $purpose[$line['purpose_id']] as $key => $value )
@@ -568,7 +580,7 @@ class cooked
 
             $tags[] = '{tag:composition:html}';
             $tpl->set( '{tag:composition:html}', $line['composition'] );
-
+            */
             $tpl->compile( $skin );
         }
 
@@ -576,6 +588,7 @@ class cooked
 
         return $tpl->result( $skin );
     }
+
 
     public final function get_raw( $filters = array() )
     {
@@ -597,7 +610,7 @@ class cooked
                 }
             }
 
-            if( isset($filters['using_hash']) )
+            /*if( isset($filters['using_hash']) )
             {
                 $filters['using_hash'] = common::filter_hash( $filters['using_hash'] );
                 $filters['using_hash'] = is_array($filters['using_hash']) ? $filters['using_hash'] : array( $filters['using_hash'] );
@@ -606,9 +619,9 @@ class cooked
                 {
                     $WHERE['using.hash']   = '"using".hash IN (\''.implode( '\', \'', $filters['using_hash'] ).'\')';
                 }
-            }
+            }*/
 
-            if( isset($filters['quantity_left:more']) )
+            /*if( isset($filters['quantity_left:more']) )
             {
                 $filters['quantity_left:more'] = common::float( $filters['quantity_left:more'] );
                 $WHERE['quantity_left:more'] = ' reactiv.quantity_left > \''.$filters['quantity_left:more'].'\'::FLOAT';
@@ -624,7 +637,7 @@ class cooked
             {
                 $filters['quantity_left:is'] = common::float( $filters['quantity_left:is'] );
                 $WHERE['quantity_left:is'] = ' reactiv.quantity_left = \''.$filters['quantity_left:is'].'\'::FLOAT';
-            }
+            }*/
 
         }
 
@@ -633,15 +646,14 @@ class cooked
         $SQL = '
             SELECT
                 reactiv.*,
-                "using".hash as using_hash,
-                reactiv_menu.name       as reactiv_name,
-                reactiv_menu.units_id   as reactiv_units_id,
-                reactiv_menu."comment"  as reactiv_comment,
-                "using".purpose_id
+                reactiv_menu.name as reactiv_menu_name,
+                reactiv_menu.units_id,
+                units.name as units_name,
+                units.short_name as units_short_name
             FROM
                 reactiv
-                    LEFT JOIN reactiv_menu ON ( reactiv_menu.id = reactiv.reactiv_menu_id )
-                    LEFT JOIN "using" ON ( "using".hash = reactiv.using_hash AND reactiv.group_id = "using".group_id )
+                LEFT JOIN reactiv_menu ON( reactiv_menu.id = reactiv.reactiv_menu_id )
+                LEFT JOIN units ON( units.id = reactiv_menu.units_id )
             '.$WHERE.'
             ORDER by
                 reactiv.inc_date DESC;
@@ -662,27 +674,67 @@ class cooked
             $row['hash'] = common::filter_hash( $row['hash'] );
             $data[$row['hash']] = $row;
             $data[$row['hash']]['composition'] = array();
+            $data[$row['hash']]['composition']['reagent'] = array();
+            $data[$row['hash']]['composition']['reactiv'] = array();
+            $data[$row['hash']]['using_hash'] = false;
         }
 
         //////////////////////////////////////////////////////////////////////////////////
         if( is_array($data) && count($data) )
         {
-            foreach( (new consume)->get_raw( array( 'reactiv_hash' => array_keys( $data ) ) ) as $consume_hash => $consume_data )
+            $SQL = '
+                SELECT
+                    reactiv_ingr_reagent.reactiv_hash 	as hash,
+                    consume.hash 						as consume_hash,
+                    "using".hash 						as using_hash,
+                    consume.quantity	                as consume_quantity,
+                    dispersion.id					    as dispersion_id,
+                    stock.id						    as stock_id,
+                    stock.reagent_id				    as reagent_id
+                FROM
+                    reactiv_ingr_reagent
+                    LEFT JOIN consume ON( consume.hash = reactiv_ingr_reagent.consume_hash )
+                    LEFT JOIN dispersion ON( consume.dispersion_id = dispersion.id )
+                    LEFT JOIN stock ON( stock.id = dispersion.stock_id )
+                    LEFT JOIN "using" ON( "using".reagent_consume_hash = consume.hash )
+                WHERE
+                    reactiv_ingr_reagent.reactiv_hash IN( \''.implode( '\', \'', array_keys($data) ).'\' )
+                    AND  dispersion.group_id    = \''.CURRENT_GROUP_ID.'\'::INTEGER
+                    AND "using".group_id        = \''.CURRENT_GROUP_ID.'\'::INTEGER
+            ';
+
+            $SQL = $this->db->query( $SQL );
+
+            while( ( $row = $this->db->get_row( $SQL ) ) !== false )
             {
-                if( !isset($data[$consume_data['reactiv_hash']]) || !isset($data[$consume_data['reactiv_hash']]['composition']) )
-                {
-                    common::err( 'Помилка отримання даних з бази даних!' );
-                }
-
-                $reactiv = &$data[$consume_data['reactiv_hash']];
-
-                if( $reactiv['using_hash'] != $consume_data['using_hash'] )
-                {
-                    common::err( 'Витарта реактивів має різні призначення! Хуйня якась!' );
-                }
-
-                $reactiv['composition'][$consume_hash] = $consume_data;
+                $data[$row['hash']]['composition']['reagent'][$row['reagent_id']] = $row;
             }
+            ///////////
+            $SQL = '
+                SELECT
+                    reactiv_ingr_reactiv.hash 	    as hash,
+                    reactiv_consume.hash 	        as consume_hash,
+                    reactiv_consume.quantity 		as consume_quantity,
+                    reactiv.hash			        as reactiv_hash
+                FROM
+                    reactiv_ingr_reactiv
+                    LEFT JOIN reactiv_consume ON( reactiv_consume.hash = reactiv_ingr_reactiv.consume_hash )
+                    LEFT JOIN reactiv 				ON( reactiv.hash = reactiv_consume.reactive_hash )
+                    LEFT JOIN "using" 			  ON( "using".reactiv_consume_hash = reactiv_consume.hash )
+                WHERE
+                    reactiv_ingr_reactiv.reactiv_hash IN( \''.implode( '\', \'', array_keys($data) ).'\' )
+                    AND  reactiv.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER
+                    AND "using".group_id  = \''.CURRENT_GROUP_ID.'\'::INTEGER
+                ;
+            ';
+
+            $SQL = $this->db->query( $SQL );
+
+            while( ( $row = $this->db->get_row( $SQL ) ) !== false )
+            {
+                $data[$row['hash']]['composition']['reactiv'][$row['reactiv_hash']] = $row;
+            }
+
         }
         //////////////////////////////////////////////////////////////////////////////////
 
