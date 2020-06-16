@@ -520,7 +520,7 @@ class recipes
                 FROM
                     reactiv_menu_reactives
                     LEFT JOIN reactiv_menu ON( reactiv_menu_reactives.reactiv_id = reactiv_menu.id )
-                    LEFT JOIN reactiv			 ON( reactiv.reactiv_menu_id = reactiv_menu_reactives.reactiv_menu_id )
+                    LEFT JOIN reactiv			 ON( reactiv.reactiv_menu_id = reactiv_menu_reactives.reactiv_id )
                     LEFT JOIN units ON( units.id = reactiv_menu.units_id )
                 WHERE reactiv_menu_reactives.reactiv_menu_id IN( '. implode( ',', array_keys( $data ) ) .' )
                 ORDER BY

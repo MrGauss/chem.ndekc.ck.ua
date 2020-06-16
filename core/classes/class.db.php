@@ -167,5 +167,19 @@ class db
         $SQL = $this->super_query( $SQL );
         return $SQL['size'];
     }
+
+    static public final function array2upd( $array )
+    {
+        foreach( $array as $k=>$v )
+        {
+            $array[$k] = '"'.$k.'" = \''.$v.'\'';
+        }
+        return implode( ', ', $array );
+
+    }
+    static public final function array2ins( $array )
+    {
+        return '("'.implode('", "', array_keys($array)).'") VALUES ( \''.implode( '\', \'', array_values($array) ).'\' )';
+    }
 }
 

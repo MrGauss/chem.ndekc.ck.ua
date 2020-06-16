@@ -5,7 +5,6 @@
 
     <input type="hidden" name="hash"        value="{tag:hash}"       data-save="1" />
     <input type="hidden" name="key"         value="{tag:key}"        data-save="1" />
-    <input type="hidden" name="using_hash"  value="{tag:using_hash}" data-save="1" />
 
     <div id="empty_composition" class="dnone">
         {@include=cooked/composition}

@@ -362,7 +362,7 @@ chem['cooked'] = new function()
 
                             post['save']['composition'] = new Array;
 
-                            $('#'+did + ' #composition .reagent' ).each(function()
+                            $('#'+did + ' #composition .reagent[data-role="reagent"]' ).each(function()
                             {
                                 post['save']['composition'].push
                                 (
@@ -371,7 +371,8 @@ chem['cooked'] = new function()
                                         'consume_hash':     $(this).attr( 'data-consume_hash' ),
                                         'reagent_id':       $(this).attr( 'data-reagent_id' ),
                                         'reactiv_hash':     $(this).attr( 'data-reactiv_hash' ),
-                                        'quantity':         $(this).find('[name="quantity"]').val()
+                                        'quantity':         $(this).find('[name="quantity"]').val(),
+                                        'role':             $(this).attr( 'data-role' )
                                     }
                                 );
                             });
