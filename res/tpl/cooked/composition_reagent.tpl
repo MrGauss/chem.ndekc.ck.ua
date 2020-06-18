@@ -1,5 +1,3 @@
-<!-- composition.tpl    -->
-[area:reagent]
     <div class="reagent" data-role="reagent" data-dispersion_id="{tag:dispersion_id}" data-consume_hash="{tag:consume_hash}" data-reagent_name="{tag:reagent:name}" data-quantity_left="{tag:dispersion:quantity_left}" data-reagent_id="{tag:reagent_id}" data-reactiv_hash="{tag:hash}" data-quantity="{tag:consume_quantity}" data-reagent_units_short="{tag:units:short_name}">
         <table>
             <tr>
@@ -13,5 +11,3 @@
             </tr>
         </table>
     </div>
-[/area:reagent]
-[area:reactiv] 1 [/area:reactiv]

@@ -160,8 +160,8 @@ class cooked
 
         if( !$SQL['reactiv']['reactiv_menu_id'] )                                   { return self::error( 'Рецепт приготування не визначено!',              'reactiv_menu_id' ); }
         if( !$SQL['reactiv']['quantity_inc'] )                                      { return self::error( 'Не визначена кількість приготованого реактиву!', 'quantity_inc' ); }
-        if( strtotime($SQL['reactiv']['inc_date']) > time() )                       { return self::error( 'Дата приготування не може бути з майбутнього!',   'inc_date' ); }
-        if( strtotime($SQL['reactiv']['inc_date']) < ( time() - $date_diap ) )      { return self::error( 'Дата приготування занадто давня!',   'inc_date' ); }
+        if( strtotime($SQL['reactiv']['inc_date']) > time() )                       { return self::error( 'Дата приготування не може бути з майбутнього!',  'inc_date' ); }
+        if( strtotime($SQL['reactiv']['inc_date']) < ( time() - $date_diap ) )      { return self::error( 'Дата приготування занадто давня!',               'inc_date' ); }
 
         if( strtotime($SQL['reactiv']['dead_date']) < strtotime($SQL['reactiv']['inc_date']) )  { return self::error( 'Дата зберігання не може бути більшою ніж дата приготування!',   'inc_date|dead_date' ); }
         if( strtotime($SQL['reactiv']['dead_date']) > ( time() + $date_diap ) )                 { return self::error( 'Дата зберігання занадто оптимістична! Ця херня стільки не стоятиме!',   'dead_date' ); }
@@ -194,7 +194,7 @@ class cooked
                     $SQL['consume']['reagent'][$ingridient['dispersion_id']] = array
                     (
                         'dispersion_id' => common::integer( $ingridient['dispersion_id'] ),
-                        'quantity'      => common::float( $ingridient['quantity'] ),
+                        'quantity'      => common::float(   $ingridient['quantity'] ),
                         'inc_expert_id' => common::integer( $SQL['reactiv']['inc_expert_id'] ),
                         'date'          => $SQL['reactiv']['inc_date'],
                     );
@@ -211,9 +211,33 @@ class cooked
                     }
                 }
 
+                if( $ingridient['role'] == 'reactiv' )
+                {
+                    $SQL['consume']['reactiv'][$ingridient['reactiv_hash']] = array
+                    (
+                        'reactiv_hash'  => $this->db->safesql(common::filter( $ingridient['reactiv_hash'] )),
+                        'quantity'      => common::float(   $ingridient['quantity'] ),
+                        'inc_expert_id' => common::integer( $SQL['reactiv']['inc_expert_id'] ),
+                        'date'          => $SQL['reactiv']['inc_date'],
+                    );
+
+                    if( !isset($ingridient['consume_hash']) || !$ingridient['consume_hash'] )
+                    {
+                        $SQL['consume']['reactiv'][$ingridient['reactiv_hash']]['query'] =
+                            'INSERT INTO reactiv_consume '.db::array2ins( $SQL['consume']['reactiv'][$ingridient['reactiv_hash']] ).' RETURNING hash;';
+                    }
+                    else
+                    {
+                        $SQL['consume']['reactiv'][$ingridient['reactiv_hash']]['query'] =
+                            'UPDATE reactiv_consume SET '.db::array2upd( $SQL['consume']['reactiv'][$ingridient['reactiv_hash']] ).' WHERE hash = \''.$this->db->safesql($ingridient['reactiv_hash']).'\' RETURNING hash;';
+                    }
+                }
+
             }
         }
         //////////////////////////////////////////////////
+
+
 
         // STEP 0: BEGIN TRANSACTION
         $this->db->query( 'BEGIN;' );
@@ -253,6 +277,25 @@ class cooked
         }
         ///////////////////////////////
 
+        // STEP 3: INS data to "reactiv_consume"
+        $reactiv_consume_hash = array();
+        $this->db->query( 'DELETE FROM reactiv_ingr_reactiv WHERE reactiv_hash = \''.$reactiv_hash.'\';' );
+        foreach( $SQL['consume']['reactiv'] as $ingridient_hash => $ingridient )
+        {
+            $SQL['consume']['reactiv'][$ingridient_hash]['query'];
+            $reactiv_consume_hash[] = $SQL['consume']['reactiv'][$ingridient_hash]['hash'] = $this->db->super_query( $SQL['consume']['reactiv'][$ingridient_hash]['query'] )['hash'];
+
+            if( !$SQL['consume']['reactiv'][$ingridient_hash]['hash'] )
+            {
+                $this->db->query( 'ROLLBACK;' );
+                return self::error( 'reactiv_consume hash error!' );
+            }
+
+            $SQL['consume']['reactiv'][$ingridient_hash]['merge_query'] = 'INSERT INTO reactiv_ingr_reactiv ( reactiv_hash, consume_hash ) VALUES ( \''.$reactiv_hash.'\', \''.$SQL['consume']['reactiv'][$ingridient_hash]['hash'].'\' ); ';
+            $this->db->query( $SQL['consume']['reactiv'][$ingridient_hash]['merge_query'] );
+        }
+        ///////////////////////////////
+
         // STEP 4: INS data to "using"
         $SQL['using'] = array();
 
@@ -277,20 +320,42 @@ class cooked
 
         $SQL['using'] = array_merge( $SQL['using'], $this->db->super_query( $SQL['using']['data'] ) );
 
-        $this->db->query( 'DELETE FROM consume_using WHERE consume_hash IN(\''.implode( '\', \'', $consume_hash ).'\');' );
-        $SQL['using']['merge_query'] = array();
+        //
+
+        $this->db->query( 'DELETE FROM consume_using WHERE using_hash=\''.$SQL['using']['hash'].'\';' );
+        $SQL['using']['consume_merge_query'] = array();
         foreach( $consume_hash as $single_consume_hash )
         {
-            $SQL['using']['merge_query'][] = '(\''.$SQL['using']['hash'].'\',\''.$single_consume_hash.'\')';
+            $SQL['using']['consume_merge_query'][] = '(\''.$SQL['using']['hash'].'\',\''.$single_consume_hash.'\')';
         }
-        $SQL['using']['merge_query'] = 'INSERT INTO consume_using (using_hash,consume_hash) VALUES '.implode( ', ', $SQL['using']['merge_query'] ).';';
-        $this->db->query( $SQL['using']['merge_query'] );
+
+        if( is_array($SQL['using']['consume_merge_query']) && count($SQL['using']['consume_merge_query']) )
+        {
+            $SQL['using']['consume_merge_query'] = 'INSERT INTO consume_using (using_hash,consume_hash) VALUES '.implode( ', ', $SQL['using']['consume_merge_query'] ).';';
+            $this->db->query( $SQL['using']['consume_merge_query'] );
+        }
+
+        //
+
+        $this->db->query( 'DELETE FROM reactiv_consume_using WHERE using_hash=\''.$SQL['using']['hash'].'\';' );
+        $SQL['using']['reactiv_consume_merge_query'] = array();
+        foreach( $reactiv_consume_hash as $single_consume_hash )
+        {
+            $SQL['using']['reactiv_consume_merge_query'][] = '(\''.$SQL['using']['hash'].'\',\''.$single_consume_hash.'\')';
+        }
+
+        if( is_array($SQL['using']['reactiv_consume_merge_query']) && count($SQL['using']['reactiv_consume_merge_query']) )
+        {
+            $SQL['using']['reactiv_consume_merge_query'] = 'INSERT INTO reactiv_consume_using (using_hash,consume_hash) VALUES '.implode( ', ', $SQL['using']['reactiv_consume_merge_query'] ).';';
+            $this->db->query( $SQL['using']['reactiv_consume_merge_query'] );
+        }
+
         ///////////////////////////////
 
 
 
 
-        //var_export($SQL);exit;
+        // var_export($SQL);exit;
 
 
         $this->db->query( 'COMMIT;' );
@@ -327,11 +392,12 @@ class cooked
         }
 
         $tpl = new tpl;
+        $result = '';
         foreach( $data as $area => $area_data )
         {
             foreach( $area_data as $line )
             {
-                $tpl->load( $skin );
+                $tpl->load( $skin.'_'.$area );
 
                 $tpl->set_block( '!\[(area:'.$area.')\](.+?)\[\/\1\]!is', '$2' );
                 $tpl->set_block( '!\[(area:(.+?))\](.+?)\[\/\1\]!is', '' );
@@ -408,12 +474,44 @@ class cooked
                     unset( $dispersion_data );
                 }
                 //////
+                if( isset($line['reactiv_hash']) )
+                {
+                    $ingridient_data = $this->get_raw( array( 'hash' => $line['reactiv_hash'] ) )[$line['reactiv_hash']];
 
-                $tpl->compile( $skin );
+                    $ingridient_data['inc_date']    = common::en_date( $ingridient_data['inc_date'], 'd.m.Y' );
+                    $ingridient_data['dead_date']   = common::en_date( $ingridient_data['dead_date'], 'd.m.Y' );
+
+                    foreach( $ingridient_data as $key => $value )
+                    {
+                        if( is_array($value) ){ continue; }
+                        $tags[] = '{tag:reactiv:'.$key.'}';
+                        $tpl->set( '{tag:reactiv:'.$key.'}', common::db2html( $value ) );
+                    }
+
+                    foreach( $recipes[$ingridient_data['reactiv_menu_id']] as $key => $value )
+                    {
+                        if( is_array($value) ){ continue; }
+                        $tags[] = '{tag:menu:'.$key.'}';
+                        $tpl->set( '{tag:menu:'.$key.'}', common::db2html( $value ) );
+                    }
+
+                    foreach( $units[$recipes[$ingridient_data['reactiv_menu_id']]['units_id']] as $key => $value )
+                    {
+                        if( is_array($value) ){ continue; }
+                        $tags[] = '{tag:units:'.$key.'}';
+                        $tpl->set( '{tag:units:'.$key.'}', common::db2html( $value ) );
+                    }
+
+                    // var_export($tags);exit;
+                }
+                //////
+
+                $tpl->compile( $skin.'_'.$area );
             }
+            $result = $result . $tpl->result( $skin.'_'.$area );
         }
 
-        return $tpl->result( $skin );
+        return $result;
     }
 
     public final function editor( $line_hash = false, $skin = false )
@@ -494,7 +592,6 @@ class cooked
 
             $tpl->load( $skin );
 
-
             $line['not_used_perc'] = common::compare_perc( $line['quantity_inc'], $line['quantity_left'] );
 
             if( $line['not_used_perc'] <= 1 )                                { $tpl->set( '{tag:not_used_class}',   'fully_used' ); }
@@ -549,6 +646,8 @@ class cooked
                     $tpl->set( '{tag:units:'.$key.'}', common::db2html( $value ) );
                 }
             }
+
+
             /*
             if( isset( $purpose[$line['purpose_id']] ) )
             {
@@ -585,7 +684,7 @@ class cooked
         }
 
 
-
+        //var_export($tags);
         return $tpl->result( $skin );
     }
 
@@ -657,7 +756,7 @@ class cooked
             '.$WHERE.'
             ORDER by
                 reactiv.inc_date DESC;
-                '.db::CACHED;
+            '.db::CACHED;
 
         //echo $SQL;
 
@@ -714,7 +813,7 @@ class cooked
 
                 $data[$row['hash']]['composition']['reagent'][$row['reagent_id']] = $row;
 
-                if( !$data[$row['hash']]['using_hash'] ){ $data[$row['hash']]['using_hash'] = $row['using_hash']; }
+                if( !isset($data[$row['hash']]['using_hash']) || !$data[$row['hash']]['using_hash'] ){ $data[$row['hash']]['using_hash'] = $row['using_hash']; }
                 if( $data[$row['hash']]['using_hash'] != $row['using_hash'] )
                 {
                     return self::error( 'Problems with "using_hash"! Hash is different at one reactive!' );
@@ -725,7 +824,7 @@ class cooked
             // ВИБРАТИ ІНГРІДІЄНТИ (РОЗЧИНИ) //
             $SQL = '
                 SELECT
-                    reactiv_ingr_reactiv.hash 	    as hash,
+                    reactiv_ingr_reactiv.reactiv_hash 	    as hash,
                     reactiv_consume.hash 	        as consume_hash,
                     reactiv_consume.quantity 		as consume_quantity,
                     reactiv.hash			        as reactiv_hash,
@@ -733,7 +832,7 @@ class cooked
                 FROM
                     reactiv_ingr_reactiv
                     LEFT JOIN reactiv_consume ON( reactiv_consume.hash = reactiv_ingr_reactiv.consume_hash )
-                    LEFT JOIN reactiv 		  ON( reactiv.hash = reactiv_consume.reactive_hash )
+                    LEFT JOIN reactiv 		  ON( reactiv.hash = reactiv_consume.reactiv_hash )
 
                     LEFT JOIN reactiv_consume_using ON( reactiv_consume_using.consume_hash = reactiv_consume.hash )
                     LEFT JOIN "using" ON( "using".hash = reactiv_consume_using.using_hash )
@@ -744,13 +843,16 @@ class cooked
                 ;
             ';
 
+            // echo $SQL;exit;
+
             $SQL = $this->db->query( $SQL );
 
             while( ( $row = $this->db->get_row( $SQL ) ) !== false )
             {
+
                 $data[$row['hash']]['composition']['reactiv'][$row['reactiv_hash']] = $row;
 
-                if( !$data[$row['hash']]['using_hash'] ){ $data[$row['hash']]['using_hash'] = $row['using_hash']; }
+                if( !isset($data[$row['hash']]['using_hash']) || !$data[$row['hash']]['using_hash'] ){ $data[$row['hash']]['using_hash'] = $row['using_hash']; }
                 if( $data[$row['hash']]['using_hash'] != $row['using_hash'] )
                 {
                     return self::error( 'Problems with "using_hash"! Hash is different at one reactive!' );

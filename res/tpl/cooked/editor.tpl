@@ -6,9 +6,8 @@
     <input type="hidden" name="hash"        value="{tag:hash}"       data-save="1" />
     <input type="hidden" name="key"         value="{tag:key}"        data-save="1" />
 
-    <div id="empty_composition" class="dnone">
-        {@include=cooked/composition}
-    </div>
+    <div id="empty_composition_reagent" class="dnone">{@include=cooked/composition_reagent}</div>
+    <div id="empty_composition_reactiv" class="dnone">{@include=cooked/composition_reactiv}</div>
 
     <div class="elem recipe">
         <label class="label">Рецепт приготування робочого реактиву</label>
