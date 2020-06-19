@@ -140,6 +140,8 @@ class cooked
         /////////
 
         $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
+        $units   = ( new spr_manager( 'units' )   )->get_raw();
+        $recipes = ( new recipes()                )->get_raw();
 
         /////////
 
@@ -198,6 +200,10 @@ class cooked
                         'inc_expert_id' => common::integer( $SQL['reactiv']['inc_expert_id'] ),
                         'date'          => $SQL['reactiv']['inc_date'],
                     );
+
+                    //
+                    if( !$SQL['consume']['reagent'][$ingridient['dispersion_id']] ){ return self::error( 'Ви намагаєтесь використати невідому речовину!',  false ); }
+                    //
 
                     if( !isset($ingridient['consume_hash']) || !$ingridient['consume_hash'] )
                     {
