@@ -14,6 +14,7 @@ class db
     private $db_id = false;
     private $query_id = false;
     private $connected = false;
+    private $is_transaction = false;
 
     private $_DBHOST = false;
     private $_DBNAME = false;
@@ -46,6 +47,7 @@ class db
 
     public final function __destruct()
     {
+        if( $this->is_transaction ){ $this->transaction_rollback(); }
         $this->close();
     }
 
@@ -83,6 +85,43 @@ class db
         if( $this->db_id ){ return pg_escape_string($this->db_id, $source ); }
         return pg_escape_string( $source );
     }
+
+
+    public final function transaction_start()
+    {
+        if( $this->is_transaction ){ common::err( 'TRANSACTION IS ALREADY STARTED!' ); }
+
+        $this->query( 'BEGIN;' );
+        $this->is_transaction = true;
+        return true;
+    }
+
+    public final function transaction_commit()
+    {
+        if( !$this->is_transaction ){ return false; }
+
+        $this->query( 'COMMIT;' );
+        $this->is_transaction = false;
+        return true;
+    }
+
+    public final function transaction_rollback( $point = false )
+    {
+        if( !$this->is_transaction ){ return false; }
+
+        $this->query( 'ROLLBACK'.($point?(' TO SAVEPONT_'.md5( $point )):'').';' );
+        if( !$point ){ $this->is_transaction = false;  }
+        return true;
+    }
+
+    public final function transaction_save( $point = false )
+    {
+        if( !$this->is_transaction ){ return false; }
+
+        $this->query( 'SAVEPOINT SAVEPONT_'.md5( $point ).';' );
+        return true;
+    }
+
 
     public final function query( $SQL )
     {

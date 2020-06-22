@@ -15,26 +15,6 @@ class cooked
     use basic, spr, db_connect;
     private $TRANSACTION_STARTED = false;
 
-    public final static function error( $error, $error_area = false )
-    {
-        if( $error != false )
-        {
-            if( _AJAX_ )
-            {
-                ajax::set_error( rand(10,99), $error );
-                ajax::set_data( 'err_area', isset($error_area) ? $error_area : '' );
-                return false;
-            }
-            else
-            {
-                common::err( $error );
-                return false;
-            }
-        }
-        return true;
-    }
-
-
 
 /*
     public final function remove( $reactiv_hash = 0 )
@@ -94,6 +74,62 @@ class cooked
     */
 
 
+
+    public final function update_reactiv_ingr_reagent( $reactiv_hash = false, $consume_hash = array() )
+    {
+        $reactiv_hash = common::filter_hash( $reactiv_hash );
+
+        if( !$reactiv_hash ){ return false; }
+
+        $reactiv_hash = $this->db->safesql($reactiv_hash);
+
+        $this->db->query( 'DELETE FROM reactiv_ingr_reagent WHERE reactiv_hash=\''.$reactiv_hash.'\';' );
+
+        if( !is_array($consume_hash) ){ return false; }
+
+        $ins = array();
+        foreach( $consume_hash as $hash )
+        {
+            $hash = common::filter_hash( $hash );
+            if( $hash ){ $ins[] = '( \''. $reactiv_hash .'\', \''. $hash .'\' )'; }
+        }
+
+        if( count($ins) )
+        {
+            $ins = 'INSERT INTO reactiv_ingr_reagent ( reactiv_hash, consume_hash ) VALUES '.implode( ', ', $ins ).';';
+            $this->db->query( $ins );
+        }
+
+        return true;
+    }
+
+    public final function update_reactiv_ingr_reactiv( $reactiv_hash = false, $consume_hash = array() )
+    {
+        $reactiv_hash = common::filter_hash( $reactiv_hash );
+
+        if( !$reactiv_hash ){ return false; }
+
+        $reactiv_hash = $this->db->safesql($reactiv_hash);
+
+        $this->db->query( 'DELETE FROM reactiv_ingr_reactiv WHERE reactiv_hash=\''.$reactiv_hash.'\';' );
+
+        if( !is_array($consume_hash) ){ return false; }
+
+        $ins = array();
+        foreach( $consume_hash as $hash )
+        {
+            $hash = common::filter_hash( $hash );
+            if( $hash ){ $ins[] = '( \''. $reactiv_hash .'\', \''. $hash .'\' )'; }
+        }
+
+        if( count($ins) )
+        {
+            $ins = 'INSERT INTO reactiv_ingr_reactiv ( reactiv_hash, consume_hash ) VALUES '.implode( ', ', $ins ).';';
+            $this->db->query( $ins );
+        }
+
+        return true;
+    }
 
     public final function save( $reactiv_hash = false, $data = array() )
     {
@@ -199,46 +235,21 @@ class cooked
                         'quantity'      => common::float(   $ingridient['quantity'] ),
                         'inc_expert_id' => common::integer( $SQL['reactiv']['inc_expert_id'] ),
                         'date'          => $SQL['reactiv']['inc_date'],
+                        'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,
                     );
-
-                    //
-                    if( !$SQL['consume']['reagent'][$ingridient['dispersion_id']] ){ return self::error( 'Ви намагаєтесь використати невідому речовину!',  false ); }
-                    //
-
-                    if( !isset($ingridient['consume_hash']) || !$ingridient['consume_hash'] )
-                    {
-                        $SQL['consume']['reagent'][$ingridient['dispersion_id']]['query'] =
-                            'INSERT INTO consume '.db::array2ins( $SQL['consume']['reagent'][$ingridient['dispersion_id']] ).' RETURNING hash;';
-                    }
-                    else
-                    {
-                        $SQL['consume']['reagent'][$ingridient['dispersion_id']]['query'] =
-                            'UPDATE consume SET '.db::array2upd( $SQL['consume']['reagent'][$ingridient['dispersion_id']] ).' WHERE hash = \''.$this->db->safesql($ingridient['consume_hash']).'\' RETURNING hash;';
-                    }
                 }
 
                 if( $ingridient['role'] == 'reactiv' )
                 {
                     $SQL['consume']['reactiv'][$ingridient['reactiv_hash']] = array
                     (
-                        'reactiv_hash'  => $this->db->safesql(common::filter( $ingridient['reactiv_hash'] )),
+                        'reactiv_hash'  => $this->db->safesql(common::filter_hash( $ingridient['reactiv_hash'] )),
                         'quantity'      => common::float(   $ingridient['quantity'] ),
                         'inc_expert_id' => common::integer( $SQL['reactiv']['inc_expert_id'] ),
                         'date'          => $SQL['reactiv']['inc_date'],
+                        'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,
                     );
-
-                    if( !isset($ingridient['consume_hash']) || !$ingridient['consume_hash'] )
-                    {
-                        $SQL['consume']['reactiv'][$ingridient['reactiv_hash']]['query'] =
-                            'INSERT INTO reactiv_consume '.db::array2ins( $SQL['consume']['reactiv'][$ingridient['reactiv_hash']] ).' RETURNING hash;';
-                    }
-                    else
-                    {
-                        $SQL['consume']['reactiv'][$ingridient['reactiv_hash']]['query'] =
-                            'UPDATE reactiv_consume SET '.db::array2upd( $SQL['consume']['reactiv'][$ingridient['reactiv_hash']] ).' WHERE hash = \''.$this->db->safesql($ingridient['reactiv_hash']).'\' RETURNING hash;';
-                    }
                 }
-
             }
         }
         //////////////////////////////////////////////////
@@ -246,7 +257,7 @@ class cooked
 
 
         // STEP 0: BEGIN TRANSACTION
-        $this->db->query( 'BEGIN;' );
+        $this->db->transaction_start();
         ///////////////////////////////
 
         // STEP 1: INS data to "reactiv"
@@ -259,112 +270,93 @@ class cooked
 
         if( !$reactiv_hash )
         {
-            $this->db->query( 'ROLLBACK;' );
+            $this->db->transaction_rollback();
             return self::error( 'reactiv hash error!' );
         }
         ///////////////////////////////
 
         // STEP 2: INS data to "consume"
+        $consume = new consume;
         $consume_hash = array();
-        $this->db->query( 'DELETE FROM reactiv_ingr_reagent WHERE reactiv_hash = \''.$reactiv_hash.'\';' );
         foreach( $SQL['consume']['reagent'] as $ingridient_id => $ingridient )
         {
-            $SQL['consume']['reagent'][$ingridient_id]['query'];
-            $consume_hash[] = $SQL['consume']['reagent'][$ingridient_id]['hash'] = $this->db->super_query( $SQL['consume']['reagent'][$ingridient_id]['query'] )['hash'];
+            $SQL['consume']['reagent'][$ingridient_id]['hash'] = $consume->save( $ingridient );
 
-            if( !$SQL['consume']['reagent'][$ingridient_id]['hash'] )
+            if( $SQL['consume']['reagent'][$ingridient_id]['hash'] )
             {
-                $this->db->query( 'ROLLBACK;' );
-                return self::error( 'consume hash error!' );
+                $consume_hash[] = $SQL['consume']['reagent'][$ingridient_id]['hash'];
             }
+            else
+            {
+                return false;
+            }
+        }
+        $consume = null;
+        unset( $consume );
 
-            $SQL['consume']['reagent'][$ingridient_id]['merge_query'] = 'INSERT INTO reactiv_ingr_reagent ( reactiv_hash, consume_hash ) VALUES ( \''.$reactiv_hash.'\', \''.$SQL['consume']['reagent'][$ingridient_id]['hash'].'\' ); ';
-            $this->db->query( $SQL['consume']['reagent'][$ingridient_id]['merge_query'] );
+        if( !$this->update_reactiv_ingr_reagent( $reactiv_hash, $consume_hash ) )
+        {
+            $this->db->transaction_rollback();
+            return self::error( 'update_reactiv_ingr_reagent error!' );
         }
         ///////////////////////////////
 
         // STEP 3: INS data to "reactiv_consume"
+        $reactiv_consume = new reactiv_consume;
         $reactiv_consume_hash = array();
-        $this->db->query( 'DELETE FROM reactiv_ingr_reactiv WHERE reactiv_hash = \''.$reactiv_hash.'\';' );
         foreach( $SQL['consume']['reactiv'] as $ingridient_hash => $ingridient )
         {
-            $SQL['consume']['reactiv'][$ingridient_hash]['query'];
-            $reactiv_consume_hash[] = $SQL['consume']['reactiv'][$ingridient_hash]['hash'] = $this->db->super_query( $SQL['consume']['reactiv'][$ingridient_hash]['query'] )['hash'];
+            $SQL['consume']['reactiv'][$ingridient_hash]['hash'] = $reactiv_consume->save( $ingridient );
 
-            if( !$SQL['consume']['reactiv'][$ingridient_hash]['hash'] )
+            if( $SQL['consume']['reactiv'][$ingridient_hash]['hash'] )
             {
-                $this->db->query( 'ROLLBACK;' );
-                return self::error( 'reactiv_consume hash error!' );
+                $reactiv_consume_hash[] = $SQL['consume']['reactiv'][$ingridient_hash]['hash'];
             }
+            else
+            {
+                return false;
+            }
+        }
+        $reactiv_consume = null;
+        unset( $reactiv_consume );
 
-            $SQL['consume']['reactiv'][$ingridient_hash]['merge_query'] = 'INSERT INTO reactiv_ingr_reactiv ( reactiv_hash, consume_hash ) VALUES ( \''.$reactiv_hash.'\', \''.$SQL['consume']['reactiv'][$ingridient_hash]['hash'].'\' ); ';
-            $this->db->query( $SQL['consume']['reactiv'][$ingridient_hash]['merge_query'] );
+        if( !$this->update_reactiv_ingr_reactiv( $reactiv_hash, $reactiv_consume_hash ) )
+        {
+            return self::error( 'update_reactiv_ingr_reactiv error!' );
         }
         ///////////////////////////////
 
         // STEP 4: INS data to "using"
         $SQL['using'] = array();
-
-        $SQL['using']['select'] = 'SELECT DISTINCT ON( "using".hash ) "using".* FROM "using" LEFT JOIN consume_using ON( consume_using.using_hash = "using".hash ) LEFT JOIN reactiv_consume_using ON( reactiv_consume_using.using_hash = "using".hash ) WHERE reactiv_consume_using.consume_hash IN( \'asd\' ) OR consume_using.consume_hash IN( \''.implode('\', \'', $consume_hash).'\' );';
-        $SQL['using'] = array_merge( $SQL['using'], $this->db->super_query( $SQL['using']['select'] ) );
+        $SQL['using'] = array_merge( $SQL['using'], $this->db->super_query( 'SELECT DISTINCT ON( "using".hash ) "using".* FROM "using" LEFT JOIN consume_using ON( consume_using.using_hash = "using".hash ) LEFT JOIN reactiv_consume_using ON( reactiv_consume_using.using_hash = "using".hash ) WHERE reactiv_consume_using.consume_hash IN( \'asd\' ) OR consume_using.consume_hash IN( \''.implode('\', \'', $consume_hash).'\' );' ) );
 
         $SQL['using']['data'] = array
         (
             'purpose_id' => $purpose['id'],
             'group_id' => CURRENT_GROUP_ID,
             'date' => $SQL['reactiv']['inc_date'],
+            'hash' => isset($SQL['using']['hash']) ? $SQL['using']['hash'] : false,
         );
 
-        if( !isset($SQL['using']['hash']) )
-        {
-            $SQL['using']['data'] = 'INSERT INTO "using" '.db::array2ins( $SQL['using']['data'] ).' RETURNING hash;';
-        }
-        else
-        {
-            $SQL['using']['data'] = 'UPDATE "using" SET '.db::array2upd( $SQL['using']['data'] ).' WHERE hash=\''.$SQL['using']['hash'].'\' RETURNING hash;';
-        }
+        $using = new using;
+        $SQL['using']['hash'] = $using->simple_save_using( $SQL['using']['data'] );
 
-        $SQL['using'] = array_merge( $SQL['using'], $this->db->super_query( $SQL['using']['data'] ) );
-
-        //
-
-        $this->db->query( 'DELETE FROM consume_using WHERE using_hash=\''.$SQL['using']['hash'].'\';' );
-        $SQL['using']['consume_merge_query'] = array();
-        foreach( $consume_hash as $single_consume_hash )
+        if( !$SQL['using']['hash'] )
         {
-            $SQL['using']['consume_merge_query'][] = '(\''.$SQL['using']['hash'].'\',\''.$single_consume_hash.'\')';
+            return self::error( 'using hash error!' );
         }
 
-        if( is_array($SQL['using']['consume_merge_query']) && count($SQL['using']['consume_merge_query']) )
+        if( !$using->update_consume_using( $SQL['using']['hash'], $consume_hash ) )
         {
-            $SQL['using']['consume_merge_query'] = 'INSERT INTO consume_using (using_hash,consume_hash) VALUES '.implode( ', ', $SQL['using']['consume_merge_query'] ).';';
-            $this->db->query( $SQL['using']['consume_merge_query'] );
+            return self::error( 'update_consume_using error!' );
         }
 
-        //
-
-        $this->db->query( 'DELETE FROM reactiv_consume_using WHERE using_hash=\''.$SQL['using']['hash'].'\';' );
-        $SQL['using']['reactiv_consume_merge_query'] = array();
-        foreach( $reactiv_consume_hash as $single_consume_hash )
+        if( !$using->update_reactiv_consume_using( $SQL['using']['hash'], $reactiv_consume_hash ) )
         {
-            $SQL['using']['reactiv_consume_merge_query'][] = '(\''.$SQL['using']['hash'].'\',\''.$single_consume_hash.'\')';
+            return self::error( 'update_reactiv_consume_using error!' );
         }
-
-        if( is_array($SQL['using']['reactiv_consume_merge_query']) && count($SQL['using']['reactiv_consume_merge_query']) )
-        {
-            $SQL['using']['reactiv_consume_merge_query'] = 'INSERT INTO reactiv_consume_using (using_hash,consume_hash) VALUES '.implode( ', ', $SQL['using']['reactiv_consume_merge_query'] ).';';
-            $this->db->query( $SQL['using']['reactiv_consume_merge_query'] );
-        }
-
         ///////////////////////////////
-
-
-
-
-        // var_export($SQL);exit;
-
-
-        $this->db->query( 'COMMIT;' );
+        $this->db->transaction_commit();
         $this->db->free();
 
         cache::clean();

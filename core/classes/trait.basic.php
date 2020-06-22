@@ -38,6 +38,25 @@ trait basic
 		exit;
 	}
 
+    public static function error( $error, $error_area = false )
+    {
+        if( $error != false )
+        {
+            if( _AJAX_ )
+            {
+                ajax::set_error( rand(10,99), $error );
+                ajax::set_data( 'err_area', isset($error_area) ? $error_area : '' );
+                return false;
+            }
+            else
+            {
+                common::err( $error );
+                return false;
+            }
+        }
+        return true;
+    }
+
     static public final function compare_perc( $a, $b )
     {
         if( !$a ){ return 100; }

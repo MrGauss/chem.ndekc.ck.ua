@@ -14,6 +14,118 @@ class using
 {
     use basic, spr, db_connect;
 
+    public final function update_reactiv_consume_using( $using_hash = false, $consume_hash = array() )
+    {
+        $using_hash = common::filter_hash( $using_hash );
+
+        if( !$using_hash ){ return false; }
+
+        $using_hash = $this->db->safesql($using_hash);
+
+        $this->db->query( 'DELETE FROM reactiv_consume_using WHERE using_hash=\''.$using_hash.'\';' );
+
+        if( !is_array($consume_hash) ){ return false; }
+
+        $ins = array();
+        foreach( $consume_hash as $hash )
+        {
+            $hash = common::filter_hash( $hash );
+            if( $hash ){ $ins[] = '( \''. $using_hash .'\', \''. $hash .'\' )'; }
+        }
+
+        if( count($ins) )
+        {
+            $ins = 'INSERT INTO reactiv_consume_using ( using_hash, consume_hash ) VALUES '.implode( ', ', $ins ).';';
+            $this->db->query( $ins );
+        }
+
+        return true;
+    }
+
+    public final function update_consume_using( $using_hash = false, $consume_hash = array() )
+    {
+        $using_hash = common::filter_hash( $using_hash );
+
+        if( !$using_hash ){ return false; }
+
+        $using_hash = $this->db->safesql($using_hash);
+
+        $this->db->query( 'DELETE FROM consume_using WHERE using_hash=\''.$using_hash.'\';' );
+
+        if( !is_array($consume_hash) ){ return false; }
+
+        $ins = array();
+        foreach( $consume_hash as $hash )
+        {
+            $hash = common::filter_hash( $hash );
+            if( $hash ){ $ins[] = '( \''. $using_hash .'\', \''. $hash .'\' )'; }
+        }
+
+        if( count($ins) )
+        {
+            $ins = 'INSERT INTO consume_using ( using_hash, consume_hash ) VALUES '.implode( ', ', $ins ).';';
+            $this->db->query( $ins );
+        }
+
+        return true;
+    }
+
+    public final function simple_save_using( $data = array() )
+    {
+        $data4db =
+            array (
+                'purpose_id' => common::integer( isset($data['purpose_id']) ? $data['purpose_id'] : false ),
+                'group_id' => CURRENT_GROUP_ID,
+                'date' => isset($data['date'])? common::en_date( $data['date'], 'Y-m-d' ) : false,
+            );
+
+        foreach( $data4db as $k => $v )
+        {
+            if( !$v )
+            {
+                return self::error( 'using hash error!' );
+            }
+        }
+
+        $hash = isset($data['hash']) ? common::filter_hash( $data['hash'] ) : false;
+
+        if( !$hash )
+        {
+            $query = 'INSERT INTO "using" '.db::array2ins( $data4db ).' RETURNING hash;';
+        }
+        else
+        {
+            $query = 'UPDATE "using" SET '.db::array2upd( $data4db ).' WHERE hash=\''.$this->db->safesql( $data['hash'] ).'\' RETURNING hash;';
+        }
+
+        $hash = $this->db->super_query( $query );
+        if( is_array($hash) && isset($hash['hash']) ){ $hash = $hash['hash']; }
+        else{ $hash = false; }
+
+        return $hash;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public final function editor( $line_hash = '', $skin = false )
     {
         access::check( 'using', 'view' );
@@ -303,9 +415,40 @@ class using
                 reactiv.reactiv_menu_id as reactiv_menu_id
             FROM
                 "using"
-                LEFT JOIN reactiv ON( reactiv.using_hash = "using".hash )
+
+                LEFT JOIN
+                (
+                    SELECT
+                        DISTINCT ON( consume_using.using_hash )
+                            consume_using.using_hash,
+                            consume_using.consume_hash,
+                            reactiv_ingr_reagent.reactiv_hash
+                    FROM
+                        consume_using
+                            LEFT JOIN consume ON( consume.hash = consume_using.consume_hash )
+                                LEFT JOIN reactiv_ingr_reagent ON( consume.hash = reactiv_ingr_reagent.consume_hash )
+                    ORDER BY consume_using.using_hash
+                ) as consume ON( consume.using_hash = "using".hash )
+
+                LEFT JOIN
+                (
+                    SELECT
+                        DISTINCT ON( reactiv_consume_using.using_hash )
+                        reactiv_consume_using.using_hash,
+                        reactiv_consume_using.consume_hash,
+                        reactiv_ingr_reactiv.reactiv_hash
+                    FROM
+                        reactiv_consume_using
+                            LEFT JOIN reactiv_consume ON( reactiv_consume.hash = reactiv_consume_using.consume_hash )
+                                LEFT JOIN reactiv_ingr_reactiv ON( reactiv_ingr_reactiv.consume_hash = reactiv_consume.hash )
+                    ORDER BY reactiv_consume_using.using_hash
+                ) as reactiv_consume ON( reactiv_consume.using_hash = "using".hash )
+
+            LEFT JOIN reactiv ON( ( reactiv.hash = consume.reactiv_hash OR reactiv_consume.reactiv_hash = reactiv.hash ) AND reactiv.group_id = "using".group_id )
+
             '.$WHERE.'
-            ORDER BY "using"."date" DESC
+
+            ORDER BY "using".date DESC;
             ;';
 
         $cache_var = 'using-'.md5( $SQL ).'-raw';
@@ -321,10 +464,10 @@ class using
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
             $row['hash']            = common::filter_hash( $row['hash'] ? $row['hash'] : '' );
-            $row['reactiv_hash']    = common::filter_hash( $row['reactiv_hash'] ? $row['reactiv_hash'] : '' );
-            $row['reactiv_menu_id'] = common::integer( $row['reactiv_menu_id'] );
+            //$row['reactiv_hash']    = common::filter_hash( $row['reactiv_hash'] ? $row['reactiv_hash'] : '' );
+            //$row['reactiv_menu_id'] = common::integer( $row['reactiv_menu_id'] );
 
-            $reactives[$row['hash']] = $row['reactiv_hash'];
+            //$reactives[$row['hash']] = $row['reactiv_hash'];
 
             $data[$row['hash']] = $row;
             $data[$row['hash']]['ucomment'] = common::decode_string( common::stripslashes( $data[$row['hash']]['ucomment'] ) );
@@ -335,7 +478,7 @@ class using
 
 
 
-        foreach( (new consume)->get_raw( array(  'using_hash' => array_keys( $data ) ) ) as $consume )
+        /*foreach( (new consume)->get_raw( array(  'using_hash' => array_keys( $data ) ) ) as $consume )
         {
             if( !isset($data[$consume['using_hash']]) || !is_array($data[$consume['using_hash']]['consume']) )
             {
@@ -363,33 +506,18 @@ class using
             }
 
             $data[$consume['using_hash']]['cooked_reactives'][$ractive['hash']] = $ractive;
-        }
+        }      */
 
         return $data;
     }
 
-    public final static function error( $error, $error_area = false )
-    {
-        if( $error != false )
-        {
-            if( _AJAX_ )
-            {
-                ajax::set_error( rand(10,99), $error );
-                ajax::set_data( 'err_area', isset($error_area) ? $error_area : '' );
-                return false;
-            }
-            else
-            {
-                common::err( $error );
-                return false;
-            }
-        }
-        return true;
-    }
+
 
     public final function save( $using_hash = false, $data = array() )
     {
         access::check( 'using', 'edit' );
+
+        echo 'OLD!'; exit;
 
         $error = false;
         $using_hash = common::filter_hash( $using_hash );
