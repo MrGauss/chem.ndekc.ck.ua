@@ -42,7 +42,7 @@ class consume
 
         $reagent    = ( new spr_manager('reagent') )->get_raw( array( 'id' => common::integer( $dispersion['reagent_id'] ) ) )[$dispersion['reagent_id']];
 
-        if( !$data['utilisation'] && time() > strtotime($stock['dead_date']) ){ return self::error( 'Речовина "'.addslashes( $reagent['name'] ).' ['.$stock['reagent_number'].']" зіпсована!' ); }
+        //if( !$data['utilisation'] && time() > strtotime($stock['dead_date']) ){ return self::error( 'Речовина "'.addslashes( $reagent['name'] ).' ['.$stock['reagent_number'].']" зіпсована!' ); }
         if( !$data['utilisation'] && strtotime($data2db['date']) > strtotime($stock['dead_date']) ){ return self::error( 'Речовина "'.addslashes( $reagent['name'] ).' ['.$stock['reagent_number'].']" зіпсована, її неможливо використати!' ); }
 
         $old_data = $this->get_raw( array( 'consume_hash' => $hash ) );

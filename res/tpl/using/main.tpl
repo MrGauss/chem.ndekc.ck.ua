@@ -27,6 +27,7 @@
     <div id="list" class="list">
 
         {list}
+
     </div>
 </div>
 

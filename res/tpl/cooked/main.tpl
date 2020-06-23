@@ -18,11 +18,11 @@
         <table>
             <tr>
                 <td class="numi">&nbsp;</td>
-                <td class="name">Назва</td>
-                <td class="inc_date">Дата приготування</td>
-                <td class="dead_date">Кінцева дата</td>
-                <td class="quantity_inc">Приготована кількість</td>
-                <td class="quantity_left">Залишилось</td>
+                <td class="name"          data-sorter="1" data-type="txt" data-sort="reagent">Назва</td>
+                <td class="inc_date"      data-sorter="1" data-type="int" data-sort="inc_date">Дата приготування</td>
+                <td class="dead_date"     data-sorter="1" data-type="int" data-sort="dead_date">Кінцева дата</td>
+                <td class="quantity_inc"  data-sorter="1" data-type="int" data-sort="quantity_inc">Приготована кількість</td>
+                <td class="quantity_left" data-sorter="1" data-type="int" data-sort="quantity_left">Залишилось</td>
                 <td class="composition">Склад</td>
             </tr>
         </table>

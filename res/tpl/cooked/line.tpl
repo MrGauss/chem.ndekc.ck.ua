@@ -1,4 +1,11 @@
 <div class="line {tag:not_used_class}" data-hash="{tag:hash}" data-lifetime="{tag:lifetime}" data-quantity_inc="{tag:quantity_inc}" data-quantity_left="{tag:quantity_left}" data-not_used_perc="{tag:not_used_perc}">
+
+    <input type="hidden" data-role="sort" name="reagent" value="{tag:menu:name}">
+    <input type="hidden" data-role="sort" name="inc_date" value="{tag:inc_date_unix}">
+    <input type="hidden" data-role="sort" name="dead_date" value="{tag:dead_date_unix}">
+    <input type="hidden" data-role="sort" name="quantity_inc" value="{tag:quantity_inc}">
+    <input type="hidden" data-role="sort" name="quantity_left" value="{tag:quantity_left}">
+
     <table>
         <tr>
             <td class="numi">{tag:numi}</td>

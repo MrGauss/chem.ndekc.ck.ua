@@ -105,7 +105,164 @@ class using
         return $hash;
     }
 
+    public final function get_raw( $filters = array() )
+    {
+        $filters = is_array($filters) ? $filters : array();
+        $WHERE = array();
 
+        $WHERE['group_id']   = '( "using".group_id = '.CURRENT_GROUP_ID.' OR "using".group_id = 0 )';
+
+        /////////////////////
+        if( isset($filters['reactiv_hash']) )
+        {
+            $filters['reactiv_hash'] = common::filter_hash( $filters['reactiv_hash'] );
+            if( !is_array($filters['reactiv_hash']) ){ $filters['reactiv_hash'] = array( $filters['reactiv_hash'] ); }
+
+            $filters['reactiv_hash'] = array_unique($filters['reactiv_hash']);
+
+            if( count($filters['reactiv_hash']) )
+            {
+                $filters['reactiv_hash'] = array_map( array( $this->db, 'safesql' ), $filters['reactiv_hash'] );
+                $WHERE['reactiv_hash']   = 'reactiv.hash IN(\''. implode( '\', \'', array_values( $filters['reactiv_hash'] ) ) .'\')';
+            }
+        }
+        /////////////////////
+
+
+        /////////////////////
+        if( isset($filters['reactiv_menu_id']) )
+        {
+            $filters['reactiv_menu_id']  = common::integer( $filters['reactiv_menu_id'] );
+            if( !is_array($filters['reactiv_menu_id']) ){ $filters['reactiv_menu_id'] = array( $filters['reactiv_menu_id'] ); }
+
+            $filters['reactiv_menu_id'] = array_unique($filters['reactiv_menu_id']);
+            sort( $filters['reactiv_menu_id'] );
+
+            if( count($filters['reactiv_menu_id']) )
+            {
+                $filters['reactiv_menu_id'] = array_map( array( $this->db, 'safesql' ), $filters['reactiv_menu_id'] );
+                $WHERE['reactiv_menu_id']   = 'reactiv.reactiv_menu_id IN(\''. implode( '\', \'', array_values( $filters['reactiv_menu_id'] ) ) .'\')';
+            }
+        }
+        /////////////////////
+
+
+        /////////////////////
+        if( isset($filters['hash']) )
+        {
+            $filters['hash'] = common::filter_hash( $filters['hash'] );
+            if( !is_array($filters['hash']) ){ $filters['hash'] = array( $filters['hash'] ); }
+
+            $filters['hash'] = array_unique($filters['hash']);
+
+            if( count($filters['hash']) )
+            {
+                $filters['hash'] = array_map( array( $this->db, 'safesql' ), $filters['hash'] );
+                $WHERE['hash']   = '"using".hash IN(\''. implode( '\', \'', array_values( $filters['hash'] ) ) .'\')';
+
+                $WHERE['reactiv_hash']      = null; unset( $WHERE['reactiv_hash'] );
+                $WHERE['reactiv_menu_id']   = null; unset( $WHERE['reactiv_menu_id'] );
+            }
+        }
+        else
+        {
+            $WHERE['hash']       = '"using".hash != \'\'';
+        }
+        /////////////////////
+
+
+        /////////////////////
+
+        $WHERE = count($WHERE) ? 'WHERE '.implode( ' AND ', $WHERE ) : '';
+
+        /////////////////////
+
+        $SQL = '
+            SELECT
+                    "using".hash,
+                    coalesce(string_agg( distinct consume.hash::text, \',\' ),\'\') as consume_hash_agg,
+                    coalesce(string_agg( distinct reactiv_consume.hash::text, \',\' ),\'\') as reactiv_consume_hash_agg,
+                    coalesce(string_agg( distinct reactiv.hash::text, \',\' ),\'\') as reactiv_hash_agg,
+                    coalesce(string_agg( distinct reactiv.reactiv_menu_id::text, \',\' ),\'\') as reactiv_menu_id_agg,
+                    "using".date,
+                    "using".purpose_id,
+                    "using".group_id,
+                    "using".exp_number,
+                    "using".exp_date,
+                    "using".obj_count,
+                    "using".tech_info,
+                    "using".ucomment
+
+            FROM
+                    "using"
+
+                        LEFT JOIN consume_using ON( consume_using.using_hash = "using".hash )
+                            LEFT JOIN consume ON( consume.hash = consume_using.consume_hash )
+
+                        LEFT JOIN reactiv_consume_using ON( reactiv_consume_using.using_hash = "using".hash )
+                            LEFT JOIN reactiv_consume ON( reactiv_consume.hash = reactiv_consume_using.consume_hash )
+
+                        LEFT JOIN reactiv_ingr_reactiv ON( reactiv_ingr_reactiv.consume_hash = reactiv_consume.hash )
+                        LEFT JOIN reactiv_ingr_reagent ON( reactiv_ingr_reagent.consume_hash = consume.hash )
+
+                        LEFT JOIN reactiv ON( reactiv.hash = reactiv_ingr_reactiv.reactiv_hash OR reactiv.hash = reactiv_ingr_reagent.reactiv_hash )
+
+                        -- reactiv_ingr_reactiv
+                        -- reactiv_ingr_reagent
+                        -- reactiv
+
+            '.$WHERE.'
+
+            GROUP BY "using".hash
+            ORDER BY "using".date DESC;
+            ;';
+
+        $cache_var = 'using-'.md5( $SQL ).'-raw';
+
+        //echo $SQL;exit;
+
+        $data = cache::get( $cache_var );
+        if( $data && is_array($data) ){ return $data; }
+
+        $data = array();
+        $SQL = $this->db->query( $SQL );
+        $reactives = array();
+
+        while( ( $row = $this->db->get_row($SQL) ) !== false )
+        {
+            $row['hash']            = common::filter_hash( $row['hash'] ? $row['hash'] : '' );
+
+            $row['reactiv_hash']            = common::filter_hash( explode( ',', $row['reactiv_hash_agg']         ));
+            $row['consume_hash']            = common::filter_hash( explode( ',', $row['consume_hash_agg']         ));
+            $row['reactiv_consume_hash']    = common::filter_hash( explode( ',', $row['reactiv_consume_hash_agg'] ));
+            $row['reactiv_menu_id']         = common::integer(     explode( ',', $row['reactiv_menu_id_agg']      ));
+
+            foreach
+            (
+                array
+                (
+                    'reactiv_hash',
+                    'consume_hash',
+                    'reactiv_consume_hash',
+                    'reactiv_menu_id',
+                )
+                as $k
+            )
+            {
+                if( !is_array($row[$k]) ){ $row[$k] = array( $row[$k] ); }
+
+                foreach( $row[$k] as $key => $value )
+                {
+                    if( !$value ){ unset( $row[$k][$key] ); }
+                }
+            }
+
+            $data[$row['hash']] = $row;
+            $data[$row['hash']]['ucomment']           = common::decode_string( common::stripslashes( $data[$row['hash']]['ucomment'] ) );
+        }
+
+        return $data;
+    }
 
 
 
@@ -325,9 +482,9 @@ class using
 
         if( !count($data) ){ return false; }
 
-        $purpose = ( new spr_manager( 'purpose' )   )->get_raw();
-        $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
-        $recipes = ( new recipes() )->get_raw();
+        $purpose = ( new spr_manager( 'purpose' ) ) ->get_raw();
+        $reagent = ( new spr_manager( 'reagent' ) ) ->get_raw();
+        $recipes = ( new recipes() )                ->get_raw();
 
         $tpl = new tpl;
 
@@ -354,7 +511,7 @@ class using
                 $tpl->set( '{tag:'.$key.'}', common::db2html( $value ) );
             }
             $tpl->set_block( '!\{tag:(\w+?)\}!is', '' );
-
+            /*
             foreach( isset($purpose[$line['purpose_id']])?$purpose[$line['purpose_id']]:array() as $key => $value )
             {
                 if( is_array($value) ){ continue; }
@@ -373,143 +530,15 @@ class using
 
             $tpl->set( '{consume:list}', $this->get_html_consume( isset($line['consume'])?$line['consume']:array(), 'using/consume_elem' ) );
 
-            // echo implode( "\n", $tags ); echo "\n\n\n"; var_export($line);exit;
-
+            //echo implode( "\n", $tags ); echo "\n\n\n"; var_export($line);exit;
+            */
             $tpl->compile( $skin );
         }
 
         return $tpl->result( $skin );
     }
 
-    public final function get_raw( $filters = array() )
-    {
-        $filters = is_array($filters) ? $filters : array();
-        $WHERE = array();
 
-        if( isset($filters['hash']) )
-        {
-            $filters['hash'] = common::filter_hash( $filters['hash']?$filters['hash']:'' );
-            $filters['hash'] = is_array($filters['hash']) ? $filters['hash'] : array( $filters['hash'] );
-
-            $filters['hash'] = array_unique($filters['hash']);
-
-            $WHERE['hash']   = '"using".hash IN(\''. implode( '\', \'', array_values( $filters['hash'] ) ) .'\')';
-        }
-        else
-        {
-            $WHERE['hash']       = '"using".hash != \'\'';
-        }
-
-        $WHERE['group_id']   = '( "using".group_id = '.CURRENT_GROUP_ID.' OR "using".group_id = 0 )';
-
-        /////////////////////
-
-        $WHERE = count($WHERE) ? 'WHERE '.implode( ' AND ', $WHERE ) : '';
-
-        /////////////////////
-
-        $SQL = '
-            SELECT
-                "using".*,
-                reactiv.hash as reactiv_hash,
-                reactiv.reactiv_menu_id as reactiv_menu_id
-            FROM
-                "using"
-
-                LEFT JOIN
-                (
-                    SELECT
-                        DISTINCT ON( consume_using.using_hash )
-                            consume_using.using_hash,
-                            consume_using.consume_hash,
-                            reactiv_ingr_reagent.reactiv_hash
-                    FROM
-                        consume_using
-                            LEFT JOIN consume ON( consume.hash = consume_using.consume_hash )
-                                LEFT JOIN reactiv_ingr_reagent ON( consume.hash = reactiv_ingr_reagent.consume_hash )
-                    ORDER BY consume_using.using_hash
-                ) as consume ON( consume.using_hash = "using".hash )
-
-                LEFT JOIN
-                (
-                    SELECT
-                        DISTINCT ON( reactiv_consume_using.using_hash )
-                        reactiv_consume_using.using_hash,
-                        reactiv_consume_using.consume_hash,
-                        reactiv_ingr_reactiv.reactiv_hash
-                    FROM
-                        reactiv_consume_using
-                            LEFT JOIN reactiv_consume ON( reactiv_consume.hash = reactiv_consume_using.consume_hash )
-                                LEFT JOIN reactiv_ingr_reactiv ON( reactiv_ingr_reactiv.consume_hash = reactiv_consume.hash )
-                    ORDER BY reactiv_consume_using.using_hash
-                ) as reactiv_consume ON( reactiv_consume.using_hash = "using".hash )
-
-            LEFT JOIN reactiv ON( ( reactiv.hash = consume.reactiv_hash OR reactiv_consume.reactiv_hash = reactiv.hash ) AND reactiv.group_id = "using".group_id )
-
-            '.$WHERE.'
-
-            ORDER BY "using".date DESC;
-            ;';
-
-        $cache_var = 'using-'.md5( $SQL ).'-raw';
-
-        $data = cache::get( $cache_var );
-        if( $data && is_array($data) ){ return $data; }
-        $data = array();
-
-        $SQL = $this->db->query( $SQL );
-
-        $reactives = array();
-
-        while( ( $row = $this->db->get_row($SQL) ) !== false )
-        {
-            $row['hash']            = common::filter_hash( $row['hash'] ? $row['hash'] : '' );
-            //$row['reactiv_hash']    = common::filter_hash( $row['reactiv_hash'] ? $row['reactiv_hash'] : '' );
-            //$row['reactiv_menu_id'] = common::integer( $row['reactiv_menu_id'] );
-
-            //$reactives[$row['hash']] = $row['reactiv_hash'];
-
-            $data[$row['hash']] = $row;
-            $data[$row['hash']]['ucomment'] = common::decode_string( common::stripslashes( $data[$row['hash']]['ucomment'] ) );
-            $data[$row['hash']]['consume']            = array();
-            $data[$row['hash']]['reactiv_consume']    = array();
-            $data[$row['hash']]['cooked_reactives']   = array();
-        }
-
-
-
-        /*foreach( (new consume)->get_raw( array(  'using_hash' => array_keys( $data ) ) ) as $consume )
-        {
-            if( !isset($data[$consume['using_hash']]) || !is_array($data[$consume['using_hash']]['consume']) )
-            {
-                common::err( 'Помилка отримання даних!' );
-            }
-
-            $data[$consume['using_hash']]['consume'][$consume['consume_hash']] = $consume;
-        }
-
-        foreach( (new reactiv_consume)->get_raw( array(  'using_hash' => array_keys( $data ) ) ) as $consume )
-        {
-            if( !isset($data[$consume['using_hash']]) || !is_array($data[$consume['using_hash']]['reactiv_consume']) )
-            {
-                common::err( 'Помилка отримання даних!' );
-            }
-
-            $data[$consume['using_hash']]['reactiv_consume'][$consume['consume_hash']] = $consume;
-        }
-
-        foreach( ( new cooked )->get_raw( array(  'using_hash' => array_keys( $data ) ) ) as $ractive )
-        {
-            if( !isset($data[$ractive['using_hash']]) || !is_array($data[$ractive['using_hash']]['cooked_reactives']) )
-            {
-                common::err( 'Помилка отримання даних!' );
-            }
-
-            $data[$consume['using_hash']]['cooked_reactives'][$ractive['hash']] = $ractive;
-        }      */
-
-        return $data;
-    }
 
 
 

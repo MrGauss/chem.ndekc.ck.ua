@@ -56,14 +56,14 @@
                 <div class="elems_line">
                     <div class="elem safe_place">
                         <label class="label">Місце зберігання</label>
-                        <input data-important="1" class="input" type="text" name="safe_place" value="{tag:safe_place}" data-save="1" data-autocomplete="1" data-key="{autocomplete:safe_place:key}" data-table="{autocomplete:table}" data-column="safe_place">
+                        <input data-important="0" class="input" type="text" name="safe_place" value="{tag:safe_place}" data-save="1" data-autocomplete="1" data-key="{autocomplete:safe_place:key}" data-table="{autocomplete:table}" data-column="safe_place">
                     </div>
                 </div>
 
                 <div class="elems_line">
                     <div class="elem safe_needs">
                         <label class="label">Умови зберігання</label>
-                        <input data-important="1" class="input" type="text" name="safe_needs" value="{tag:safe_needs}" data-save="1" data-autocomplete="1" data-key="{autocomplete:safe_needs:key}" data-table="{autocomplete:table}" data-column="safe_needs">
+                        <input data-important="0" class="input" type="text" name="safe_needs" value="{tag:safe_needs}" data-save="1" data-autocomplete="1" data-key="{autocomplete:safe_needs:key}" data-table="{autocomplete:table}" data-column="safe_needs">
                     </div>
                     <div class="clear"></div>
                 </div>

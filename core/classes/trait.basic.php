@@ -72,7 +72,7 @@ trait basic
 
     static public final function to_nice_time( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only!' ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only!' ); }
         if( is_array($data) ){ return array_map( 'self::to_nice_time', $data ); }
 
         $time = array();
@@ -89,7 +89,7 @@ trait basic
 
     static public final function db2html( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::db2html', $data ); }
 
         $data = common::stripslashes( $data );
@@ -104,7 +104,7 @@ trait basic
 
     static public final function filter_hash( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::filter_hash', $data ); }
 
         $data = preg_replace( '!(\W+)!is', '', $data );
@@ -114,28 +114,28 @@ trait basic
 
     static public final function filter( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data ) ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::filter', $data ); }
         return self::trim( filter_var( $data, FILTER_UNSAFE_RAW, FILTER_FLAG_ENCODE_LOW | FILTER_FLAG_STRIP_BACKTICK | FILTER_FLAG_ENCODE_AMP ) );
     }
 
     static public final function htmlspecialchars_decode( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::htmlspecialchars_decode', $data ); }
         return htmlspecialchars_decode( $data, ENT_QUOTES | ENT_HTML5 );
     }
 
     static public final function float( $data )
     {
-        if( !is_bool($data) && !is_null($data) && !is_numeric( $data ) && !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_bool($data) && !is_null($data) && !is_numeric( $data ) && !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::float', $data ); }
         return floatval($data);
     }
 
 	static public final function integer( $data )
 	{
-        if( !is_bool($data) && !is_null($data) && !is_numeric( $data ) && !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_bool($data) && !is_null($data) && !is_numeric( $data ) && !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::integer', $data ); }
         $data = intval( $data, 10 );
         settype( $data, 'integer' );
@@ -144,7 +144,7 @@ trait basic
 
     static public final function string( $data )
     {
-        if( !is_numeric( $data ) && !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_numeric( $data ) && !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::string', $data ); }
         return strval($data);
     }
@@ -175,28 +175,28 @@ trait basic
 
     static public final function strtotime( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::strtotime', $data ); }
         return strtotime( $data );
     }
 
     static public final function hash( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::hash', $data ); }
         return md5( sha1( sha1( $data ) . sha1( self::$HASH_SALT ) ) );
     }
 
     static public final function trim( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::trim', $data ); }
         return trim( $data );
     }
 
     static public final function stripslashes( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::stripslashes', $data ); }
         return stripslashes( $data );
     }
@@ -209,21 +209,21 @@ trait basic
 
     static public final function html_entity_decode( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::html_entity_decode', $data ); }
         return html_entity_decode( $data, ENT_QUOTES | ENT_HTML5, CHARSET ); ;
     }
 
     static public final function htmlspecialchars( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::htmlspecialchars', $data ); }
         return htmlspecialchars( $data, ENT_QUOTES | ENT_HTML5, CHARSET, true );;
     }
 
     static public final function htmlentities( $data = '' )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::htmlentities', $data ); }
         return htmlentities( $data, ENT_QUOTES | ENT_HTML5, CHARSET, true );
     }
@@ -249,62 +249,62 @@ trait basic
 
     static public final function strtoupper( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::strtoupper', $data ); }
         return mb_strtoupper( $data, CHARSET );
     }
 
     static public final function strtolower( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::strtolower', $data ); }
         return mb_strtolower( $data, CHARSET );
     }
 
     static public final function safesql( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::safesql', $data ); }
         return pg_escape_string( $data );
     }
 
     static public final function urlencode( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::urlencode', $data ); }
         return urlencode( $data );
     }
 
     static public final function urldecode( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::urldecode', $data ); }
         return urldecode( $data );
     }
     static public final function utf2win( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::utf2win', $data ); }
         return mb_convert_encoding( $data, 'cp1251', 'utf-8' );
     }
 
     static public final function win2utf( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::win2utf', $data ); }
         return mb_convert_encoding( $data, 'utf-8', 'cp1251' );
     }
 
     static final public function encode_string( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::encode_string', $data ); }
         return self::urlencode( base64_encode( strrev( base64_encode( $data ) ) ) );
     }
 
     static final public function decode_string( $data )
     {
-        if( !is_scalar( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
         if( is_array($data) ){ return array_map( 'self::decode_string', $data ); }
         return base64_decode( strrev( base64_decode( self::urldecode( $data ) ) ) ); ;
     }
