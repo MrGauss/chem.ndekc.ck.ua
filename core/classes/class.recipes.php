@@ -416,7 +416,7 @@ class recipes
         $cache_var = 'spr-'.self::DB_MAIN_TABLE.'-'.md5( md5( $SQL ) . md5( serialize( $filters ) ) ).'';
 
         $data = false;
-        //$data = cache::get( $cache_var );
+        $data = cache::get( $cache_var );
         if( $data && is_array($data) && count($data) ){ return $data; }
         $data = array();
 

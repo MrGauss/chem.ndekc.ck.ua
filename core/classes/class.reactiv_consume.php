@@ -116,6 +116,7 @@ class reactiv_consume
                 reactiv_consume.quantity,
                 reactiv_consume.consume_ts  as consume_date,
 
+                reactiv.reactiv_menu_id     as reactiv_menu_id,
                 reactiv.inc_date            as reactiv_inc_date,
                 reactiv.dead_date           as reactiv_dead_date,
                 reactiv.quantity_inc        as reactiv_quantity_inc,

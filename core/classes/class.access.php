@@ -83,7 +83,6 @@ class access
                 ORDER by spr_access_actions.label ASC';
 
         $cache_var = 'access-user-'.md5( $SQL ).'-raw';
-        $data = false;
         $data = cache::get( $cache_var );
         if( $data && is_array($data) && count($data) ){ return $data; }
         $data = array();
@@ -94,6 +93,7 @@ class access
             $data[$row['action_label']] = $row;
         }
 
+        cache::set( $cache_var, $data ); 
         return $data;
     }
 

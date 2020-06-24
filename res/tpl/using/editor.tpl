@@ -68,14 +68,14 @@
     <div class="sides">
         <div class="side side1">
             <div class="elem list">
-                <label class="label">Реактиви</label>
+                <label class="label">Реактиви чи розхідні матеріали</label>
                 <div id="consume_list" class="listline">{consume:list}</div>
                 <div id="dispersion_list" class="selectable_list" data-empty="empty_dispersion">{dispersion:list}</div>
             </div>
         </div>
         <div class="side side2">
             <div class="elem list">
-                <label class="label">Приготовані реактиви</label>
+                <label class="label">Робочі реактиви (розчини)</label>
                 <div id="reactiv_consume_list" class="listline">{reactiv_consume:list}</div>
                 <div id="cooked_list" class="selectable_list" data-empty="empty_reactiv">{cooked:list}</div>
             </div>

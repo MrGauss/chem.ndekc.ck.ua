@@ -283,26 +283,30 @@ chem['stock'] = new function()
                     dialog["buttons"][bi]["text"]  = "Видалити";
                     dialog["buttons"][bi]["click"] = function()
                     {
-                        var save_post = {};
-                            save_post['ajax'] = 1;
-                            save_post['action'] = 3;
-                            save_post['subaction'] = 1;
-                            save_post['mod'] = $('body').attr('data-mod');
-                            save_post['id']  = $('#'+did).find('input[name="id"]').val();
-                            save_post['key'] = $('#'+did).find('input[name="key"]').val();
-
-                        $.ajax({ data: save_post }).done(function( _r )
+                        if( confirm('Ви дійсно хочете видалити даний запис?') )
                         {
-                            _r = chem.txt2json( _r );
-                            _r['id'] = parseInt(_r['id']);
+                            var save_post = {};
+                                save_post['ajax'] = 1;
+                                save_post['action'] = 3;
+                                save_post['subaction'] = 1;
+                                save_post['mod'] = $('body').attr('data-mod');
+                                save_post['id']  = $('#'+did).find('input[name="id"]').val();
+                                save_post['key'] = $('#'+did).find('input[name="key"]').val();
 
-                            if( _r['id'] > 0 )
+                            $.ajax({ data: save_post }).done(function( _r )
                             {
-                                $('#list .line[data-id="'+_r['id']+'"]').remove();
-                                chem.close_it( $('#'+did) );
-                                chem.stock.reload();
-                            }
-                        });
+                                _r = chem.txt2json( _r );
+                                _r['id'] = parseInt(_r['id']);
+
+                                if( _r['id'] > 0 )
+                                {
+                                    $('#list .line[data-id="'+_r['id']+'"]').remove();
+                                    chem.close_it( $('#'+did) );
+                                    chem.stock.reload();
+                                }
+                            });
+                        }
+
                     };
                     dialog["buttons"][bi]["class"] = "type5 right";
                     dialog["buttons"][bi]["data-role"] = "delete_button";

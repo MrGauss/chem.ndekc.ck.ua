@@ -405,7 +405,6 @@ class stock
 
         $cache_var = 'stock-'.md5($SQL).'-raw';
         $data = cache::get( $cache_var );
-        $data = false;
         if( $data && is_array($data) && count($data) ){ return $data; }
         $data = array();
 

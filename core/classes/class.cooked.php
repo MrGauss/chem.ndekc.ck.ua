@@ -596,8 +596,6 @@ class cooked
         $units          = ( new spr_manager( 'units' ) )    ->get_raw();
         $reagent        = ( new spr_manager( 'reagent' ) )  ->get_raw();
         $reactiv_menu   = ( new recipes )                   ->get_raw();
-        //$dispersion     = ( new dispersion )                ->get_raw();
-        $stock          = ( new stock )                     ->get_raw();
 
         $_dates = array();
         $_dates[] = 'inc_date';
@@ -677,12 +675,11 @@ class cooked
                     {
                         $ingridient['dispersion_id'] = common::integer( $ingridient['dispersion_id'] );
 
-                        $_stock   = &$stock[$ingridient['stock_id']];
                         $_reagent = &$reagent[$ingridient['reagent_id']];
                         $_units   = &$units[$_reagent['units_id']];
 
                         $composition[] = '  <div class="compos">
-                                                <span class="name">'    . common::db2html( $_reagent['name'] ) . ' ['.common::db2html($_stock['reagent_number']).']:</span>
+                                                <span class="name">'    . common::db2html( $_reagent['name'] ) . ' ['.common::db2html($ingridient['reagent_number']).']:</span>
                                                 <span class="quantity">'. common::db2html( $ingridient['consume_quantity'] ).'</span>
                                                 <span class="units">'   . common::db2html( $_units['short_name'] ).'</span>
                                             </div>';
@@ -752,7 +749,10 @@ class cooked
             ORDER by
                 reactiv.inc_date DESC,
                 reactiv_menu.name ASC;
+
             '.db::CACHED;
+
+        ///echo $SQL;exit;
 
         $cache_var = 'spr-reactiv-'.md5( $SQL ).'-raw';
         $data = false;
@@ -784,7 +784,8 @@ class cooked
                     consume.quantity	                as consume_quantity,
                     dispersion.id					    as dispersion_id,
                     stock.id						    as stock_id,
-                    stock.reagent_id				    as reagent_id
+                    stock.reagent_id				    as reagent_id,
+                    stock.reagent_number			    as reagent_number
                 FROM
                     reactiv_ingr_reagent
                     LEFT JOIN consume ON( consume.hash = reactiv_ingr_reagent.consume_hash )

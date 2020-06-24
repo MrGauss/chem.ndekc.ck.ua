@@ -514,25 +514,28 @@ chem['cooked'] = new function()
                         dialog["buttons"][bi]["text"]  = "Видалити";
                         dialog["buttons"][bi]["click"] = function()
                         {
-                            var post = {};
-                                post['ajax'] = 1;
-                                post['action'] = 3;
-                                post['subaction'] = 1;
-                                post['mod'] = $('body').attr('data-mod');
-                                post['hash']   = $('#'+did).find('input[name="hash"]').val();
-                                post['key']    = $('#'+did).find('input[name="key"]').val();
-
-                            $.ajax({ data: post }).done(function( _r )
+                            if( confirm('Ви дійсно хочете видалити даний запис?') )
                             {
-                                _r = chem.txt2json( _r );
+                                var post = {};
+                                    post['ajax'] = 1;
+                                    post['action'] = 3;
+                                    post['subaction'] = 1;
+                                    post['mod'] = $('body').attr('data-mod');
+                                    post['hash']   = $('#'+did).find('input[name="hash"]').val();
+                                    post['key']    = $('#'+did).find('input[name="key"]').val();
 
-                                if( _r['hash'] != '' )
+                                $.ajax({ data: post }).done(function( _r )
                                 {
-                                    $('#list .line[data-hash="'+_r['hash']+'"]').remove();
-                                    chem.close_it( $('#'+did) );
-                                    chem.cooked.reload();
-                                }
-                            });
+                                    _r = chem.txt2json( _r );
+
+                                    if( _r['hash'] != '' )
+                                    {
+                                        $('#list .line[data-hash="'+_r['hash']+'"]').remove();
+                                        chem.close_it( $('#'+did) );
+                                        chem.cooked.reload();
+                                    }
+                                });
+                            }
                         };
                         dialog["buttons"][bi]["class"] = "type5 right";
                         dialog["buttons"][bi]["data-role"] = "delete_button";

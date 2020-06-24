@@ -116,14 +116,16 @@ class consume
                 stock.reagent_number
             FROM
                 consume
-                    RIGHT JOIN dispersion       ON( dispersion.id = consume.dispersion_id )
-                    RIGHT JOIN stock            ON( stock.id = dispersion.stock_id )
+                    LEFT JOIN dispersion       ON( dispersion.id = consume.dispersion_id )
+                    LEFT JOIN stock            ON( stock.id = dispersion.stock_id )
                     LEFT  JOIN consume_using    ON( consume_using.consume_hash = consume.hash )
                     LEFT  JOIN "using"          ON( consume_using.using_hash = "using".hash )
                     LEFT  JOIN reactiv_ingr_reagent ON( reactiv_ingr_reagent.consume_hash = consume.hash )
                     LEFT  JOIN reactiv          ON( reactiv.hash = reactiv_ingr_reagent.reactiv_hash )
 
-            '.$WHERE.';';
+            '.$WHERE.'
+            ORDER BY consume.date DESC;
+            ;';
 
         // echo $SQL;exit;
 

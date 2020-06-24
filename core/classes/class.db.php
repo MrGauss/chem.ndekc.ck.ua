@@ -129,6 +129,8 @@ class db
 
         $this->query_id = pg_query( $this->db_id, $SQL );
 
+        self::log( $SQL );
+
         if( !isset($this->counters['queries']) ){ $this->counters['queries'] = 0; }
         if( !isset($this->counters['cached']) ){ $this->counters['cached'] = 0; }
 
@@ -191,6 +193,43 @@ class db
     {
         echo $error;
         exit;
+    }
+
+    private final static function log( $SQL )
+    {
+        $file = CACHE_DIR.DS.'sql_log-'.date('Y.m.d').'.log';
+
+        $SQL =
+                 "-------------------------\n"
+                ."-- ".date('Y.m.d H:i:s')." --\n"
+                . $SQL
+                ."\n-------------------------"
+                ."\n\n";
+
+        $fop =  fopen( $file, 'a' );
+
+        $i = 0;
+
+        while( true )
+        {
+            if( $i > 10 ){ common::err( 'CAN NOT LOCK FILE "'.$file.'"!' ); exit; }
+            if( !flock($fop, LOCK_EX ) )
+            {
+                usleep( 10 );
+                $i++;
+                continue;
+            }
+            fwrite( $fop, $SQL );
+            fflush( $fop );
+            flock( $fop, LOCK_UN );
+
+            break;
+        }
+
+        fclose( $fop );
+
+        return true;
+
     }
 
     public function version()
