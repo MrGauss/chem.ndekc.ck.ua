@@ -5,8 +5,9 @@
 #main_frame #page_frame #list_frame .line table td.name{ width: 240px; text-align: left; }
 #main_frame #page_frame #list_frame .line table td.inc_date{ width: 110px; text-align: center; }
 #main_frame #page_frame #list_frame .line table td.dead_date{ width: 110px; text-align: center; }
-#main_frame #page_frame #list_frame .line table td.quantity_inc{ width: 140px; text-align: center; }
-#main_frame #page_frame #list_frame .line table td.quantity_left{ width: 140px; text-align: center; }
+#main_frame #page_frame #list_frame .line table td.quantity_inc{ width: 110px; text-align: center; }
+#main_frame #page_frame #list_frame .line table td.quantity_left{ width: 110px; text-align: center; }
+#main_frame #page_frame #list_frame .line table td.coocked_by{ width: 120px; text-align: center; }
 #main_frame #page_frame #list_frame .line table td.composition{ width: auto; text-align: left; }
 
 .default_editor table.panel{ width: 100%;  vertical-align: top; border: none; }

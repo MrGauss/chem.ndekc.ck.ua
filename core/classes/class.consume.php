@@ -106,6 +106,7 @@ class consume
                 reactiv.hash 	as reactiv_hash,
                 "using".hash 	as using_hash,
                 consume.quantity,
+                consume.inc_expert_id,
                 consume.dispersion_id,
                 consume.consume_ts,
                 consume.date    as consume_date,

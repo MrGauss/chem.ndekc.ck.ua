@@ -12,6 +12,7 @@
             <!-- td class="composition">{tag:com position:html}</td -->
         </tr>
     </table>
+    <div class="expert" data-expert_id="{tag:inc_expert_id}">Приготував: {tag:user:surname} {tag:user:name:1}.{tag:user:phname:1}.</div>
 </div>
 
 <!--

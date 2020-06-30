@@ -23,6 +23,7 @@
                 <td class="dead_date"     data-sorter="1" data-type="int" data-sort="dead_date">Кінцева дата</td>
                 <td class="quantity_inc"  data-sorter="1" data-type="int" data-sort="quantity_inc">Приготована кількість</td>
                 <td class="quantity_left" data-sorter="1" data-type="int" data-sort="quantity_left">Залишилось</td>
+                <td class="coocked_by"    data-sorter="1" data-type="txt" data-sort="quantity_left">Хто готував</td>
                 <td class="composition">Склад</td>
             </tr>
         </table>

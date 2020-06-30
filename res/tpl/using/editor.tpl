@@ -13,7 +13,7 @@
 
     <div class="elem reactiv_menu_id" data-purpose="reactiv">
         <label class="label">Рецепт приготування</label>
-        <select disabled="disabled" class="input select" disabled="disabled" data-value="{tag:reactiv_menu_id}" value="{tag:reactiv_menu_id}" name="reactiv_menu_id"><option value="0">--</option>{select:recipes}</select>
+        <select disabled="disabled" class="input select" disabled="disabled" data-value="{tag:reactiv:reactiv_menu_id}" value="{tag:reactiv:reactiv_menu_id}" name="reactiv_menu_id"><option value="0">--</option>{select:recipes}</select>
     </div>
 
     <div class="elem quantity_inc" data-purpose="reactiv">
@@ -23,7 +23,7 @@
 
     <div class="elem units_short_name" data-purpose="reactiv">
         <label class="label">&nbsp;</label>
-        <input class="input noimportant" type="text" name="obj_count" value="{tag:reactiv:units:short_name}"  disabled="disabled">
+        <input class="input noimportant" type="text" name="obj_count" value="{tag:reactiv:units:short_name}" disabled="disabled">
     </div>
 
     <div class="elem exp_number" data-purpose="expertise">

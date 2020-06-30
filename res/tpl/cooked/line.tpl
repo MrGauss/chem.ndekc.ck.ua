@@ -5,6 +5,7 @@
     <input type="hidden" data-role="sort" name="dead_date" value="{tag:dead_date_unix}">
     <input type="hidden" data-role="sort" name="quantity_inc" value="{tag:quantity_inc}">
     <input type="hidden" data-role="sort" name="quantity_left" value="{tag:quantity_left}">
+    <input type="hidden" data-role="sort" name="coocked_by" value="{tag:user:surname} {tag:user:name} {tag:user:phname}">
 
     <table>
         <tr>
@@ -14,6 +15,7 @@
             <td class="dead_date">{tag:dead_date}</td>
             <td class="quantity_inc">{tag:quantity_inc} {tag:units:short_name}</td>
             <td class="quantity_left">{tag:quantity_left} {tag:units:short_name}</td>
+            <td class="coocked_by">{tag:user:surname} {tag:user:name} {tag:user:phname}</td>
             <td class="composition">{tag:composition:html}</td>
             <td></td>
         </tr>

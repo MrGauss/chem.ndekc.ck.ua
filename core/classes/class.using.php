@@ -320,10 +320,14 @@ class using
     {
         access::check( 'using', 'view' );
 
+        //////////
+        $units   = ( new spr_manager( 'units' ) ) ->get_raw();
+        //////////
+
         $line_hash = common::filter_hash( $line_hash );
 
         $data = $this->get_raw( array( 'hash' => $line_hash ) );
-        $data = isset( $data[$line_hash] ) ? $data[$line_hash] : false;
+        $data = isset( $data[$line_hash] ) ? $data[$line_hash] : array();
 
         if( !is_array($data) ){ return false; }
 
@@ -343,7 +347,12 @@ class using
 
         $data['key'] = common::key_gen( $line_hash );
 
-        if( !$data['purpose_id'] ){ $data['purpose_id'] = 1; }
+
+        $data['purpose_id'] = common::integer( ( isset($data['purpose_id']) && $data['purpose_id'] ) ? $data['purpose_id'] : 1 );
+        $data['obj_count']  = common::integer( ( isset($data['obj_count']) && $data['obj_count'] )   ? $data['obj_count'] : 0 );
+        $data['exp_number'] = common::filter ( ( isset($data['exp_number']) && $data['exp_number'] )   ? $data['exp_number'] : '' );
+        $data['ucomment']   = common::filter ( ( isset($data['ucomment']) && $data['ucomment'] )   ? $data['ucomment'] : '' );
+        $data['tech_info']  = common::filter ( ( isset($data['tech_info']) && $data['tech_info'] )   ? $data['tech_info'] : '' );
 
         $tags = array();
 
@@ -356,6 +365,35 @@ class using
             $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
             $tpl->set( '{autocomplete:'.$k.':key}', autocomplete::key( 'stock', $k ) );
         }
+
+        //var_export($data);exit;
+
+        foreach( ( isset($data['reactiv_hash']) && is_array($data['reactiv_hash']) )?$data['reactiv_hash']:array() as $reactiv_hash => $reactiv_data )
+        {
+            foreach( $reactiv_data as $k => $v )
+            {
+                if( is_array( $v ) ){ continue; }
+                $tags[] = '{tag:reactiv:'.$k.'}';
+                $tpl->set( '{tag:reactiv:'.$k.'}', common::db2html( $v ) );
+            }
+
+            if( isset($reactiv_data['units_id']) && isset($units[$reactiv_data['units_id']]) )
+            {
+                foreach( $units[$reactiv_data['units_id']] as $k => $v )
+                {
+                    if( is_array( $v ) ){ continue; }
+                    $tags[] = '{tag:reactiv:units:'.$k.'}';
+                    $tpl->set( '{tag:reactiv:units:'.$k.'}', common::db2html( $v ) );
+                }
+            }
+        }
+
+        // consume_hash
+        foreach( ( isset($data['consume_hash']) && is_array($data['consume_hash']) )?$data['consume_hash']:array() as $reactiv_hash => $reactiv_data )
+        {
+
+        }
+
 
         /*
         if( $data['reactiv_hash'] && $data['reactiv_menu_id'] && isset($data['cooked_reactives']) && is_array($data['cooked_reactives']) && count($data['cooked_reactives']) )
@@ -376,9 +414,11 @@ class using
         $tpl->set( '{reactiv_consume:list}', $this->get_html_consume( $data['reactiv_consume'], 'using/reactiv_consume_line' ) );
         $tpl->set( '{consume:list}',         $this->get_html_consume( $data['consume'], 'using/consume_line' ) );
 
+
+         */
+
         $tpl->set( '{cooked:list}',      ( new cooked )     ->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_cooked' ) );
         $tpl->set( '{dispersion:list}',  ( new dispersion ) ->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_dispersion' ) );
-         */
 
         $tpl->compile( $skin );
 
@@ -401,6 +441,7 @@ class using
         $reagent = ( new spr_manager( 'reagent' ) ) ->get_raw();
         $units   = ( new spr_manager( 'units'   ) ) ->get_raw();
         $recipes = ( new recipes() )                ->get_raw();
+        $users   = ( new user )                      ->get_raw( array( 'expert.group_id' => CURRENT_GROUP_ID ) );
 
         $tpl = new tpl;
 
@@ -412,6 +453,21 @@ class using
             $line['numi'] = $I--;
 
             $tags = array();
+
+            if( isset($line['inc_expert_id']) && isset($users[$line['inc_expert_id']]) )
+            {
+                foreach( $users[$line['inc_expert_id']] as $key => $value )
+                {
+                    if( is_array($value) ){ continue; }
+                    $tags[] = '{tag:user:'.$key.'} : \''.common::db2html( $value ).'\'';
+                    $tpl->set( '{tag:user:'.$key.'}', common::db2html( $value ) );
+                }
+
+                $tpl->set( '{tag:user:name:1}',     common::db2html( substr( $users[$line['inc_expert_id']]['name']     , 0, 1 ) ) );
+                $tpl->set( '{tag:user:surname:1}',  common::db2html( substr( $users[$line['inc_expert_id']]['surname']  , 0, 1 ) ) );
+                $tpl->set( '{tag:user:phname:1}',   common::db2html( substr( $users[$line['inc_expert_id']]['phname']   , 0, 1 ) ) );
+            }
+
 
             foreach( $_dates as $_date )
             {
@@ -470,8 +526,21 @@ class using
 
             $ingridients = array();
 
+            $consume_user_id = 0;
             foreach( $line['consume_hash'] as $consume )
             {
+                if( !$consume_user_id )
+                {
+                    $consume_user_id = common::integer( $consume['inc_expert_id'] );
+                }
+                else
+                {
+                    if( $consume_user_id != $consume['inc_expert_id'] )
+                    {
+                        // FUCK &
+                    }
+                }
+
                 $ingridients[] = '
                     <div class="consume_elem">
                         <span class="reagent_name">'.common::db2html($reagent[$consume['reagent_id']]['name']).'</span>
@@ -484,6 +553,18 @@ class using
 
             foreach( $line['reactiv_consume_hash'] as $consume )
             {
+                if( !$consume_user_id )
+                {
+                    $consume_user_id = common::integer( $consume['inc_expert_id'] );
+                }
+                else
+                {
+                    if( $consume_user_id != $consume['inc_expert_id'] )
+                    {
+                        // FUCK &
+                    }
+                }
+
                 $ingridients[] = '
                     <div class="consume_elem">
                         <span class="reagent_name">'.common::db2html($recipes[$consume['reactiv_menu_id']]['name']).'</span>
@@ -491,6 +572,20 @@ class using
                         <span class="units_short_name">'.common::db2html($units[$recipes[$consume['reactiv_menu_id']]['units_id']]['short_name']).'</span>
                     </div>
                 ';
+            }
+
+            if( isset($users[$consume_user_id]) )
+            {
+                foreach( $users[$consume_user_id] as $key => $value )
+                {
+                    if( is_array($value) ){ continue; }
+                    $tags[] = '{tag:user:'.$key.'} : \''.common::db2html( $value ).'\'';
+                    $tpl->set( '{tag:user:'.$key.'}',   common::db2html( $value ) );
+                }
+
+                $tpl->set( '{tag:user:name:1}',     common::db2html( substr( $users[$consume_user_id]['name']     , 0, 1 ) ) );
+                $tpl->set( '{tag:user:surname:1}',  common::db2html( substr( $users[$consume_user_id]['surname']  , 0, 1 ) ) );
+                $tpl->set( '{tag:user:phname:1}',   common::db2html( substr( $users[$consume_user_id]['phname']   , 0, 1 ) ) );
             }
 
                 //$tpl->set_block( '!\{tag:recipe:(\w+?)\}!is', '' );

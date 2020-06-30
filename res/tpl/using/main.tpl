@@ -21,6 +21,7 @@
                 <td class="date"            data-sorter="1" data-type="int" data-sort="date">Дата</td>
                 <td class="purpose_name"    data-sorter="1" data-type="int" data-sort="purpose_id">Мета використання</td>
                 <td class="name"            data-sorter="1" data-type="txt" data-sort="result">Результат використання</td>
+                <td class="expert"          data-sorter="1" data-type="txt" data-sort="expert">Хто використав</td>
                 <td class="consume">Що використано</td>
                 <td></td>
             </tr>

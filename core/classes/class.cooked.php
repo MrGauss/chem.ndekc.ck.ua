@@ -596,6 +596,7 @@ class cooked
         $units          = ( new spr_manager( 'units' ) )    ->get_raw();
         $reagent        = ( new spr_manager( 'reagent' ) )  ->get_raw();
         $reactiv_menu   = ( new recipes )                   ->get_raw();
+        $users          = ( new user )                      ->get_raw( array( 'expert.group_id' => CURRENT_GROUP_ID ) );
 
         $_dates = array();
         $_dates[] = 'inc_date';
@@ -653,6 +654,20 @@ class cooked
                     $tags[] = '{tag:menu:'.$key.'}';
                     $tpl->set( '{tag:menu:'.$key.'}', common::db2html( $value ) );
                 }
+            }
+
+            if( isset($line['inc_expert_id']) && isset( $users[$line['inc_expert_id']] ) )
+            {
+                foreach( $users[$line['inc_expert_id']] as $key => $value )
+                {
+                    if( is_array($value) ){ continue; }
+
+                    $tags[] = '{tag:user:'.$key.'}';
+                    $tpl->set( '{tag:user:'.$key.'}', common::db2html( $value ) );
+                }
+                $tpl->set( '{tag:user:name:1}',     common::db2html( substr( $users[$line['inc_expert_id']]['name']     , 0, 1 ) ) );
+                $tpl->set( '{tag:user:surname:1}',  common::db2html( substr( $users[$line['inc_expert_id']]['surname']  , 0, 1 ) ) );
+                $tpl->set( '{tag:user:phname:1}',   common::db2html( substr( $users[$line['inc_expert_id']]['phname']   , 0, 1 ) ) );
             }
 
             if( isset( $units[$line['units_id']] ) )
@@ -719,6 +734,12 @@ class cooked
 
         if( is_array($filters) )
         {
+            if( isset($filters['quantity_left:more']) )
+            {
+                $filters['quantity_left:more'] = common::float($filters['quantity_left:more']);
+                $WHERE['reactiv.quantity_left']   = 'reactiv.quantity_left > \''. $filters['quantity_left:more'] .'\'::float';
+            }
+
             if( isset($filters['hash']) )
             {
                 $filters['hash'] = common::filter_hash( $filters['hash'] );
@@ -731,6 +752,8 @@ class cooked
             }
 
         }
+
+        //
 
         $WHERE = count($WHERE) ? 'WHERE '.implode( ' AND ', $WHERE ) : '';
 
