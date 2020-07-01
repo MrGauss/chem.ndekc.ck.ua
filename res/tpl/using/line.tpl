@@ -11,7 +11,11 @@
             <td class="date">{tag:using:date}</td>
             <td class="purpose_name">{tag:purpose:name}</td>
             <td class="name">
-                [reactive]<span class="recipe_name">{tag:recipe:name} ({tag:reactive:quantity_inc} {tag:units:short_name})</span>[/reactive]
+                <!-- reactiv:3     -->  [purpose:3]<span class="recipe_name">{tag:recipe:name} ({tag:reactive:quantity_inc} {tag:units:short_name})</span>[/purpose:3]
+                <!-- maintenance:2 -->  [purpose:2]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose:2]
+                <!-- expertise:1   -->  [purpose:1]<span class="recipe_name">{tag:using:exp_number}</span>    [/purpose:1]
+                <!-- other:4   -->      [purpose:4]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose:4]
+                <!-- science:5   -->    [purpose:5]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose:5]
             </td>
             <td class="expert">{tag:user:surname} {tag:user:name} {tag:user:phname}</td>
             <td class="consume">{consume:list}<div class="clear"></div></td>

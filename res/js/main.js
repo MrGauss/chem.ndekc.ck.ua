@@ -399,6 +399,11 @@ $(document).ready( function()
         $('.ui-dialog-content').dialog("option", "position", {my: "center", at: "center", of: window});
     });
 
+    $( '#foot .foot_logo_name' ).click( function()
+    {
+        chem.clear_cache();
+    } );
+
 
 
 

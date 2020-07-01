@@ -1,4 +1,4 @@
-<div class="line" data-hash="{tag:hash}" data-lifetime="{tag:lifetime}" data-quantity_inc="{tag:quantity_inc}" data-quantity_left="{tag:quantity_left}" data-not_used_perc="{tag:not_used_perc}" data-units="{tag:units:short_name}">
+<div class="line" data-name="{tag:menu:name:lower}" data-hash="{tag:hash}" data-lifetime="{tag:lifetime}" data-quantity_inc="{tag:quantity_inc}" data-quantity_left="{tag:quantity_left}" data-not_used_perc="{tag:not_used_perc}" data-units="{tag:units:short_name}">
     <table>
         <tr>
             <td class="reagent">

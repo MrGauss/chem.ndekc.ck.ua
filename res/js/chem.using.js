@@ -168,6 +168,24 @@ chem['using'] = new function()
 
                 autocomplete.init( $('#'+did+'') );
 
+                $('#'+did+'').find('input[name="search"]').on('keyup', function()
+                {
+                    var st = $(this).val().toLowerCase();
+                    if( st.length < 3 )
+                    {
+                        $('#'+did+' .selectable_list .line').removeClass( 'dnone' );
+                    }
+                    else
+                    {
+                        $('#'+did+' .selectable_list .line').addClass( 'dnone' );
+                        $('#'+did+' .selectable_list .line[data-name*="'+st+'"]').removeClass( 'dnone' );
+                    }
+
+
+
+                });
+
+
                 $('#'+did+'').find('select[name="purpose_id"]').on('change', function()
                 {
                     $('#'+did).find('.elem[data-purpose]')
@@ -181,8 +199,7 @@ chem['using'] = new function()
                         } );
 
 
-                    $('#'+did).find('.elem[data-purpose="'+$(this).find('option:selected')
-                        .attr( 'data-attr' )+'"]')
+                    $('#'+did).find('.elem[data-purpose~="'+$(this).find('option:selected').attr( 'data-attr' )+'"]')
                         .removeClass('dnone')
                         .find('.input')
                         .each( function()
@@ -374,11 +391,17 @@ chem['using'] = new function()
                     }
 
 
-                $('#'+did).dialog( dialog );
+                $('#'+did)
+                    .dialog( dialog )
+                    .find('input[name="search"]').focus();
             }
         });
     }
 
+    this.mase_search = function()
+    {
+
+    }
     this.init = function()
     {
         $('#content #list_frame [data-hash]').on( "click", function()

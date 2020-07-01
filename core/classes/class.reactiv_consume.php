@@ -110,7 +110,7 @@ class reactiv_consume
         $SQL = '
             SELECT
                 reactiv_consume.hash        as consume_hash,
-                reactiv.hash 	            as reactiv_hash,
+                reactiv_consume.reactiv_hash 	    as reactiv_hash,
                 "using".hash 	            as using_hash,
 
                 reactiv_consume.quantity,
@@ -127,10 +127,12 @@ class reactiv_consume
                     LEFT JOIN reactiv_consume_using ON( reactiv_consume_using.consume_hash = reactiv_consume.hash )
                         LEFT JOIN "using" ON( "using".hash = reactiv_consume_using.using_hash )
                     LEFT JOIN reactiv_ingr_reactiv ON( reactiv_ingr_reactiv.consume_hash = reactiv_consume.hash )
-                        LEFT JOIN reactiv ON( reactiv.hash = reactiv_ingr_reactiv.reactiv_hash )
+                        LEFT JOIN reactiv ON( reactiv.hash = reactiv_consume.reactiv_hash )
+                        -- LEFT JOIN reactiv ON( reactiv.hash = reactiv_ingr_reactiv.reactiv_hash )
                 '.$WHERE.'
             ORDER BY reactiv_consume.date DESC
             ;';
+
 
 
         $cache_var = 'reactiv_consume-'.md5( $SQL ).'-raw';

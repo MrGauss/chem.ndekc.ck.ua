@@ -64,7 +64,7 @@
                 </div>
                 <div id="foot" class="wpage">
                     <span>&bull;</span>
-                    <span>Експертна служба МВС України</span>
+                    <span class="foot_logo_name">Експертна служба МВС України</span>
                     <span>&bull;</span>
                     <div class="clear"></div>
                 </div>

@@ -654,6 +654,8 @@ class cooked
                     $tags[] = '{tag:menu:'.$key.'}';
                     $tpl->set( '{tag:menu:'.$key.'}', common::db2html( $value ) );
                 }
+
+                $tpl->set( '{tag:menu:name:lower}', common::strtolower( common::db2html( $reactiv_menu[$line['reactiv_menu_id']]['name'] ) ) );
             }
 
             if( isset($line['inc_expert_id']) && isset( $users[$line['inc_expert_id']] ) )
@@ -738,6 +740,12 @@ class cooked
             {
                 $filters['quantity_left:more'] = common::float($filters['quantity_left:more']);
                 $WHERE['reactiv.quantity_left']   = 'reactiv.quantity_left > \''. $filters['quantity_left:more'] .'\'::float';
+            }
+
+            if( isset($filters['is_dead']) )
+            {
+                $filters['is_dead'] = common::integer($filters['is_dead']);
+                $WHERE['reactiv.dead_date']   = 'reactiv.dead_date ' . ( $filters['is_dead'] ? ' < ' : ' >= ' ) . ' NOW()::date';
             }
 
             if( isset($filters['hash']) )

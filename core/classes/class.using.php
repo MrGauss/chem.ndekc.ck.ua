@@ -216,9 +216,8 @@ class using
             ORDER BY "using".date DESC;
             ;';
 
-        $cache_var = 'using-'.md5( $SQL ).'-raw';
 
-        //echo $SQL;exit;
+        $cache_var = 'using-'.md5( $SQL ).'-raw';
 
         $data = cache::get( $cache_var );
         if( $data && is_array($data) ){ return $data; }
@@ -297,32 +296,21 @@ class using
         return $data;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public final function editor( $line_hash = '', $skin = false )
     {
         access::check( 'using', 'view' );
 
         //////////
+        $reagent = ( new spr_manager( 'reagent' ) ) ->get_raw();
         $units   = ( new spr_manager( 'units' ) ) ->get_raw();
+        $recipes = ( new recipes() )                ->get_raw();
         //////////
+
+        $_skin = array
+        (
+            'consume'         => 'using/consume_line',
+            'reactiv_consume' => 'using/reactiv_consume_line',
+        );
 
         $line_hash = common::filter_hash( $line_hash );
 
@@ -343,10 +331,8 @@ class using
 
         $tpl = new tpl;
 
-        $tpl->load( $skin );
-
+        $data['hash'] = common::trim( isset($data['hash'])?$data['hash']:'' );
         $data['key'] = common::key_gen( $line_hash );
-
 
         $data['purpose_id'] = common::integer( ( isset($data['purpose_id']) && $data['purpose_id'] ) ? $data['purpose_id'] : 1 );
         $data['obj_count']  = common::integer( ( isset($data['obj_count']) && $data['obj_count'] )   ? $data['obj_count'] : 0 );
@@ -354,6 +340,69 @@ class using
         $data['ucomment']   = common::filter ( ( isset($data['ucomment']) && $data['ucomment'] )   ? $data['ucomment'] : '' );
         $data['tech_info']  = common::filter ( ( isset($data['tech_info']) && $data['tech_info'] )   ? $data['tech_info'] : '' );
 
+        // consume_hash
+        $data['consume_hash'] = ( isset($data['consume_hash']) && is_array($data['consume_hash']) )?$data['consume_hash']:array();
+        $data['reactiv_consume_hash'] = ( isset($data['reactiv_consume_hash']) && is_array($data['reactiv_consume_hash']) )?$data['reactiv_consume_hash']:array();
+
+
+        foreach( array_merge( $data['consume_hash'], $data['reactiv_consume_hash'] ) as $consume_hash => $consume_data )
+        {
+            if( isset($consume_data['dispersion_id']) )
+            {
+                $_consume_skin = $_skin['consume'];
+            }
+            else
+            {
+                $_consume_skin = $_skin['reactiv_consume'];
+            }
+
+            $consume_data['key'] = common::key_gen( $consume_data['consume_hash'] . $consume_data['using_hash'] . $consume_data['reactiv_hash'] );
+
+            $tpl->load( $_consume_skin );
+
+            if( isset( $consume_data['dispersion_quantity_left'] ) ){ $consume_data['dispersion_quantity_left'] = $consume_data['dispersion_quantity_left'] + $consume_data['quantity']; }
+            if( isset( $consume_data['reactiv_quantity_left'] ) ){ $consume_data['reactiv_quantity_left'] = $consume_data['reactiv_quantity_left'] + $consume_data['quantity']; }
+
+            foreach( $consume_data as $k => $v )
+            {
+                if( is_array($v) ){ continue; }
+                $tpl->set( '{consume:'.$k.'}', common::db2html( $v ) );
+            }
+
+            if( isset( $consume_data['reactiv_menu_id'] ) && isset( $recipes[$consume_data['reactiv_menu_id']] ) )
+            {
+                foreach( $recipes[$consume_data['reactiv_menu_id']] as $k => $v )
+                {
+                    if( is_array($v) ){ continue; }
+                    $tpl->set( '{consume:recipe:'.$k.'}', common::db2html( $v ) );
+                }
+
+                foreach( $units[$recipes[$consume_data['reactiv_menu_id']]['units_id']] as $k => $v )
+                {
+                    if( is_array($v) ){ continue; }
+                    $tpl->set( '{consume:units:'.$k.'}', common::db2html( $v ) );
+                }
+            }
+
+            if( isset( $consume_data['reagent_id'] ) && isset( $reagent[$consume_data['reagent_id']] ) )
+            {
+                foreach( $reagent[$consume_data['reagent_id']] as $k => $v )
+                {
+                    if( is_array($v) ){ continue; }
+                    $tpl->set( '{consume:reagent:'.$k.'}', common::db2html( $v ) );
+                }
+
+                foreach( $units[$reagent[$consume_data['reagent_id']]['units_id']] as $k => $v )
+                {
+                    if( is_array($v) ){ continue; }
+                    $tpl->set( '{consume:units:'.$k.'}', common::db2html( $v ) );
+                }
+            }
+
+            $tpl->compile( $_consume_skin );
+        }
+
+        $tpl->load( $skin );
         $tags = array();
 
         foreach( $data as $k => $v )
@@ -365,8 +414,6 @@ class using
             $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
             $tpl->set( '{autocomplete:'.$k.':key}', autocomplete::key( 'stock', $k ) );
         }
-
-        //var_export($data);exit;
 
         foreach( ( isset($data['reactiv_hash']) && is_array($data['reactiv_hash']) )?$data['reactiv_hash']:array() as $reactiv_hash => $reactiv_data )
         {
@@ -388,37 +435,11 @@ class using
             }
         }
 
-        // consume_hash
-        foreach( ( isset($data['consume_hash']) && is_array($data['consume_hash']) )?$data['consume_hash']:array() as $reactiv_hash => $reactiv_data )
-        {
+        $tpl->set( '{cooked:list}',      ( new cooked )     ->get_html( array( 'quantity_left:more' => 0, 'is_dead' => 0 ), 'using/selectable_element_cooked' ) );
+        $tpl->set( '{dispersion:list}',  ( new dispersion ) ->get_html( array( 'quantity_left:more' => 0, 'is_dead' => 0 ), 'using/selectable_element_dispersion' ) );
 
-        }
-
-
-        /*
-        if( $data['reactiv_hash'] && $data['reactiv_menu_id'] && isset($data['cooked_reactives']) && is_array($data['cooked_reactives']) && count($data['cooked_reactives']) )
-        {
-            foreach( $data['cooked_reactives'][$data['reactiv_hash']] as $k => $v )
-            {
-                if( is_array($v) ){ continue; }
-
-                $tpl->set( '{tag:reactiv:'.$k.'}', common::db2html( $v ) );
-
-                $tags[] = '{tag:reactiv:'.$k.'}';
-            }
-
-            $tpl->set( '{tag:reactiv:units:short_name}', ( new spr_manager( 'units' ) )->get_raw()[$data['cooked_reactives'][$data['reactiv_hash']]['reactiv_units_id']]['short_name'] );;
-        } */
-        /*
-        $tpl->set( '{autocomplete:table}', 'stock' );
-        $tpl->set( '{reactiv_consume:list}', $this->get_html_consume( $data['reactiv_consume'], 'using/reactiv_consume_line' ) );
-        $tpl->set( '{consume:list}',         $this->get_html_consume( $data['consume'], 'using/consume_line' ) );
-
-
-         */
-
-        $tpl->set( '{cooked:list}',      ( new cooked )     ->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_cooked' ) );
-        $tpl->set( '{dispersion:list}',  ( new dispersion ) ->get_html( array( 'quantity_left:more' => 0 ), 'using/selectable_element_dispersion' ) );
+        $tpl->set( '{consume:list}',            $tpl->result( $_skin['consume'] ) );
+        $tpl->set( '{reactiv_consume:list}',    $tpl->result( $_skin['reactiv_consume'] ) );
 
         $tpl->compile( $skin );
 
@@ -433,6 +454,7 @@ class using
         $_dates[] = 'exp_date';
 
         $data = $this->get_raw( $filters );
+
         $data = is_array($data) ? $data : array();
 
         if( !count($data) ){ return false; }
@@ -448,6 +470,7 @@ class using
         $I = count( $data );
         foreach( $data as $line )
         {
+
             $tpl->load( $skin );
 
             $line['numi'] = $I--;
@@ -493,32 +516,38 @@ class using
             }
             $tpl->set_block( '!\{tag:purpose:(\w+?)\}!is', '' );
 
+            $tpl->set( '[purpose:'.$line['purpose_id'].']', '' );
+            $tpl->set( '[/purpose:'.$line['purpose_id'].']', '' );
+            $tpl->set_block( '!\[purpose\:(\d+?)\](.+?)\[\/purpose:\1\]!is', '' );
 
             // ЯКЩО СТВОРЕНО РЕАКТИВ /////////////////////////////////////////////////////
-            foreach( $line['reactiv_hash'] as $reactive )
+            if( isset($line['reactiv_hash']) )
             {
-                $tpl->set( '[reactive]', '' );
-                $tpl->set( '[/reactive]', '' );
-
-                foreach( $reactive as $key => $value )
+                foreach( $line['reactiv_hash'] as $reactive )
                 {
-                    if( is_array($value) ){ continue; }
-                    $tags[] = '{tag:reactive:'.$key.'} : \''.common::db2html( $value ).'\'';
-                    $tpl->set( '{tag:reactive:'.$key.'}', common::db2html( $value ) );
-                }
+                    $tpl->set( '[reactive]', '' );
+                    $tpl->set( '[/reactive]', '' );
 
-                foreach( isset($recipes[$reactive['reactiv_menu_id']])?$recipes[$reactive['reactiv_menu_id']]:array() as $key => $value )
-                {
-                    if( is_array($value) ){ continue; }
-                    $tags[] = '{tag:recipe:'.$key.'} : \''.common::db2html( $value ).'\'';
-                    $tpl->set( '{tag:recipe:'.$key.'}', common::db2html( $value ) );
-                }
+                    foreach( $reactive as $key => $value )
+                    {
+                        if( is_array($value) ){ continue; }
+                        $tags[] = '{tag:reactive:'.$key.'} : \''.common::db2html( $value ).'\'';
+                        $tpl->set( '{tag:reactive:'.$key.'}', common::db2html( $value ) );
+                    }
 
-                foreach( isset($units[$reactive['units_id']])?$units[$reactive['units_id']]:array() as $key => $value )
-                {
-                    if( is_array($value) ){ continue; }
-                    $tags[] = '{tag:units:'.$key.'} : \''.common::db2html( $value ).'\'';
-                    $tpl->set( '{tag:units:'.$key.'}', common::db2html( $value ) );
+                    foreach( isset($recipes[$reactive['reactiv_menu_id']])?$recipes[$reactive['reactiv_menu_id']]:array() as $key => $value )
+                    {
+                        if( is_array($value) ){ continue; }
+                        $tags[] = '{tag:recipe:'.$key.'} : \''.common::db2html( $value ).'\'';
+                        $tpl->set( '{tag:recipe:'.$key.'}', common::db2html( $value ) );
+                    }
+
+                    foreach( isset($units[$reactive['units_id']])?$units[$reactive['units_id']]:array() as $key => $value )
+                    {
+                        if( is_array($value) ){ continue; }
+                        $tags[] = '{tag:units:'.$key.'} : \''.common::db2html( $value ).'\'';
+                        $tpl->set( '{tag:units:'.$key.'}', common::db2html( $value ) );
+                    }
                 }
             }
             $tpl->set_block( '!\[reactive\](.+?)\[\/reactive\]!is', '' );
@@ -565,6 +594,11 @@ class using
                     }
                 }
 
+                if( !isset($recipes[$consume['reactiv_menu_id']]) )
+                {
+                    var_export($line);exit;
+                }
+
                 $ingridients[] = '
                     <div class="consume_elem">
                         <span class="reagent_name">'.common::db2html($recipes[$consume['reactiv_menu_id']]['name']).'</span>
@@ -607,28 +641,16 @@ class using
     {
         access::check( 'using', 'edit' );
 
-        echo 'OLD!'; exit;
-
-        $error = false;
-        $using_hash = common::filter_hash( $using_hash );
-
-        if( !is_array($data) )            { return self::error( 'Помилка передачі даних!' ); }
-        //if( !isset($data['composition']) || !is_array($data['composition']) || !count(($data['composition'])) ){ return self::error( 'Відсутня інформація про компоненти!' ); }
-
         $date_diap = (60*60*24*356*10);
+
+        $_USING_HASH = common::filter_hash( $using_hash );
+        if( !is_array($data) ){ return self::error( 'Помилка передачі даних!' ); }
 
         /////////
         $data['purpose_id'] = common::integer( isset($data['purpose_id'])?$data['purpose_id']:0 );
-
         $purpose = ( ( new spr_manager( 'purpose' )   )->get_raw()[$data['purpose_id']] );
         $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
         $recipes = ( new recipes )->get_raw();
-
-        /////////
-
-        if( !isset($purpose['id']) || !$purpose['id'] ) { return self::error( 'Системна помилка! Не вдалося визначити мету використання!', false ); }
-        if( $purpose['attr'] == 'reactiv' ){ return self::error( 'Редагування даного запису заборонено!', false ); }
-
         /////////
 
         $SQL = array();
@@ -642,203 +664,110 @@ class using
         $SQL['using']['tech_info']  = common::filter( isset($data['tech_info']) ? $data['tech_info'] : '' );
         $SQL['using']['ucomment']   = common::encode_string( common::trim( common::filter( isset($data['comment']) ? $data['comment'] : '' ) ) );
 
-        ///////////////////////
+        $SQL['using']['query'] = !$_USING_HASH
+            ?   'INSERT INTO "using" '.db::array2ins( $SQL['using'] )
+            :   'UPDATE "using" SET '.db::array2upd( $SQL['using'] ).' WHERE group_id = '.CURRENT_GROUP_ID.' AND hash = \''.$this->db->safesql($_USING_HASH).'\' ';
+        $SQL['using']['query'] = $SQL['using']['query'].' RETURNING hash;';
 
         if( strtotime($SQL['using']['date']) > time() ){ return self::error( 'Ви не можете створювати записи в майбутньому!', 'date' ); }
         if( strtotime($SQL['using']['date']) < ( time() - $date_diap ) ){ return self::error( 'Дуууже давня дата!', 'date' ); }
+        if( !isset($purpose['id']) || !$purpose['id'] ) { return self::error( 'Системна помилка! Не вдалося визначити мету використання!', false ); }
+        if( $purpose['attr'] == 'reactiv' ){ return self::error( 'Редагування даного запису заборонено!', false ); }
 
         ///////////////////////
 
         if( $purpose['attr'] != 'expertise' )
         {
             unset( $SQL['using']['exp_number'] );
-            //unset( $SQL['using']['exp_date'] );
             unset( $SQL['using']['obj_count'] );
         }
         else
         {
-            // if( strtotime($SQL['using']['exp_date']) < strtotime($SQL['using']['date']) ){ return self::error( 'Дата експертизи не може бути меншою за дату використання!', 'date|exp_date' ); }
-            // if( strtotime($SQL['using']['exp_date']) > time() ){ return self::error( 'Ви не можете створювати записи в майбутньому!', 'exp_date' ); }
-            // if( strtotime($SQL['using']['exp_date']) < ( time() - $date_diap ) ){ return self::error( 'Дуууже давня дата експертизи!', 'exp_date' ); }
-
             if( !$SQL['using']['obj_count'] ){ return self::error( 'Зазначте кількість об\'єктів!', 'obj_count' ); }
             if( strlen($SQL['using']['exp_number']) < 2 ){ return self::error( 'Зазначте номер висновку!', 'exp_number' ); }
-        }
-
-        if( $purpose['attr'] != 'reactiv' )
-        {
-
-        }
-
-        if( $purpose['attr'] != 'maintenance' )
-        {
             unset( $SQL['using']['tech_info'] );
         }
 
+
+        $data['consume'] =          array_values( ( isset($data['consume']) && is_array($data['consume']) ) ?$data['consume']:array() );
+        $data['reactiv_consume'] =  array_values( ( isset($data['reactiv_consume']) && is_array($data['reactiv_consume']) )?$data['reactiv_consume']:array() );
+
+        if( !count($data['reactiv_consume']) && !count($data['consume']) )
+        {
+            return self::error( 'Не зазначені використані речовини/матеріали!' );
+        }
+
+
         ///////////////////////
+        // STEP 0: BEGIN TRANSACTION
+        $this->db->transaction_start();
 
-        $USING_QUERY = false;
-        if( $using_hash )
+        ///////////////////////////////
+        $SQL['using']['hash'] = $_USING_HASH = $this->db->super_query( $SQL['using']['query'] )['hash'];
+        if( !$_USING_HASH )
         {
-            $USING_QUERY = array();
-            foreach( array_map( array( &$this->db, 'safesql' ), $SQL['using'] ) as $k=>$v )
-            {
-                $USING_QUERY[] = '"'.$k.'"=\''.$v.'\'';
-            }
-            $USING_QUERY = 'UPDATE "using" SET '.implode( ', ', $USING_QUERY ).' WHERE "hash"=\''.$this->db->safesql( $using_hash ).'\' RETURNING "hash";';
+            $this->db->transaction_rollback();
+            return self::error( 'reactiv hash error!' );
         }
-        else
-        {
-            $USING_QUERY = array_map( array( &$this->db, 'safesql' ), $SQL['using'] );
-            $USING_QUERY = 'INSERT INTO "using" ("'.implode( '", "', array_keys( $USING_QUERY ) ).'") VALUES( \''.implode( '\', \'', array_values( $USING_QUERY ) ).'\' ) RETURNING "hash";';
-        }
-
         /////////////////
 
-        $CONSUME_QUERY = array();
         $SQL['consume'] = array();
+        $i = 0;
 
-        foreach( isset($data['consume'])?$data['consume']:array() as $k=>$consume_data )
+        $consume = new consume;
+        $this->db->super_query( 'DELETE FROM consume_using WHERE using_hash = \''.$_USING_HASH.'\';' );
+        $SQL['consume']['reagent'] = array();
+        foreach( $data['consume'] as $k=>$ingridient )
         {
-            $consume_hash = common::filter_hash( isset($consume_data['consume_hash']) ? $consume_data['consume_hash'] : false );
-            $consume_data['key'] = isset($consume_data['key']) ? $consume_data['key'] : false;
-
-            if( $consume_hash && $consume_data['key'] && !common::key_check( $consume_hash, $consume_data['key'] ) )
+            $SQL['consume']['reagent'][$k] = array
+            (
+                'dispersion_id' => common::integer( $ingridient['dispersion_id'] ),
+                'quantity'      => common::float(   $ingridient['quantity'] ),
+                'inc_expert_id' => common::integer( CURRENT_USER_ID ),
+                'date'          => $SQL['using']['date'],
+                'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,
+            );
+            $SQL['consume']['reagent'][$k]['hash'] = $consume->save( $SQL['consume']['reagent'][$k] );
+            if( $SQL['consume']['reagent'][$k]['hash'] )
             {
-                return self::error( 'Помилка даних! Виявлено розбіжності в ідентифікаторах!', false );
-            }
-
-            $SQL['consume'][$k] = array();
-            $SQL['consume'][$k]['dispersion_id']    = common::integer( isset($consume_data['dispersion_id']) ? $consume_data['dispersion_id'] : false );
-            $SQL['consume'][$k]['quantity']         = common::float( isset($consume_data['quantity']) ? $consume_data['quantity'] : false );
-            $SQL['consume'][$k]['inc_expert_id']    = CURRENT_USER_ID;
-            $SQL['consume'][$k]['using_hash']       = '%USING_HASH%';
-            $SQL['consume'][$k]['date']             = $SQL['using']['date'];
-
-            if( !$SQL['consume'][$k]['dispersion_id'] )
-            {
-                return self::error( 'Помилка даних! Реактив не знайдено!', false );
-            }
-
-            if( !$SQL['consume'][$k]['quantity'] )      { return self::error( 'Не зазначена кількість використаного реактиву!', false ); }
-
-            $reactive = ( new dispersion )->get_raw( array( 'id' => $SQL['consume'][$k]['dispersion_id'] ) )[$SQL['consume'][$k]['dispersion_id']];
-            $consume  = $consume_hash ? ( new consume )->get_raw( array( 'hash' => $consume_hash ) ) : array();
-            $consume  = isset($consume[$consume_hash])?$consume[$consume_hash] : array();
-
-            //
-            if( !isset($reactive['reagent_id']) || !isset($reagent[$reactive['reagent_id']]) )  { return self::error( 'Реактив не знайдено!', false ); }
-            if( strtotime($SQL['using']['date']) > strtotime( $reactive['dead_date'] ) )        { return self::error( 'Реактив "'. ( $reagent[$reactive['reagent_id']]['name'] ) .'" зіпсований!', false ); }
-            if( strtotime($SQL['using']['date']) < strtotime( $reactive['inc_date'] ) )         { return self::error( 'Ви не можете використовувати реактив "'. ( $reagent[$reactive['reagent_id']]['name'] ) .'",'."\n".'оскільки на момент використання ('.common::en_date($SQL['using']['date'],'d.m.Y').') він ще не був виданий (дата видачі '. common::en_date( $reactive['inc_date'], 'd.m.Y' ) .')!', false ); }
-            if( common::float( $consume_data['quantity'] ) > common::float( $reactive['quantity_left'] ) + common::float( isset($consume['quantity']) ? $consume['quantity'] : 0 )  ){ return self::error( 'Ви намагаєтесь використати забагато реактиву!', false ); }
-            if( common::integer( $reactive['group_id'] ) != CURRENT_GROUP_ID )                  { return self::error( 'Реактив знаходиться в іншій лабораторії!', false ); }
-            //
-
-            if( $consume_hash )
-            {
-                $CONSUME_QUERY[$k] = array();
-                foreach( array_map( array( &$this->db, 'safesql' ), $SQL['consume'][$k] ) as $tag=>$v )
-                {
-                    $CONSUME_QUERY[$k][] = '"'.$tag.'"=\''.$v.'\'';
-                }
-                $CONSUME_QUERY[$k] = 'UPDATE "consume" SET '.implode( ', ', $CONSUME_QUERY[$k] ).' WHERE "hash"=\''.$this->db->safesql( $consume_hash ).'\' AND "using_hash"=\'%USING_HASH%\';';
+                $this->db->super_query( 'INSERT INTO consume_using ( using_hash, consume_hash ) VALUES ( \''.$_USING_HASH.'\', \''.$SQL['consume']['reagent'][$k]['hash'].'\' );' );
             }
             else
             {
-                $CONSUME_QUERY[$k] = array_map( array( &$this->db, 'safesql' ), $SQL['consume'][$k] );
-                $CONSUME_QUERY[$k] = 'INSERT INTO "consume" ("'.implode( '", "', array_keys( $CONSUME_QUERY[$k] ) ).'") VALUES( \''.implode( '\', \'', array_values( $CONSUME_QUERY[$k] ) ).'\' );';
+                return self::error( 'Помилка збереження використаних речовин чи матеріалів!' );
             }
         }
 
-        ////////////////
-
-        $REACTIV_CONSUME_QUERY = array();
-        $SQL['reactiv_consume'] = array();
-
-        foreach( isset($data['reactiv_consume'])?$data['reactiv_consume']:array() as $k=>$consume_data )
+        $reactiv_consume = new reactiv_consume;
+        $this->db->super_query( 'DELETE FROM reactiv_consume_using WHERE using_hash = \''.$_USING_HASH.'\';' );
+        $SQL['consume']['reactiv'] = array();
+        foreach( $data['reactiv_consume'] as $k=>$ingridient )
         {
-            $consume_hash = common::filter_hash( isset($consume_data['consume_hash']) ? $consume_data['consume_hash'] : false );
-            $consume_data['key'] = isset($consume_data['key']) ? $consume_data['key'] : false;
-
-            if( $consume_hash && $consume_data['key'] && !common::key_check( $consume_hash, $consume_data['key'] ) )
+            $SQL['consume']['reactiv'][$k] = array
+            (
+                'reactiv_hash'  => $this->db->safesql(common::filter_hash( $ingridient['reactiv_hash'] )),
+                'quantity'      => common::float(   $ingridient['quantity'] ),
+                'inc_expert_id' => common::integer( CURRENT_USER_ID ),
+                'date'          => $SQL['using']['date'],
+                'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,
+            );
+            $SQL['consume']['reactiv'][$k]['hash'] = $reactiv_consume->save( $SQL['consume']['reactiv'][$k] );
+            if( $SQL['consume']['reagent'][$k]['hash'] )
             {
-                return self::error( 'Помилка даних! Виявлено розбіжності в ідентифікаторах!', false );
-            }
-
-            $SQL['reactiv_consume'][$k] = array();
-            $SQL['reactiv_consume'][$k]['reactive_hash']    = common::filter_hash( isset($consume_data['reactiv_hash']) ? $consume_data['reactiv_hash'] : false );
-            $SQL['reactiv_consume'][$k]['quantity']         = common::float( isset($consume_data['quantity']) ? $consume_data['quantity'] : false );
-            $SQL['reactiv_consume'][$k]['inc_expert_id']    = CURRENT_USER_ID;
-            $SQL['reactiv_consume'][$k]['using_hash']       = '%USING_HASH%';
-            $SQL['reactiv_consume'][$k]['date']             = $SQL['using']['date'];
-
-            if( !$SQL['reactiv_consume'][$k]['quantity'] )      { return self::error( 'Не зазначена кількість використаного реактиву!', false ); }
-            if( !$SQL['reactiv_consume'][$k]['reactive_hash'] ) { return self::error( 'Реактив не знайдено!', false ); }
-
-            ///
-
-            $reactive = ( new cooked )->get_raw( array( 'hash' => $SQL['reactiv_consume'][$k]['reactive_hash'] ) );
-
-            if( !isset($reactive[$SQL['reactiv_consume'][$k]['reactive_hash']]) ){ return self::error( 'Реактив не знайдено!', false ); }
-
-            $reactive = $reactive[$SQL['reactiv_consume'][$k]['reactive_hash']];
-
-            if( strtotime($SQL['using']['date']) < strtotime( $reactive['inc_date'] ) ){ return self::error( 'Ви не можете використовувати приготований реактив "'. common::trim( $recipes[$reactive['reactiv_menu_id']]['name'] ) .'",'."\n".'оскільки на момент використання ('.common::en_date($SQL['using']['date'],'d.m.Y').') він ще не був приготований (дата приготування '. common::en_date( $reactive['inc_date'], 'd.m.Y' ) .')!', false ); }
-            if( strtotime($SQL['using']['date']) > strtotime( $reactive['dead_date'] ) )        { return self::error( 'Приготований реактив "'. common::trim( $recipes[$reactive['reactiv_menu_id']]['name'] ) .'" зіпсований! Термін зберігання закінчився '. common::en_date( $reactive['dead_date'], 'd.m.Y' ) .'!', false ); }
-
-            ///
-
-            if( $consume_hash )
-            {
-                $REACTIV_CONSUME_QUERY[$k] = array();
-                foreach( array_map( array( &$this->db, 'safesql' ), $SQL['reactiv_consume'][$k] ) as $tag=>$v )
-                {
-                    $REACTIV_CONSUME_QUERY[$k][] = '"'.$tag.'"=\''.$v.'\'';
-                }
-                $REACTIV_CONSUME_QUERY[$k] = 'UPDATE "reactiv_consume" SET '.implode( ', ', $REACTIV_CONSUME_QUERY[$k] ).' WHERE "hash"=\''.$this->db->safesql( $consume_hash ).'\' AND "using_hash"=\'%USING_HASH%\';';
+                $this->db->super_query( 'INSERT INTO reactiv_consume_using ( using_hash, consume_hash ) VALUES ( \''.$_USING_HASH.'\', \''.$SQL['consume']['reactiv'][$k]['hash'].'\' );' );
             }
             else
             {
-                $REACTIV_CONSUME_QUERY[$k] = array_map( array( &$this->db, 'safesql' ), $SQL['reactiv_consume'][$k] );
-                $REACTIV_CONSUME_QUERY[$k] = 'INSERT INTO "reactiv_consume" ("'.implode( '", "', array_keys( $REACTIV_CONSUME_QUERY[$k] ) ).'") VALUES( \''.implode( '\', \'', array_values( $REACTIV_CONSUME_QUERY[$k] ) ).'\' );';
+                return self::error( 'Помилка збереження використаних розчинів!' );
             }
-
         }
 
-        ////////////////
+        $this->db->transaction_commit();
+        $this->db->free();
 
-        $err = false;
-        $this->db->query( 'BEGIN;' );
+        cache::clean();
 
-        /////////////////
-
-        $USING_HASH_FROM_DB = $this->db->super_query( $USING_QUERY )['hash'];
-
-        if( $using_hash && $using_hash != $USING_HASH_FROM_DB ) { return self::error( 'Помилка збереження даних!', false ); }
-
-        if( !$err && count($CONSUME_QUERY) )
-        {
-            $CONSUME_QUERY = implode( "\n", $CONSUME_QUERY );
-            $CONSUME_QUERY = str_replace( '%USING_HASH%', $USING_HASH_FROM_DB, $CONSUME_QUERY );
-            $this->db->query( $CONSUME_QUERY );
-        }
-
-        if( !$err && count($REACTIV_CONSUME_QUERY) )
-        {
-            $REACTIV_CONSUME_QUERY = implode( "\n", $REACTIV_CONSUME_QUERY );
-            $REACTIV_CONSUME_QUERY = str_replace( '%USING_HASH%', $USING_HASH_FROM_DB, $REACTIV_CONSUME_QUERY );
-            $this->db->query( $REACTIV_CONSUME_QUERY );
-        }
-
-        if( !$err )
-        {
-            $this->db->query( 'COMMIT;' );
-            cache::clean();
-            return $USING_HASH_FROM_DB;
-        }
-
-        $this->db->query( 'ROLLBACK;' );
-        return self::error( $err, false );
+        return $_USING_HASH;
     }
 
 

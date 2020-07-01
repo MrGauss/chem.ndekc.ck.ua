@@ -114,6 +114,7 @@ class consume
                 dispersion.quantity_left as dispersion_quantity_left,
                 dispersion.quantity_inc as dispersion_quantity_inc,
                 stock.reagent_id,
+                stock.dead_date,
                 stock.reagent_number
             FROM
                 consume

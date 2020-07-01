@@ -62,8 +62,8 @@ if( !defined('CURRENT_GROUP_ID') )  { common::err( 'Константа CURRENT_GROUP_ID н
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-if( _MOD_ == 'logout' )             { $_user->logout(); }
-if( _MOD_ == 'clean_cache' )        { cache::clean(); exit; }
+if( _MOD_ == 'logout' ){ $_user->logout(); }
+if( _MOD_ == 'clean_cache' && CURRENT_USER_ID ){ cache::clean(); exit; }
 if( _MOD_ == 'ban' )
 {
     ob_start();

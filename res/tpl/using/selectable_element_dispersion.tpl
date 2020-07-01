@@ -1,4 +1,4 @@
-<div class="line" data-id="{tag:id}" data-inc_date="{tag:inc_date_unix}" data-lifetime="{tag:lifetime}" data-quantity_inc="{tag:quantity_inc}" data-quantity_left="{tag:quantity_left}" data-not_used_perc="{tag:not_used_perc}" data-units="{tag:reagent_units_short}">
+<div class="line" data-name="{tag:reagent:lower}" data-id="{tag:id}" data-inc_date="{tag:inc_date_unix}" data-lifetime="{tag:lifetime}" data-quantity_inc="{tag:quantity_inc}" data-quantity_left="{tag:quantity_left}" data-not_used_perc="{tag:not_used_perc}" data-units="{tag:reagent_units_short}">
     <table>
         <tr>
             <td class="reagent">

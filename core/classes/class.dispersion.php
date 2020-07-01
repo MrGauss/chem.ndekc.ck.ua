@@ -235,11 +235,17 @@ class dispersion
                 $tpl->set( '{tag:'.$key.'}', $value );
             }
 
-            foreach( ( isset($reagent[$line['reagent_id']]) ? $reagent[$line['reagent_id']] : array() ) as $key => $value )
+            if( isset($reagent[$line['reagent_id']]) )
             {
-                if( is_array($value) ){ continue; }
-                $tpl->set( '{tag:reagent:'.$key.'}', $value );
+                foreach( ( isset($reagent[$line['reagent_id']]) ? $reagent[$line['reagent_id']] : array() ) as $key => $value )
+                {
+                    if( is_array($value) ){ continue; }
+                    $tpl->set( '{tag:reagent:'.$key.'}', $value );
+                }
+
+                $tpl->set( '{tag:reagent:lower}', common::strtolower( common::db2html( $reagent[$line['reagent_id']]['name'] ) ) );
             }
+
 
             foreach( ( ( isset($reagent[$line['reagent_id']]) && isset($units[$reagent[$line['reagent_id']]['units_id']]) ) ? $units[$reagent[$line['reagent_id']]['units_id']] : array() ) as $key => $value )
             {
@@ -327,6 +333,12 @@ class dispersion
             else
             {
                 $WHERE['dispersion.id'] = 'dispersion.id > 0';
+            }
+
+            if( isset($filters['is_dead']) )
+            {
+                $filters['is_dead'] = common::integer($filters['is_dead']);
+                $WHERE['stock.dead_date']   = 'stock.dead_date ' . ( $filters['is_dead'] ? ' < ' : ' >= ' ) . ' NOW()';
             }
 
             if( isset($filters['quantity_left:more']) )
