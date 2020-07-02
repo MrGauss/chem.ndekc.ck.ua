@@ -335,6 +335,35 @@ class dispersion
                 $WHERE['dispersion.id'] = 'dispersion.id > 0';
             }
 
+            if( isset($filters['reagent_id']) )
+            {
+                $filters['reagent_id'] = common::integer( $filters['reagent_id'] );
+                $filters['reagent_id'] = is_array($filters['reagent_id'])?$filters['reagent_id']:array($filters['reagent_id']);
+                $WHERE['stock.reagent_id'] = 'stock.reagent_id IN( \''. implode( '\',\'', $filters['reagent_id'] ) .'\' )';
+            }
+
+            if( isset($filters['clearence_id']) )
+            {
+                $filters['clearence_id'] = common::integer( $filters['clearence_id'] );
+                $filters['clearence_id'] = is_array($filters['clearence_id'])?$filters['clearence_id']:array($filters['clearence_id']);
+                $WHERE['stock.clearence_id'] = 'stock.clearence_id IN(\''.implode( '\',\'', $filters['clearence_id'] ).'\')';
+            }
+
+            if( isset($filters['reagent_state_id']) )
+            {
+                $filters['reagent_state_id'] = common::integer( $filters['reagent_state_id'] );
+                $filters['reagent_state_id'] = is_array($filters['reagent_state_id'])?$filters['reagent_state_id']:array($filters['reagent_state_id']);
+                $WHERE['stock.reagent_state_id'] = 'stock.reagent_state_id IN(\''.implode( '\',\'', $filters['reagent_state_id'] ).'\')';
+            }
+
+            if( isset($filters['danger_class_id']) )
+            {
+                $filters['danger_class_id'] = common::integer( $filters['danger_class_id'] );
+                $filters['danger_class_id'] = is_array($filters['danger_class_id'])?$filters['danger_class_id']:array($filters['danger_class_id']);
+                $WHERE['stock.danger_class_id'] = 'stock.danger_class_id IN(\''.implode( '\',\'', $filters['danger_class_id'] ).'\')';
+            }
+
+
             if( isset($filters['is_dead']) )
             {
                 $filters['is_dead'] = common::integer($filters['is_dead']);
@@ -357,6 +386,12 @@ class dispersion
             {
                 $filters['quantity_left:is'] = common::float( $filters['quantity_left:is'] );
                 $WHERE['quantity_left:is'] = ' dispersion.quantity_left = \''.$filters['quantity_left:is'].'\'::FLOAT';
+            }
+
+            if( isset($filters['quantity_left']) )
+            {
+                $filters['quantity_left'] = common::float( $filters['quantity_left'] );
+                $WHERE['quantity_left:is'] = ' dispersion.quantity_left = \''.$filters['quantity_left'].'\'::FLOAT';
             }
         }
 
@@ -393,6 +428,8 @@ class dispersion
 
             ORDER by
                 reagent.name ASC; '.db::CACHED;
+
+        //echo $SQL;exit;
 
         $cache_var = 'spr-dispersion-'.md5( $SQL ).'-raw';
 

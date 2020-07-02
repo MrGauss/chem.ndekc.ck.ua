@@ -80,7 +80,7 @@ class access
                     access.id > 0
                     AND
                     expert.id = '.$user_id.'
-                ORDER by spr_access_actions.label ASC';
+                ORDER by spr_access_actions.label ASC; '.QUERY_CACHABLE;   
 
         $cache_var = 'access-user-'.md5( $SQL ).'-raw';
         $data = cache::get( $cache_var );
@@ -93,7 +93,7 @@ class access
             $data[$row['action_label']] = $row;
         }
 
-        cache::set( $cache_var, $data ); 
+        cache::set( $cache_var, $data );
         return $data;
     }
 
@@ -170,7 +170,7 @@ class access
 
     public final function get_access_actions_raw()
     {
-        $SQL = 'SELECT * FROM access_actions ORDER by access_id ASC';
+        $SQL = 'SELECT * FROM access_actions ORDER by access_id ASC; '.QUERY_CACHABLE;
 
         $cache_var = 'access-actions-'.md5( $SQL ).'-raw';
         $data = false;
@@ -186,12 +186,14 @@ class access
             $data[$row['access_id']] = array_unique( $data[$row['access_id']] );
         }
 
+        cache::set( $cache_var, $data );
+
         return $data;
     }
 
     public final function get_actions_raw()
     {
-        $SQL = 'SELECT * FROM spr_access_actions WHERE id > 0 ORDER by name ASC';
+        $SQL = 'SELECT * FROM spr_access_actions WHERE id > 0 ORDER by name ASC; '.QUERY_CACHABLE;
 
         $cache_var = 'access-actions_spr-'.md5( $SQL ).'-raw';
         $data = false;
@@ -205,12 +207,14 @@ class access
             $data[$row['id']] = $row;
         }
 
+        cache::set( $cache_var, $data );
+
         return $data;
     }
 
     public final function get_groups_raw()
     {
-        $SQL = 'SELECT * FROM access WHERE id > 0 ORDER by position ASC';
+        $SQL = 'SELECT * FROM access WHERE id > 0 ORDER by position ASC; '.QUERY_CACHABLE;
 
         $cache_var = 'access-'.md5( $SQL ).'-raw';
         $data = false;
@@ -223,6 +227,8 @@ class access
         {
             $data[$row['id']] = $row;
         }
+
+        cache::set( $cache_var, $data );
 
         return $data;
     }

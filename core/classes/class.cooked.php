@@ -238,6 +238,10 @@ class cooked
         }
         else
         {
+            $_comp = array();
+            $_comp['reagent'] = array();
+            $_comp['reactiv'] = array();
+
             foreach( $data['composition'] as $ingridient )
             {
                 $ingridient = common::filter( $ingridient );
@@ -252,6 +256,8 @@ class cooked
                         'date'          => $SQL['reactiv']['inc_date'],
                         'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,
                     );
+
+                    $_comp['reagent'][] = common::integer( $ingridient['reagent_id'] );
                 }
 
                 if( $ingridient['role'] == 'reactiv' )
@@ -264,9 +270,30 @@ class cooked
                         'date'          => $SQL['reactiv']['inc_date'],
                         'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,
                     );
+
+                    $_comp['reactiv'][] = common::integer( $ingridient['reactiv_menu_id'] );
                 }
             }
         }
+        //////////////////////////////////////////////////
+        //
+
+        foreach( $recipes[$SQL['reactiv']['reactiv_menu_id']]['ingredients_reagent'] as $rid => $rdata )
+        {
+            if( !in_array( $rid, $_comp['reagent'] ) )
+            {
+                return self::error( 'В Вашому розчині недостатньо інгрідієнтів! Додайте інгрідієнт "'.common::trim( $reagent[$rid]['name'] ).'" згідно рецепту приготування!' );
+            }
+        }
+
+        foreach( $recipes[$SQL['reactiv']['reactiv_menu_id']]['ingredients_reactiv'] as $rid => $rdata )
+        {
+            if( !in_array( $rid, $_comp['reactiv'] ) )
+            {
+                return self::error( 'В Вашому розчині недостатньо інгрідієнтів! Додайте інгрідієнт "'.common::trim( $recipes[$rid]['name'] ).'" згідно рецепту приготування!' );
+            }
+        }
+        //
         //////////////////////////////////////////////////
 
         if( $reactiv_hash && $this->is_used($reactiv_hash) )
@@ -569,8 +596,8 @@ class cooked
 
         /////////////
         $tpl->set( '{ingridients}',
-                        $this->get_html( array(), 'cooked/ingridient_reactive' )."\n\n".
-                        ( new dispersion )->get_html( array(), 'cooked/ingridient_reagent' )
+                        $this->get_html( array( 'quantity_left:more' => 0, 'is_dead' => 0 ), 'cooked/ingridient_reactive' )."\n\n".
+                        ( new dispersion )->get_html( array( 'quantity_left:more' => 0, 'is_dead' => 0 ), 'cooked/ingridient_reagent' )
         );
 
         /////////////
@@ -742,6 +769,12 @@ class cooked
                 $WHERE['reactiv.quantity_left']   = 'reactiv.quantity_left > \''. $filters['quantity_left:more'] .'\'::float';
             }
 
+            if( isset($filters['quantity_left']) )
+            {
+                $filters['quantity_left'] = common::float($filters['quantity_left']);
+                $WHERE['reactiv.quantity_left']   = 'reactiv.quantity_left = \''. $filters['quantity_left'] .'\'::float';
+            }
+
             if( isset($filters['is_dead']) )
             {
                 $filters['is_dead'] = common::integer($filters['is_dead']);
@@ -783,7 +816,7 @@ class cooked
 
             '.db::CACHED;
 
-        ///echo $SQL;exit;
+        //echo $SQL;exit;
 
         $cache_var = 'spr-reactiv-'.md5( $SQL ).'-raw';
         $data = false;

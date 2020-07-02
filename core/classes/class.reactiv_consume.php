@@ -18,6 +18,8 @@ class reactiv_consume
     {
         $time_minimal = time() - ( 60*60*24*365*10 );
 
+
+
         $data2db =  array(
                         'reactiv_hash'  => common::filter_hash(     isset($data['reactiv_hash'])  ? $data['reactiv_hash']   : false ),
                         'quantity'      => common::float(           isset($data['quantity'])      ? $data['quantity']       : false ),
@@ -69,6 +71,8 @@ class reactiv_consume
         {
             $query = 'UPDATE reactiv_consume SET '.db::array2upd( $data2db ).' WHERE hash = \''.$this->db->safesql( $hash ).'\' RETURNING hash;';
         }
+
+
 
         $hash = $this->db->super_query( $query );
 

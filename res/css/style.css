@@ -189,17 +189,23 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #list_frame #filters #create,
 #main_frame #page_frame #list_frame #filters #search{ display: inline-block; width: 140px; height: 40px; background: #007500; letter-spacing: 0.1em; }
 #main_frame #page_frame #list_frame #filters #search{ background: #003366; }
+
 #main_frame #page_frame #list_frame #filters table.filters_header_frame{ border: none; width: 100%; height: 100%; border-collapse: collapse; background: none; }
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td{ border: none; width: auto; border-collapse: collapse; padding: 0px; margin: 0px; }
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td.create_button,
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td.search_button{ width: 160px; text-align: center; }
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td.filters_area{  }
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td.filters_area .filters_list{ background: none; position: relative; width: 100%; height: calc( var(--list-filters-area-height) - 1px ); overflow: hidden; overflow-y: auto; }
-#main_frame #page_frame #list_frame #filters table.filters_header_frame td.filters_area .filters_list .fbox{ width: 180px; height: 100%; float: left; }
+#main_frame #page_frame #list_frame #filters table.filters_header_frame td.filters_area .filters_list .fbox{ width: 180px; height: 100%; float: left; margin-right: 5px; }
 #main_frame #page_frame #list_frame #filters .filter{ display: block;  width: 100%; height: 47px; overflow: hidden; text-align: center; padding: 0px 2px 0px 2px; margin: 0px; background: none; }
 #main_frame #page_frame #list_frame #filters .filter.fullheight{ height: 100%;  }
 #main_frame #page_frame #list_frame #filters .filter .input{ width: 100%; height: 28px; }
 #main_frame #page_frame #list_frame #filters .filter .label{ text-transform: uppercase; font-size: 0.85em; font-weight: bold; color: #003366; }
+#main_frame #page_frame #list_frame #filters .filter .label[for]{ cursor: pointer; }
+
+#main_frame #page_frame #list_frame #filters .filter.ch_filter{ height: 24px; width: 180px; position: relative; text-align: left;  }
+#main_frame #page_frame #list_frame #filters .filter.ch_filter .input{ display: block; position: absolute; top: 2px; left: 0px; height: 18px; width: 18px;  }
+#main_frame #page_frame #list_frame #filters .filter.ch_filter .label{ display: block; position: absolute; top: 4px; left: 22px; height: 20px; text-align: left; }
 
 /*#main_frame #page_frame #list_frame #filters #search{ left:  auto; right: 10px; background: #184D7B;  }
 #main_frame #page_frame #list_frame #filters table{ vertical-align: middle; text-align: left; }

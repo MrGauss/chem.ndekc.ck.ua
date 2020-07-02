@@ -41,7 +41,7 @@
         <input tabindex="6" data-important="1" class="input" type="number" min="0" step="1" maxlength="5" max="1000000000" name="obj_count" value="{tag:obj_count}" data-save="1" data-mask="99999" data-placeholder="" placeholder="">
     </div>
 
-    <div class="elem tech_info" data-purpose="maintenance other science">
+    <div class="elem tech_info" data-purpose="maintenance other science utilisation">
         <label class="label">Деталі використання</label>
         <input tabindex="7" class="input" type="text" name="tech_info" value="{tag:tech_info}" data-save="1">
     </div>

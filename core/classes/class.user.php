@@ -190,7 +190,18 @@ class user
 
         $data           = $data[$user_id];
         $access         = ( new access )->get_groups_raw();
-        $labs           = $this->get_labs_raw();
+
+
+        if( access::allow( 'admin', 'change_ndekc' ) && access::allow( 'admin', 'change_lab' ) )
+        {
+            $labs = $this->get_labs_raw( true );
+        }
+        else
+        {
+            $labs = $this->get_labs_raw();
+        }
+
+
 
         if( $user_id && $data['access_id'] == 1 &&  $this->get_user_data_raw( CURRENT_USER_ID )[CURRENT_USER_ID]['access_id'] != 1 )
         {
@@ -222,7 +233,7 @@ class user
         $opts = array();
         foreach( $labs as $id => $line )
         {
-            $opts[] = '<option value="'.$id.'">'.common::db2html( $line['name'] ).'</option>';
+            $opts[] = '<option value="'.$id.'">'.common::db2html( $line['region_name'].': '.$line['name'] ).'</option>';
         }
         $tpl->set( '{list:labs}', implode( "\n", $opts ) );
 
@@ -312,7 +323,7 @@ class user
             WHERE
                 '.implode( ' AND ', $WHERE ).'
             ORDER BY expert.surname, expert.name, expert.phname;
-        ';
+        ; '.QUERY_CACHABLE;
 
         $cache_var = 'users-'.md5($SQL);
         $data = cache::get( $cache_var );
@@ -337,22 +348,22 @@ class user
         return $this->get_raw( array( 'id' => $user_id ) );
     }
 
-    public final function get_labs_raw()
+    public final function get_labs_raw( $no_region = false )
     {
         $SQL =
         '
                     SELECT
-                        groups.*
+                        groups.*,
+                        region.name as region_name
                     FROM
                         groups
                             LEFT JOIN region ON( region.id = groups.region_id )
                     WHERE
                         groups.id > 0
                         AND
-                        groups.region_id = '.CURRENT_REGION_ID.'
+                        ' .( $no_region ? 'groups.region_id > 0' : 'groups.region_id = '.CURRENT_REGION_ID.'' ). '
                     ORDER by
-                        groups.name ASC;
-        ';
+                        groups.name ASC; '.QUERY_CACHABLE;
 
         $cache_var = 'labs-'.md5( $SQL ).'-raw';
         $data = false;
@@ -366,6 +377,7 @@ class user
             $data[$row['id']] = $row;
         }
 
+        cache::set( $cache_var, $data );
         return $data;
     }
 

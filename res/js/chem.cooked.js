@@ -38,10 +38,9 @@ chem['cooked'] = new function()
             post['mod'] = $('body').attr('data-mod');
             post['filters'] = {};
 
-        $('#filters').find('[data-role="filter"]').each(function()
-        {
-            post['filters'][$(this).attr('name')] = $(this).val();
-        });
+        $('#filters').find('select[data-role="filter"]').each(function(){ if( $(this).val() != '0' ){ post['filters'][$(this).attr('name')] = $(this).val(); }});
+        $('#filters').find('input[type="text"][data-role="filter"]').each(function(){ if( $(this).val() != '' ){ post['filters'][$(this).attr('name')] = $(this).val(); }});
+        $('#filters').find('input[type="checkbox"][data-role="filter"]:checked').each(function(){ post['filters'][$(this).attr('name')] = $(this).val(); });
 
         if( line_hash != '' ){ post['filters']['hash'] = line_hash; }
 
@@ -49,7 +48,7 @@ chem['cooked'] = new function()
         {
             _r = chem.txt2json( _r );
 
-            if( _r['lines'] )
+            if( _r['lines'] !== undefined )
             {
                 if( line_hash.length == 32 )
                 {

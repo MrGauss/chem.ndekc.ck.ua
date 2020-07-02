@@ -1217,7 +1217,8 @@ CREATE TABLE "public"."using" (
     "exp_date" "date" DEFAULT '1970-01-01'::"date" NOT NULL,
     "obj_count" integer DEFAULT 0 NOT NULL,
     "tech_info" "text" DEFAULT ''::"text" NOT NULL,
-    "ucomment" "text" DEFAULT ''::"text" NOT NULL
+    "ucomment" "text" DEFAULT ''::"text" NOT NULL,
+    "expert_id" bigint DEFAULT 0 NOT NULL
 );
 
 
@@ -1403,20 +1404,16 @@ INSERT INTO "public"."clearence" ("id", "name", "position") VALUES (11, 'Фар�
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('86e704d1b1ec726cf31d9a9273c4f379', '2020-07-01 17:28:44.031746', 80, 1, 12, '2020-07-01 17:28:44.031746', '2020-07-01');
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('d16fbc833a3163263bc2e524612bc045', '2020-07-01 17:28:44.031746', 82, 1, 3, '2020-07-01 17:28:44.031746', '2020-07-01');
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('', '2020-01-02 15:37:30.168681', 0, 0, 0, '2020-03-18 16:07:51.03563', '1970-01-01');
-INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('3961fc5bdef17016d26a84ce67b21772', '2020-07-01 17:29:08.696778', 81, 1, 2, '2020-07-01 17:29:08.696778', '2020-07-01');
-INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('436501b896d15fb0f30d6bbf588cdd8c', '2020-07-01 17:29:08.696778', 82, 1, 2, '2020-07-01 17:29:08.696778', '2020-07-01');
-INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('cf46acb73e037a0c712b6262ee22ff30', '2020-07-01 17:29:08.696778', 80, 1, 2, '2020-07-01 17:29:08.696778', '2020-07-01');
+INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('822eae7a756d2ccafbec8fcf48602fe4', '2020-07-02 15:43:48.617187', 24, 3, 50, '2020-07-02 15:43:48.617187', '2020-07-02');
 
 
 --
 -- Data for Name: consume_using; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('822eae7a756d2ccafbec8fcf48602fe4', '9e08241a3fdcbe3d98d29955a1abc091');
 INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('86e704d1b1ec726cf31d9a9273c4f379', 'c6cf5caca65a8382d90d4b2467861222');
 INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('d16fbc833a3163263bc2e524612bc045', 'c6cf5caca65a8382d90d4b2467861222');
-INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('3961fc5bdef17016d26a84ce67b21772', '8acc1355276a3446355a291b7c762e9a');
-INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('436501b896d15fb0f30d6bbf588cdd8c', '8acc1355276a3446355a291b7c762e9a');
-INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('cf46acb73e037a0c712b6262ee22ff30', '8acc1355276a3446355a291b7c762e9a');
 
 
 --
@@ -1441,7 +1438,7 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (29, 292, '2020-05-18 16:30:27.715373', 3, 3, 25, 25, 1, '2020-05-06', 'Передано Столяру на використання 1 уп з пластинками на 20*20 мм', '2020-05-18 16:30:27.715373+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (34, 404, '2020-05-18 16:40:46.266979', 3, 3, 1000, 1000, 1, '2020-05-14', 'Передано в сектор біологів для використання в дослідженнях', '2020-05-18 16:40:46.266979+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (35, 146, '2020-05-18 16:41:54.234759', 3, 3, 2500, 2500, 1, '2020-05-18', 'Передано в лабораторію для використання', '2020-05-18 16:41:54.234759+03');
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (24, 291, '2020-04-17 09:34:37.52125', 3, 3, 500, 500, 1, '2020-04-17', 'Передано в лабораторію для використання', '2020-04-17 09:34:37.52125+03');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (24, 291, '2020-04-17 09:34:37.52125', 3, 3, 500, 450, 1, '2020-04-17', 'Передано в лабораторію для використання', '2020-04-17 09:34:37.52125+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (39, 281, '2020-06-10 10:27:20.462045', 3, 8, 2500, 2500, 1, '2020-05-27', 'Передано в лабораторію для використання', '2020-06-10 10:27:20.462045+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (36, 312, '2020-05-18 16:50:52.101473', 3, 3, 2500, 2500, 1, '2020-05-13', 'Передано в лабораторію для використання', '2020-05-18 16:50:52.101473+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (37, 143, '2020-05-21 10:26:00.957111', 3, 4, 600, 600, 1, '2020-05-21', 'Передано в лабораторію для використання', '2020-05-21 10:26:00.957111+03');
@@ -1499,16 +1496,16 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (79, 295, '2020-06-16 08:53:43.303891', 3, 3, 100, 100, 1, '2020-06-16', 'Передано в лабораторію для використання', '2020-06-16 08:53:43.303891+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (86, 295, '2020-06-22 11:54:06.603359', 3, 3, 100, 100, 1, '2020-06-22', 'Передано в лабораторію для використання', '2020-06-22 11:54:06.603359+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (87, 299, '2020-06-22 11:54:34.590456', 3, 3, 100, 100, 1, '2020-06-22', 'Передано в лабораторію для використання', '2020-06-22 11:54:34.590456+03');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (81, 416, '2020-06-16 09:51:18.712668', 1, 1, 100, 100, 1, '2020-01-10', '', '2020-06-16 09:51:18.712668+03');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (82, 415, '2020-06-16 09:51:35.535723', 1, 1, 10, 7, 1, '2020-01-10', '', '2020-06-16 09:51:35.535723+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (83, 366, '2020-06-17 09:36:57.197881', 3, 3, 100, 100, 1, '2020-06-17', 'Передано в лабораторію для використання', '2020-06-17 09:36:57.197881+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (84, 295, '2020-06-18 14:29:15.803411', 3, 4, 100, 100, 1, '2020-06-18', 'Передано в лабораторію для використання', '2020-06-18 14:29:15.803411+03');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (80, 417, '2020-06-16 09:50:43.971156', 1, 1, 500, 488, 1, '2020-01-10', '', '2020-06-16 09:50:43.971156+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (88, 202, '2020-06-24 13:53:21.408324', 3, 3, 1000, 1000, 1, '2020-06-24', 'Передано в сектор біологів для використання в дослідженнях', '2020-06-24 13:53:21.408324+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (85, 285, '2020-06-18 15:06:35.218231', 3, 3, 1000, 1000, 1, '2020-06-18', 'Передано в лабораторію для використання', '2020-06-18 15:06:35.218231+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (89, 331, '2020-07-01 12:02:47.255339', 3, 3, 500, 500, 1, '2020-07-01', 'Передано в лабораторію для використання', '2020-07-01 12:02:47.255339+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (90, 232, '2020-07-01 12:03:53.4075', 3, 3, 5, 5, 1, '2020-06-22', 'Передано в лабораторію для використання', '2020-07-01 12:03:53.4075+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (68, 55, '2020-06-11 08:49:52.394321', 1, 3, 100, 100, 1, '2020-03-05', 'Передано в лабораторію для використання', '2020-06-11 08:49:52.394321+03');
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (81, 416, '2020-06-16 09:51:18.712668', 1, 1, 100, 98, 1, '2020-01-10', '', '2020-06-16 09:51:18.712668+03');
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (82, 415, '2020-06-16 09:51:35.535723', 1, 1, 10, 5, 1, '2020-01-10', '', '2020-06-16 09:51:35.535723+03');
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (80, 417, '2020-06-16 09:50:43.971156', 1, 1, 500, 486, 1, '2020-01-10', '', '2020-06-16 09:50:43.971156+03');
 
 
 --
@@ -1518,11 +1515,11 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (8, 'Цинда', 'Роман', 'Володимирович', 1, '2020-05-13 15:19:01.423968', 'TSYNDA_ROMAN', '88baebeb0b1bba69c6d1091d09fcfc17', '', 1, '0.0.0.0', 4);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (2, 'Шкурдода', 'Сергій', 'Вікторович', 1, '2020-06-30 08:37:47.527158', 'shkurdoda', 'd80daf84242523a7c25c1162a314d3d3', 'c81ca9264594fed818045889c46bc269', 1, '192.168.2.118', 3);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (4, 'Курочка', 'Альона', 'Вікторівна', 1, '2020-05-13 12:45:28.033254', 'kurochka_alona', '367351bf60f9f27578c468f6de2a3dbc', '', 1, '0.0.0.0', 4);
-INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2020-07-01 12:39:48.544496', 'shinkarenko', '1174b4363b1661f9b2c480440a97deea', 'd42b3e1a6ff697e6f4b3dd3b64b9e856', 1, '192.168.2.127', 3);
+INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2020-07-02 17:21:01.092717', 'root', '855cb86bd065112c52899ef9ea7b9918', '69e8b23ea67a3f899966a9f0a64691c9', 1, '192.168.137.168', 1);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (6, 'Тищенко', 'Владислав', 'Валерійович', 1, '2020-05-13 12:51:12.018755', 'tyshchenko_vladyslav', 'fdc633a1cdff96e4de0bb502b11a3426', '', 1, '0.0.0.0', 4);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (7, 'Крикуненко', 'Олександр', 'Юрійович', 1, '2020-07-01 11:26:31.920189', 'krykunenko_oleksandr', 'ce06f5f52a91795ac79fdcf31e867121', '7555f5ec8f126bfc900bfe859d0bc0fd', 2, '192.168.2.162', 3);
+INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2020-07-02 15:45:52.111714', 'shinkarenko', '1174b4363b1661f9b2c480440a97deea', '557af902d087e23bc4e7b94a5acaeeec', 1, '192.168.2.127', 3);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (0, '', '', '', 1, '2019-12-28 11:10:20.623791', '', '', '', 0, '0.0.0.0', 0);
-INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2020-07-01 21:56:37.42574', 'root', '855cb86bd065112c52899ef9ea7b9918', '04cb7a1d7d29c230ef7bf58211cbb121', 1, '217.115.96.67', 1);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (5, 'Конопацька', 'Інна', 'Сергіївна', 1, '2020-05-13 12:47:50.616139', 'konopatska_inna', '9049e404aeac19bfb971c573c16978df', '', 1, '0.0.0.0', 4);
 
 
@@ -1533,6 +1530,7 @@ INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts
 INSERT INTO "public"."groups" ("id", "ts", "name", "full_name", "region_id") VALUES (0, '2019-12-28 11:09:48.499219', '--', '--', 0);
 INSERT INTO "public"."groups" ("id", "ts", "name", "full_name", "region_id") VALUES (1, '2019-12-29 23:20:15.009224', 'Лабораторія хімічних досліджень', 'Лабораторія хімічних досліджень', 1);
 INSERT INTO "public"."groups" ("id", "ts", "name", "full_name", "region_id") VALUES (2, '2020-05-13 13:59:14.272388', 'Лабораторія балістичних досліджень', 'Лабораторія балістичних досліджень', 1);
+INSERT INTO "public"."groups" ("id", "ts", "name", "full_name", "region_id") VALUES (3, '2020-07-02 16:35:29.816604', 'Лабораторія хімічних досліджень', 'Лабораторія хімічних досліджень', 2);
 
 
 --
@@ -1871,29 +1869,30 @@ INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (2, 'Техн
 INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (3, 'Приготування робочого реактиву (розчину)', '2020-03-18 16:12:38.948107', 'reactiv');
 INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (4, 'Інше', '2020-04-23 08:47:35.867644', 'other');
 INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (5, 'Наукова діяльність', '2020-07-01 11:54:34.737934', 'science');
+INSERT INTO "public"."purpose" ("id", "name", "ts", "attr") VALUES (6, 'Знищення (утилізація)', '2020-07-02 10:18:56.492213', 'utilisation');
 
 
 --
 -- Data for Name: reactiv; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "group_id", "inc_date", "dead_date", "safe_place", "safe_needs", "comment") VALUES ('139fea8e6738ae2b5cd35087349caff3', 37, 100, 80, 1, 1, '2020-07-01', '2020-07-01', '', '', '');
 INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "group_id", "inc_date", "dead_date", "safe_place", "safe_needs", "comment") VALUES ('', 0, 0, 0, 0, 0, '1970-01-01', '1970-01-01', '', '', '');
+INSERT INTO "public"."reactiv" ("hash", "reactiv_menu_id", "quantity_inc", "quantity_left", "inc_expert_id", "group_id", "inc_date", "dead_date", "safe_place", "safe_needs", "comment") VALUES ('139fea8e6738ae2b5cd35087349caff3', 37, 100, 0, 1, 1, '2020-07-01', '2020-07-01', '', '', '');
 
 
 --
 -- Data for Name: reactiv_consume; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO "public"."reactiv_consume" ("hash", "reactiv_hash", "quantity", "inc_expert_id", "consume_ts", "ts", "date") VALUES ('792b00b16e82323428651b45267c3cde', '139fea8e6738ae2b5cd35087349caff3', 100, 1, '2020-07-02 12:25:09.827974', '2020-07-02 12:25:09.827974', '2020-07-02');
 INSERT INTO "public"."reactiv_consume" ("hash", "reactiv_hash", "quantity", "inc_expert_id", "consume_ts", "ts", "date") VALUES ('', '', 0, 0, '2020-06-15 13:39:55.968213', '2020-06-15 13:39:55.968213', '1970-01-01');
-INSERT INTO "public"."reactiv_consume" ("hash", "reactiv_hash", "quantity", "inc_expert_id", "consume_ts", "ts", "date") VALUES ('434f38eba27f7539453302b67f388e0c', '139fea8e6738ae2b5cd35087349caff3', 20, 1, '2020-07-01 17:31:44.889677', '2020-07-01 17:31:44.889677', '2020-07-01');
 
 
 --
 -- Data for Name: reactiv_consume_using; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."reactiv_consume_using" ("consume_hash", "using_hash") VALUES ('434f38eba27f7539453302b67f388e0c', '8acc1355276a3446355a291b7c762e9a');
+INSERT INTO "public"."reactiv_consume_using" ("consume_hash", "using_hash") VALUES ('792b00b16e82323428651b45267c3cde', 'b4b0f1b719f1d9e9e70375115524a2b6');
 
 
 --
@@ -2288,6 +2287,7 @@ INSERT INTO "public"."reagent_state" ("id", "name", "position") VALUES (4, 'Ро
 
 INSERT INTO "public"."region" ("id", "ts", "name", "position") VALUES (0, '2019-12-28 11:09:22.894212', '--', 0);
 INSERT INTO "public"."region" ("id", "ts", "name", "position") VALUES (1, '2019-12-29 23:22:02.645034', 'Черкаська область', 0);
+INSERT INTO "public"."region" ("id", "ts", "name", "position") VALUES (2, '2020-07-02 16:35:12.8155', 'Харківська область', 0);
 
 
 --
@@ -2687,8 +2687,8 @@ INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_dat
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (403, '2020-04-17 15:09:15.393344', 141, 2000, '2020-03-17', 3, 1, 2000, 11, '2020-01-10', '2020-07-10', 1, 'Польща', 1, 5, 1, '2 пляшок із прозорою рідиною по 1 л (по 1,15 кг)', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-17 15:09:15.393344', '93-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (404, '2020-04-17 15:12:43.530091', 7, 5000, '2020-03-17', 1, 1, 4000, 7, '2020-01-09', '2021-01-09', 1, 'Україна', 1, 5, 1, '5 пляшок із прозорою рідиною по 1 л (по 0,9 кг)', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-17 15:12:43.530091', '94-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (391, '2020-04-17 13:59:39.735225', 20, 3000, '2020-03-17', 3, 1, 3000, 7, '2019-06-17', '2020-12-15', 1, 'Китай', 1, 5, 1, '3 пляшки із прозорою рідиною по 1000 мл (по 0,7 кг)', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-17 13:59:39.735225', '81-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
-INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (357, '2020-04-15 16:56:42.668003', 39, 1000, '2020-03-17', 3, 1, 900, 8, '2019-04-15', '2021-04-15', 1, 'Франція', 2, 5, 1, '10 банок із речовиною по 100 г', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-15 16:56:42.668003', '47-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (415, '2020-06-16 09:45:34.743197', 275, 20, '2011-01-01', 1, 1, 10, 2, '2011-01-01', '2025-01-01', 0, 'ТЕСТ', 2, 3, 0, 'ТЕСТ', 'ТЕСТ', 'ТЕСТ', '2020-06-16 09:45:34.743197', '1-2011', 'ТЕСТ', 'ТЕСТ', '2011-01-01');
+INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (357, '2020-04-15 16:56:42.668003', 39, 1000, '2020-03-17', 3, 1, 900, 8, '2019-04-15', '2021-04-15', 1, 'Франція', 2, 5, 1, '10 банок із речовиною по 100 г', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-04-15 16:56:42.668003', '47-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004269', '2020-03-17');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (406, '2020-06-09 15:41:33.242192', 246, 1000, '2020-04-01', 3, 1, 1000, 1, '2020-03-01', '2030-03-01', 0, '', 4, 6, 1, '1 упаковка із папером фільтрувальним (100 шт)', 'шафа для розхідних матеріалів к. 313', 'В сухому захищеному від пошкодження місці', '2020-06-09 15:41:33.242192', '95-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004257', '2020-04-01');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (407, '2020-06-09 15:50:09.351556', 29, 10, '2020-03-17', 3, 1, 10, 7, '2020-01-09', '2022-01-09', 1, 'Alfa Aesar', 2, 5, 1, '1 пляшка із речовиною 10 г', 'шафа для реактивів к. 318', 'В темних шафах (холодильнику) за температури не вище 5 і не нижче 0 град. цельсію', '2020-06-09 15:50:09.351556', '96-2020', 'ТОВ "ХІМЛАБОРРЕАКТИВ"', '№ЛР004263', '2020-03-17');
 INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_date", "inc_expert_id", "group_id", "quantity_left", "clearence_id", "create_date", "dead_date", "is_sertificat", "creator", "reagent_state_id", "danger_class_id", "is_suitability", "comment", "safe_place", "safe_needs", "created_ts", "reagent_number", "provider", "nakladna_num", "nakladna_date") VALUES (408, '2020-06-09 16:10:42.871831', 171, 500, '2020-05-21', 3, 1, 500, 1, '2020-03-01', '2030-03-01', 0, '', 4, 6, 1, '1 упаковка з накінечниками на 10 мкл (500 шт)', 'шафа для розхідних матеріалів к. 313', 'В сухому захищеному від пошкодження місці', '2020-06-09 16:10:42.871831', '97-2020', 'ДНДЕКЦ МВС', '20-254', '2020-05-21');
@@ -2718,8 +2718,9 @@ INSERT INTO "public"."units" ("id", "name", "position", "short_name") VALUES (2,
 -- Data for Name: using; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('c6cf5caca65a8382d90d4b2467861222', 3, '2020-07-01', 1, '', '1970-01-01', 0, '', '');
-INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment") VALUES ('8acc1355276a3446355a291b7c762e9a', 4, '2020-07-01', 1, '', '1970-01-01', 0, 'fghfghfdgh', '');
+INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment", "expert_id") VALUES ('c6cf5caca65a8382d90d4b2467861222', 3, '2020-07-01', 1, '', '1970-01-01', 0, '', '', 1);
+INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment", "expert_id") VALUES ('b4b0f1b719f1d9e9e70375115524a2b6', 6, '2020-07-02', 1, '', '1970-01-01', 0, 'Знищення зіпсованого розчину', '', 1);
+INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment", "expert_id") VALUES ('9e08241a3fdcbe3d98d29955a1abc091', 4, '2020-07-02', 1, '', '1970-01-01', 0, 'Використано за призначенням', '', 3);
 
 
 --
@@ -2768,14 +2769,14 @@ SELECT pg_catalog.setval('"public"."expert_id_seq"', 8, true);
 -- Name: groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."groups_id_seq"', 2, true);
+SELECT pg_catalog.setval('"public"."groups_id_seq"', 3, true);
 
 
 --
 -- Name: purpose_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."purpose_id_seq"', 5, true);
+SELECT pg_catalog.setval('"public"."purpose_id_seq"', 6, true);
 
 
 --
@@ -2810,7 +2811,7 @@ SELECT pg_catalog.setval('"public"."reagent_state_id_seq"', 4, true);
 -- Name: region_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."region_id_seq"', 1, true);
+SELECT pg_catalog.setval('"public"."region_id_seq"', 2, true);
 
 
 --
@@ -3475,6 +3476,14 @@ ALTER TABLE ONLY "public"."stock"
 
 ALTER TABLE ONLY "public"."stock"
     ADD CONSTRAINT "stock_reagent_state_id_fkey" FOREIGN KEY ("reagent_state_id") REFERENCES "public"."reagent_state"("id") ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: using using_expert_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY "public"."using"
+    ADD CONSTRAINT "using_expert_id_fkey" FOREIGN KEY ("expert_id") REFERENCES "public"."expert"("id") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

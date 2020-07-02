@@ -54,7 +54,7 @@ switch ( _ACTION_ )
 
         $_POST['filters'] = ( isset($_POST['filters']) && is_array($_POST['filters']) )?$_POST['filters']:array();
         $stock = new stock;
-
+    
         ajax::set_data( 'lines', $stock->get_html( $_POST['filters'], 'stock/line' ) );
     break;
 

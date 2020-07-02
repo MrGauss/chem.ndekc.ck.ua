@@ -11,11 +11,12 @@
             <td class="date">{tag:using:date}</td>
             <td class="purpose_name">{tag:purpose:name}</td>
             <td class="name">
-                <!-- reactiv:3     -->  [purpose:3]<span class="recipe_name">{tag:recipe:name} ({tag:reactive:quantity_inc} {tag:units:short_name})</span>[/purpose:3]
-                <!-- maintenance:2 -->  [purpose:2]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose:2]
-                <!-- expertise:1   -->  [purpose:1]<span class="recipe_name">{tag:using:exp_number}</span>    [/purpose:1]
-                <!-- other:4   -->      [purpose:4]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose:4]
-                <!-- science:5   -->    [purpose:5]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose:5]
+                <!-- reactiv:3     -->  [purpose:3]<span class="recipe_name">{tag:recipe:name} ({tag:reactive:quantity_inc} {tag:units:short_name})</span>[/purpose]
+                <!-- maintenance:2 -->  [purpose:2]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose]
+                <!-- expertise:1   -->  [purpose:1]<span class="recipe_name">{tag:using:exp_number}</span>    [/purpose]
+                <!-- other:4   -->      [purpose:4]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose]
+                <!-- science:5   -->    [purpose:5]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose]
+                <!-- science:5   -->    [purpose:6]<span class="recipe_name">{tag:using:tech_info}</span>     [/purpose]
             </td>
             <td class="expert">{tag:user:surname} {tag:user:name} {tag:user:phname}</td>
             <td class="consume">{consume:list}<div class="clear"></div></td>

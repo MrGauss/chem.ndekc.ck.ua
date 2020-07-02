@@ -380,6 +380,13 @@ $(document).ready( function()
 
     $('[data-sorter="1"]').on('click', function(){ sort.init( $(this) ); });
 
+    $('#filters input[type="checkbox"][data-group]').on('change', function()
+    {
+        var is_ch = $(this).is(':checked');
+        $('#filters input[type="checkbox"][data-group="'+$(this).attr('data-group')+'"]').prop( 'checked', false );
+        $(this).prop( 'checked', is_ch );
+    });
+
     /////////////////////////////////////////////////////////////////////////
 
     $('[data-role^="dialog:window"]').dialog( chem.dialog_conf );

@@ -12,7 +12,7 @@ $_stock = new stock;
 
 $tpl->load( 'stock/main' );
 
-$tpl->set( '{list}', $_stock->get_html( array(), 'stock/line' ) );
+$tpl->set( '{list}', $_stock->get_html( array( 'is_dead' => 0, 'quantity_left:more' => 0 ), 'stock/line' ) );
 
 $tpl->compile( 'stock/main' );
 

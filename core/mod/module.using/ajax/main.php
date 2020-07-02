@@ -37,9 +37,8 @@ switch ( _ACTION_ )
 
         $_POST['hash']  = isset($_POST['hash'])?$_POST['hash']:false;
         $_POST['key']   = isset($_POST['key'])?$_POST['key']:false;
-        $_POST['save']  = isset($_POST['save'])?$_POST['save']:false;
 
-        if( !common::key_check( $_POST['hash'], $_POST['hash'] ) )
+        if( !common::key_check( $_POST['hash'], $_POST['key'] ) )
         {
             ajax::set_error( 1, 'Помилка даних! Оновіть сторінку!' );
         }
