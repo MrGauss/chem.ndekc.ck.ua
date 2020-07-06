@@ -36,7 +36,7 @@
                 <div class="elems_line">
                     <div class="elem inc_date">
                         <label class="label">Дата приготування</label>
-                        <input data-important="1" class="input" type="text" autocomplete="off" name="inc_date" value="{tag:inc_date}" data-save="1" data-mask="99.99.9999" data-placeholder="__.__.____" placeholder="__.__.____" maxlength="10" data-mindate="-1y" data-maxdate="+1y">
+                        <input data-important="1" class="input" type="text" autocomplete="off" name="inc_date" value="{tag:inc_date}" data-save="1" maxlength="10" data-mindate="-1y" data-maxdate="+1y">
                     </div>
                     <div class="elem dead_date">
                         <label class="label">Кінцева дата</label>

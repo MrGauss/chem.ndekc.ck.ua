@@ -3,7 +3,7 @@
     <div id="filters" class="filters">
         <table class="filters_header_frame">
             <tr>
-                <td class="create_button"><button id="create" type="button" data-id="0">Створити</button></td>
+                <td class="create_button"><button id="clear" type="reset" data-id="0">Скинути</button></td>
                 <td class="filters_area">
                     <div class="filters_list">
 

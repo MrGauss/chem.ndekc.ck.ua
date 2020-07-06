@@ -177,6 +177,8 @@ class tpl
         $data = self::str_replace_if_exist( '{CURRENT_REGION_ID}',  CURRENT_REGION_ID, $data );
         $data = self::str_replace_if_exist( '{encoding}',           ENCODING, $data );
         $data = self::str_replace_if_exist( '{charset}',            CHARSET, $data );
+        $data = self::str_replace_if_exist( '{CURR_URL}',           $_SERVER['REQUEST_URI'], $data );
+
 
         foreach( user::get_current_user_data_raw() as $uk => $uv )
         {

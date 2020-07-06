@@ -127,7 +127,7 @@ class consume
 
             '.$WHERE.'
             ORDER BY consume.date DESC;
-            ;';
+            ; '.QUERY_CACHABLE;
 
         // echo $SQL;exit;
 
@@ -144,9 +144,12 @@ class consume
             $row['consume_hash'] = common::filter_hash( $row['consume_hash'] ? $row['consume_hash'] : '' );
             $row['reactiv_hash'] = common::filter_hash( $row['reactiv_hash'] ? $row['reactiv_hash'] : '' );
             $row['using_hash']   = common::filter_hash( $row['using_hash'] ? $row['using_hash'] : '' );
-            
+
             $data[$row['consume_hash']] = $row;
         }
+
+        cache::set( $cache_var, $data );
+
         return $data;
     }
 

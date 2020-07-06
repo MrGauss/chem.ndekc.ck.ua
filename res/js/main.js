@@ -94,6 +94,8 @@ $('.ui-dialog-content').dialog("option", "position", {my: "center", at: "center"
 
     this.init_datepicker = function( obj )
     {
+        if( obj.attr('type') == 'date' ){ return false; }
+
         var maxdate = obj.attr( 'data-maxdate' );
             maxdate = maxdate?maxdate:0;
 
@@ -241,7 +243,15 @@ var sort = new function()
 
     this.renum = function( obj )
     {
-        obj = obj.find( '.line' );
+        if( obj.hasClass('stats_table') )
+        {
+            obj = obj.find( 'tr.data' );
+        }
+        else
+        {
+            obj = obj.find( '.line' );
+        }
+
         var i = obj.length;
 
         obj.each(function()
@@ -257,6 +267,14 @@ var sort = new function()
         var sorter_type = obj.attr( 'data-type' );
 
         var list = obj.parents('#list_frame').find('#list');
+        var find = 'line';
+
+        if( obj.parents('#list_frame').hasClass('stats') )
+        {
+            list = obj.parents('table');
+            find = 'data';
+        }
+
 
         if( sort.STILL_SORT )
         {
@@ -292,7 +310,7 @@ var sort = new function()
 
         ///////////////////////////////////
 
-        list.find('.line').sort(function(a,b)
+        list.find( '.' + find ).sort(function(a,b)
         {
             sort.STILL_SORT = true;
 
@@ -373,7 +391,7 @@ $(document).ready( function()
     /////////////////////////////////////////////////////////////////////////
 
     $('[data-mask]').each(function()        { chem.init_mask( $(this) ); });
-    $('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
+    $('input[name*="date"][type="text"]').each(function(){ chem.init_datepicker( $(this) ); });
     $('select[data-value]').each(function() { chem.init_select( $(this) ); });
 
     /////////////////////////////////////////////////////////////////////////

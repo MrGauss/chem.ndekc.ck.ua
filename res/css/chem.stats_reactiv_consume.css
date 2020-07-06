@@ -5,17 +5,12 @@
 #main_frame #page_frame #list_frame .stats_table tr.data .data_numeric{ text-align: center; width: 10%; }
 #main_frame #page_frame #list_frame .stats_table tr.data .reagent_number{ text-align: center; width: 100px; }
 
-#main_frame #page_frame #list_frame .stats_table tr td.stock_quantity_inc, #main_frame #page_frame #list_frame .stats_table tr th.stock_quantity_inc{ background: #FFFFBD; }
-#main_frame #page_frame #list_frame .stats_table tr.head th.stock_quantity_inc{ background: #FFFFA3; }
+#main_frame #page_frame #list_frame .stats_table tr td.reactiv_quantity_inc, #main_frame #page_frame #list_frame .stats_table tr th.reactiv_quantity_inc{ background: #FFFFBD; }
+#main_frame #page_frame #list_frame .stats_table tr.head th.reactiv_quantity_inc{ background: #FFFFA3; }
 
-#main_frame #page_frame #list_frame .stats_table tr td.stock_quantity_left, #main_frame #page_frame #list_frame .stats_table tr th.stock_quantity_left{ background: #FFFFD1; }
-#main_frame #page_frame #list_frame .stats_table tr.head th.stock_quantity_left{ background: #FFFFB2; }
+#main_frame #page_frame #list_frame .stats_table tr td.reactiv_quantity_left, #main_frame #page_frame #list_frame .stats_table tr th.reactiv_quantity_left{ background: #FFFFD1; }
+#main_frame #page_frame #list_frame .stats_table tr.head th.reactiv_quantity_left{ background: #FFFFB2; }
 
-#main_frame #page_frame #list_frame .stats_table tr td.dispersion_quantity_inc, #main_frame #page_frame #list_frame .stats_table tr th.dispersion_quantity_inc{ background: #BDDEFF; }
-#main_frame #page_frame #list_frame .stats_table tr.head th.dispersion_quantity_inc{ background: #99CCFF; }
-
-#main_frame #page_frame #list_frame .stats_table tr td.dispersion_quantity_left, #main_frame #page_frame #list_frame .stats_table tr th.dispersion_quantity_left{ background: #D6EBFF; }
-#main_frame #page_frame #list_frame .stats_table tr.head th.dispersion_quantity_left{ background: #BDDFFF; }
 
 #main_frame #page_frame #list_frame .stats_table tr td.consume_quantity, #main_frame #page_frame #list_frame .stats_table tr th.consume_quantity{ background: #FFDBDB; }
 #main_frame #page_frame #list_frame .stats_table tr.head th.consume_quantity{ background: #FFBDBD; }

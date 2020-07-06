@@ -56,11 +56,20 @@ option::-moz-focus-inner{border:0;padding:0;}
 
 /*********************************/
 
+
+
+/*********************************/
+
 #ajax{ display: none; }
 
 /*********************************/
 
-input[type="number"], input[type="text"], input[type="password"], textarea, select
+input[type="number"],
+input[type="date"],
+input[type="text"],
+input[type="password"],
+textarea,
+select
 {
     -webkit-transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
     -moz-transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
@@ -81,11 +90,34 @@ input[type="number"],
 input[type="number"]:hover,
 input[type="number"]:focus { -moz-appearance: textfield; -webkit-appearance: none;  }
 
-input[type="number"][data-important="1"], input[type="text"][data-important="1"], input[type="password"][data-important="1"], textarea[data-important="1"], select[data-important="1"]{ background-image: url(../img/important-12px.png); }
-input[type="number"][data-important="1"].blred, input[type="text"][data-important="1"].blred, input[type="password"][data-important="1"].blred, textarea[data-important="1"].blred, select[data-important="1"].blred{ background-color: #FFC7C7; background-image: url(../img/important-red-16px.png); border-color: #FF0000; opacity: 1.0; }
-input[type="number"][data-important="1"].warn, input[type="text"][data-important="1"].warn, input[type="password"][data-important="1"].warn, textarea[data-important="1"].warn, select[data-important="1"].warn{background-image: url(../img/important-red-16px.png); opacity: 1.0; }
+input[type="date"]{ text-align: center; }
 
-input[type="number"]:hover, input[type="text"]:hover, input[type="password"]:hover, textarea:hover
+input[type="number"][data-important="1"],
+input[type="date"][data-important="1"],
+input[type="text"][data-important="1"],
+input[type="password"][data-important="1"],
+textarea[data-important="1"],
+select[data-important="1"]{ background-image: url(../img/important-12px.png); }
+
+input[type="number"][data-important="1"].blred,
+input[type="date"][data-important="1"].blred,
+input[type="text"][data-important="1"].blred,
+input[type="password"][data-important="1"].blred,
+textarea[data-important="1"].blred,
+select[data-important="1"].blred{ background-color: #FFC7C7; background-image: url(../img/important-red-16px.png); border-color: #FF0000; opacity: 1.0; }
+
+input[type="number"][data-important="1"].warn,
+input[type="date"][data-important="1"].warn,
+input[type="text"][data-important="1"].warn,
+input[type="password"][data-important="1"].warn,
+textarea[data-important="1"].warn,
+select[data-important="1"].warn{background-image: url(../img/important-red-16px.png); opacity: 1.0; }
+
+input[type="number"]:hover,
+input[type="date"]:hover,
+input[type="text"]:hover,
+input[type="password"]:hover,
+textarea:hover
 {
     -moz-user-focus: none !important;
     border-color: #111111;
@@ -93,7 +125,12 @@ input[type="number"]:hover, input[type="text"]:hover, input[type="password"]:hov
     background-color: #FFFFFF;
     cursor: pointer;
 }
-input[type="number"]:focus, input[type="text"]:focus, input[type="password"]:focus, textarea:focus, select:focus
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus
 {
     -moz-user-focus: none !important;
     border-color: #111111;
@@ -102,7 +139,15 @@ input[type="number"]:focus, input[type="text"]:focus, input[type="password"]:foc
     cursor: text;
 }
 
-input[type="number"][disabled="disabled"], input[type="text"][disabled="disabled"], input[type="password"][disabled="disabled"], textarea[disabled="disabled"], input[type="text"][readonly="readonly"], input[type="password"][readonly="readonly"], textarea[readonly="readonly"]{ cursor: text; }
+input[type="number"][disabled="disabled"],
+input[type="date"][disabled="disabled"],
+input[type="text"][disabled="disabled"],
+input[type="password"][disabled="disabled"],
+textarea[disabled="disabled"],
+input[type="text"][readonly="readonly"],
+input[type="password"][readonly="readonly"],
+textarea[readonly="readonly"]{ cursor: text; }
+
 .curpointer{ cursor: pointer; }
 .noselect{ -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
 input[type="checkbox"]{ display: inline-block; position: relative; top: 2px; }
@@ -187,19 +232,22 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #list_frame{ position: relative; height: 100%; width: 100%; padding: 0px 0px 0px 0px; }
 #main_frame #page_frame #list_frame #filters{ position: absolute; top: 0px; left: 0px; width: 100%; background: none; z-index: 15; border-bottom: 1px solid #999999; padding: 0px 5px 0px 5px; }
 #main_frame #page_frame #list_frame #filters #create,
+#main_frame #page_frame #list_frame #filters #clear,
 #main_frame #page_frame #list_frame #filters #search{ display: inline-block; width: 140px; height: 40px; background: #007500; letter-spacing: 0.1em; }
 #main_frame #page_frame #list_frame #filters #search{ background: #003366; }
+#main_frame #page_frame #list_frame #filters #clear{ background: #700000; border-color: #1F0000; }
 
 #main_frame #page_frame #list_frame #filters table.filters_header_frame{ border: none; width: 100%; height: 100%; border-collapse: collapse; background: none; }
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td{ border: none; width: auto; border-collapse: collapse; padding: 0px; margin: 0px; }
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td.create_button,
+#main_frame #page_frame #list_frame #filters table.filters_header_frame td.clear_button,
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td.search_button{ width: 160px; text-align: center; }
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td.filters_area{  }
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td.filters_area .filters_list{ background: none; position: relative; width: 100%; height: calc( var(--list-filters-area-height) - 1px ); overflow: hidden; overflow-y: auto; }
 #main_frame #page_frame #list_frame #filters table.filters_header_frame td.filters_area .filters_list .fbox{ width: 180px; height: 100%; float: left; margin-right: 5px; }
 #main_frame #page_frame #list_frame #filters .filter{ display: block;  width: 100%; height: 47px; overflow: hidden; text-align: center; padding: 0px 2px 0px 2px; margin: 0px; background: none; }
 #main_frame #page_frame #list_frame #filters .filter.fullheight{ height: 100%;  }
-#main_frame #page_frame #list_frame #filters .filter .input{ width: 100%; height: 28px; }
+#main_frame #page_frame #list_frame #filters .filter .input{ width: 100%; height: 28px; text-align: center; }
 #main_frame #page_frame #list_frame #filters .filter .label{ text-transform: uppercase; font-size: 0.85em; font-weight: bold; color: #003366; }
 #main_frame #page_frame #list_frame #filters .filter .label[for]{ cursor: pointer; }
 
@@ -342,7 +390,31 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 .default_editor .good_area      { padding: 20px; text-align: center; font-weight: bold; font-size: 1.1em; color: #006600; border: 1px solid #006600; background: #E3FFDB url(../img/important-green-32px.png) no-repeat 5px 50%;; margin-bottom: 5px; }
 .default_editor .edit_info      { padding: 20px 20px 20px 40px; text-align: center; font-size: 1.1em; font-weight: bold; color: #A87000; border: 1px solid #FAA700; background: #FFF4BD url(../img/important-yellow-32px.png) no-repeat 5px 50%; margin-top: 5px; margin-bottom: 0px; }
 
+#main_frame #page_frame #list_frame .stats_table{ width: 100%; border: 1px solid #000000; border-collapse: collapse; margin: 0px auto 0px auto; }
+#main_frame #page_frame #list_frame .stats_table tr,
+#main_frame #page_frame #list_frame .stats_table tr th,
+#main_frame #page_frame #list_frame .stats_table tr td,
+#main_frame #page_frame #list_frame .stats_table tr.head td,
+#main_frame #page_frame #list_frame .stats_table tr.head th,
+#main_frame #page_frame #list_frame .stats_table tr.data td,
+#main_frame #page_frame #list_frame .stats_table tr.data th
+{
+    opacity: 1.0;
+    padding: 5px;
+    border: 1px solid #000000;
+    border-collapse: collapse;
+    background: #FFFFFF;
+    cursor: pointer;
+}
 
+#main_frame #page_frame #list_frame .stats_table tr.data th{ font-weight: normal; }
+#main_frame #page_frame #list_frame .stats_table tr.head th{ font-weight: bold; padding-top: 10px; padding-bottom: 10px; background: #CCCCCC; }
+#main_frame #page_frame #list_frame .stats_table tr [data-sorter="1"]{ cursor: pointer; }
+
+
+#main_frame #page_frame #list_frame .stats_table tr.data .numi{ text-align: center; width: 40px; }
+#main_frame #page_frame #list_frame .stats_table tr.data .name{ text-align: left; width: auto; }
+#main_frame #page_frame #list_frame .stats_table tr.data .data_numeric{ text-align: center; width: 10%; }
 
 
 
