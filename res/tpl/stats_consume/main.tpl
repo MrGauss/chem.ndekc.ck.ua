@@ -30,30 +30,54 @@
 
     <div id="list" class="list">
 
-        <h2 id="table02">Статистика використання матеріалів (загалом)</h2>
-        <table class="stats_table stats_by_purpose_id">
-            <tr class="head">
-                <th class="noselect reagent_name" data-sorter="1" data-type="txt" data-sort="reagent_name" colspan="2">Назва реактиву чи витратного матеріалу</th>
-                <th class="noselect stock_quantity_inc" data-sorter="1" data-type="int" data-sort="stock_quantity_inc">Надійшло на склад</th>
-                <th class="noselect stock_quantity_left" data-sorter="1" data-type="int" data-sort="stock_quantity_left">Залишилось на складі</th>
-                <th class="noselect dispersion_quantity_inc" data-sorter="1" data-type="int" data-sort="dispersion_quantity_inc">Видано в лабораторію</th>
-                <th class="noselect dispersion_quantity_left" data-sorter="1" data-type="int" data-sort="dispersion_quantity_left">Залишилось в лабораторії</th>
-                <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity">Фактично використано</th>
-            </tr>
+        <table id="table02" class="stats_table stats_by_purpose_id">
+            <caption>Статистика використання матеріалів (загалом)</caption>
+            <thead>
+                <tr class="head">
+                    <th class="noselect reagent_name" data-sorter="1" data-type="txt" data-sort="reagent_name" colspan="2">Назва реактиву чи витратного матеріалу</th>
+                    <th class="noselect stock_quantity_inc" data-sorter="1" data-type="int" data-sort="stock_quantity_inc">Надійшло на склад</th>
+                    <th class="noselect stock_quantity_left" data-sorter="1" data-type="int" data-sort="stock_quantity_left">Залишилось на складі</th>
+                    <th class="noselect dispersion_quantity_inc" data-sorter="1" data-type="int" data-sort="dispersion_quantity_inc">Видано в лабораторію</th>
+                    <th class="noselect dispersion_quantity_left" data-sorter="1" data-type="int" data-sort="dispersion_quantity_left">Залишилось в лабораторії</th>
+                    <th class="noselect consume_count" data-sorter="1" data-type="int" data-sort="consume_count">Використань</th>
+                    <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity">Фактично використано</th>
+                </tr>
+            </thead>
+            <tbody>
             {table02}
+            </tbody>
         </table>
 
-        <h2 id="table01">Статистика використання матеріалів зі складу</h2>
-        <table class="stats_table stats_by_stock_id">
-            <tr class="head">
-                <th class="noselect reagent_name" data-sorter="1" data-type="txt" data-sort="reagent_name" colspan="3">Назва реактиву чи витратного матеріалу</th>
-                <th class="noselect stock_quantity_inc" data-sorter="1" data-type="int" data-sort="stock_quantity_inc">Надійшло на склад</th>
-                <th class="noselect stock_quantity_left" data-sorter="1" data-type="int" data-sort="stock_quantity_left">Залишилось на складі</th>
-                <th class="noselect dispersion_quantity_inc" data-sorter="1" data-type="int" data-sort="dispersion_quantity_inc">Видано в лабораторію</th>
-                <th class="noselect dispersion_quantity_left" data-sorter="1" data-type="int" data-sort="dispersion_quantity_left">Залишилось в лабораторії</th>
-                <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity">Фактично використано</th>
-            </tr>
+        <table id="table01" class="stats_table stats_by_stock_id">
+            <caption>Статистика використання матеріалів зі складу</caption>
+            <thead>
+                <tr class="head">
+                    <th class="noselect reagent_name" data-sorter="1" data-type="txt" data-sort="reagent_name" colspan="3">Назва реактиву чи витратного матеріалу</th>
+                    <th class="noselect stock_quantity_inc" data-sorter="1" data-type="int" data-sort="stock_quantity_inc">Надійшло на склад</th>
+                    <th class="noselect stock_quantity_left" data-sorter="1" data-type="int" data-sort="stock_quantity_left">Залишилось на складі</th>
+                    <th class="noselect dispersion_quantity_inc" data-sorter="1" data-type="int" data-sort="dispersion_quantity_inc">Видано в лабораторію</th>
+                    <th class="noselect dispersion_quantity_left" data-sorter="1" data-type="int" data-sort="dispersion_quantity_left">Залишилось в лабораторії</th>
+                    <th class="noselect consume_count" data-sorter="1" data-type="int" data-sort="consume_count">Використань</th>
+                    <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity">Фактично використано</th>
+                </tr>
+            </thead>
+            <tbody>
             {table01}
+            </tbody>
+        </table>
+
+        <table id="table02" class="stats_table stats_by_stock_id">
+            <caption>Статистика використання матеріалів за призначеннями</caption>
+            <thead>
+                <tr class="head">
+                    <th class="noselect purpose_name" colspan="1">Мета використання (призначення)</th>
+                    <th class="noselect reagent_name" colspan="2">Назва реактиву чи витратного матеріалу</th>
+
+                    <th class="noselect consume_count">Використань</th>
+                    <th class="noselect consume_quantity">Фактично використано</th>
+                </tr>
+            </thead>
+            {table03}
         </table>
 
 

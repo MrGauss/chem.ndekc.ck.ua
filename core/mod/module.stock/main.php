@@ -11,8 +11,8 @@ access::check( 'stock', 'view' );
 $_stock = new stock;
 
 $tpl->load( 'stock/main' );
-
-$tpl->set( '{list}', $_stock->get_html( array( 'is_dead' => 0, 'quantity_left:more' => 0 ), 'stock/line' ) );
+                                       // array( 'is_dead' => 0, 'quantity_left:more' => 0 )
+$tpl->set( '{list}', $_stock->get_html( array() , 'stock/line' ) );
 
 $tpl->compile( 'stock/main' );
 

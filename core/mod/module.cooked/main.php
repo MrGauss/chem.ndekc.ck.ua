@@ -11,8 +11,8 @@ access::check( 'cooked', 'view' );
 $cooked = new cooked;
 
 $tpl->load( 'cooked/main' );
-
-$tpl->set( '{list}', $cooked->get_html( array( 'is_dead' => 0, 'quantity_left:more' => 0 ), 'cooked/line' ) );
+                                       // array( 'is_dead' => 0, 'quantity_left:more' => 0 )
+$tpl->set( '{list}', $cooked->get_html( array(  ), 'cooked/line' ) );
 
 $tpl->compile( 'cooked/main' );
 

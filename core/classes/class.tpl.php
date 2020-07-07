@@ -62,12 +62,8 @@ class tpl
 
         $this->theme[$skin] = $this->parse_global_tags( $this->cache[$skin] );
 
-        while( strpos( $this->theme[$skin], '{RAND}' ) !== false )
-        {
-            $this->theme[$skin] = preg_replace ( '!\{RAND\}!i', str_shuffle(md5(rand( 1000000, 9999999 ))), $this->theme[$skin], 1 );
-        }
-
         if( $enable_current ){ $this->current = $skin; }
+
         return $this->theme[$skin];
     }
 
@@ -136,6 +132,17 @@ class tpl
 
             $data = preg_replace( '!\{global:(\w+?)\}!', '', $data );
         }
+
+        while( strpos( $data, '{RAND}' ) !== false )
+        {
+            $data = preg_replace ( '!\{RAND\}!i', str_shuffle(md5(rand( 1000000, 9999999 ))), $data, 1 );
+        }
+
+        while( strpos( $data, '{RAND_NUMBER}' ) !== false )
+        {
+            $data = preg_replace ( '!\{RAND_NUMBER\}!i', mt_rand( 0, 10000 ), $data, 1 );
+        }
+
         return $data;
     }
 

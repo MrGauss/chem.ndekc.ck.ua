@@ -1,0 +1,52 @@
+#main_frame #page_frame #list_frame #list{ height: 100%; margin-top: 0px; }
+
+#main_frame #page_frame #list_frame .stats_table tr.data .numi{  }
+#main_frame #page_frame #list_frame .stats_table tr.data .name{  }
+#main_frame #page_frame #list_frame .stats_table tr.data .data_numeric{  }
+
+
+#main_frame #page_frame #list_frame .stats_table .head th[class*="month"],
+#main_frame #page_frame #list_frame .stats_table .data td[class*="month"]{ width: 5%; }
+
+#main_frame #page_frame #list_frame .stats_table .head th.consume_quantity,
+#main_frame #page_frame #list_frame .stats_table .data td.consume_quantity{ width: 5%; }
+
+#main_frame #page_frame #list_frame .stats_table tr.data th.numi{ width: 40px; background: #CCCCCC; }
+#main_frame #page_frame #list_frame .stats_table tr.data [data-value=""] span,
+#main_frame #page_frame #list_frame .stats_table tr.data [data-value="0"] span{ opacity: 0.2; }
+
+#main_frame #page_frame #list_frame .stats_table tr th.month12,
+#main_frame #page_frame #list_frame .stats_table tr th.month01,
+#main_frame #page_frame #list_frame .stats_table tr th.month02{ background: #75BAFF; }
+#main_frame #page_frame #list_frame .stats_table tr td.month12,
+#main_frame #page_frame #list_frame .stats_table tr td.month01,
+#main_frame #page_frame #list_frame .stats_table tr td.month02{ background: #D1E8FF; }
+
+#main_frame #page_frame #list_frame .stats_table tr th.month03,
+#main_frame #page_frame #list_frame .stats_table tr th.month04,
+#main_frame #page_frame #list_frame .stats_table tr th.month05{ background: #B6FF9E; }
+#main_frame #page_frame #list_frame .stats_table tr td.month03,
+#main_frame #page_frame #list_frame .stats_table tr td.month04,
+#main_frame #page_frame #list_frame .stats_table tr td.month05{ background: #E0FFD6; }
+
+#main_frame #page_frame #list_frame .stats_table tr th.month06,
+#main_frame #page_frame #list_frame .stats_table tr th.month07,
+#main_frame #page_frame #list_frame .stats_table tr th.month08{ background: #FFFF70; }
+#main_frame #page_frame #list_frame .stats_table tr td.month06,
+#main_frame #page_frame #list_frame .stats_table tr td.month07,
+#main_frame #page_frame #list_frame .stats_table tr td.month08{ background: #FFFFC7; }
+
+#main_frame #page_frame #list_frame .stats_table tr th.month09,
+#main_frame #page_frame #list_frame .stats_table tr th.month10,
+#main_frame #page_frame #list_frame .stats_table tr th.month11{ background: #FFC59E; }
+#main_frame #page_frame #list_frame .stats_table tr td.month09,
+#main_frame #page_frame #list_frame .stats_table tr td.month10,
+#main_frame #page_frame #list_frame .stats_table tr td.month11{ background: #FFE3D1; }
+
+#main_frame #page_frame #list_frame .stats_table tr th.consume_quantity{ background: #FFBDBD; }
+#main_frame #page_frame #list_frame .stats_table tr td.consume_quantity{ background: #FFE0E0; }
+
+
+#table01_chart{ height: 400px; }
+
+#main_frame #page_frame #list_frame .stats_table:last-of-type{ margin-bottom: 20px; }

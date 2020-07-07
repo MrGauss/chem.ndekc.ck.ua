@@ -3,7 +3,17 @@
 #main_frame #page_frame #list_frame .stats_table tr.data .numi{ text-align: center; width: 40px; background: #CCCCCC; }
 #main_frame #page_frame #list_frame .stats_table tr.data .name{ text-align: left; width: auto; }
 #main_frame #page_frame #list_frame .stats_table tr.data .data_numeric{ text-align: center; width: 10%; }
-#main_frame #page_frame #list_frame .stats_table tr.data .reagent_number{ text-align: center; width: 100px; }
+
+#main_frame #page_frame #list_frame .stats_table tr.data .reagent_number{ text-align: center; }
+#main_frame #page_frame #list_frame .stats_table tr.data .reagent_number,
+#main_frame #page_frame #list_frame .stats_table tr.data .consume_count,
+#main_frame #page_frame #list_frame .stats_table tr.data .consume_quantity,
+#main_frame #page_frame #list_frame .stats_table tr.data .dispersion_quantity_inc,
+#main_frame #page_frame #list_frame .stats_table tr.data .dispersion_quantity_left,
+#main_frame #page_frame #list_frame .stats_table tr.data .stock_quantity_inc,
+#main_frame #page_frame #list_frame .stats_table tr.data .stock_quantity_left       { width: 7%; }
+
+#main_frame #page_frame #list_frame .stats_table tr.data .purpose_name       { width: 20%; }
 
 #main_frame #page_frame #list_frame .stats_table tr td.stock_quantity_inc, #main_frame #page_frame #list_frame .stats_table tr th.stock_quantity_inc{ background: #FFFFBD; }
 #main_frame #page_frame #list_frame .stats_table tr.head th.stock_quantity_inc{ background: #FFFFA3; }
@@ -20,8 +30,11 @@
 #main_frame #page_frame #list_frame .stats_table tr td.consume_quantity, #main_frame #page_frame #list_frame .stats_table tr th.consume_quantity{ background: #FFDBDB; }
 #main_frame #page_frame #list_frame .stats_table tr.head th.consume_quantity{ background: #FFBDBD; }
 
-#main_frame #page_frame #list_frame .stats_table tr.data:hover td{  }
+#main_frame #page_frame #list_frame .stats_table tr td.consume_count, #main_frame #page_frame #list_frame .stats_table tr th.consume_count{ background: #E0FFE0; }
+#main_frame #page_frame #list_frame .stats_table tr.head th.consume_count{ background: #BDFFBD; }
 
+#main_frame #page_frame #list_frame .stats_table tr td.purpose_name, #main_frame #page_frame #list_frame .stats_table tr th.purpose_name{ background: #FFF7EB; }
+#main_frame #page_frame #list_frame .stats_table tr.head th.purpose_name{ background: #FFE0B2; }
 
 #main_frame #page_frame #list_frame nav ul{ margin-left: 40px; }
 #main_frame #page_frame #list_frame nav ul li{ margin: 5px; }

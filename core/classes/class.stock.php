@@ -115,7 +115,7 @@ class stock
         if( !$error && $ID ){ $data = $ID?$this->get_raw(array('id'=>$ID))[$ID] : array(); }
 
         if( !$error && ( !is_array($data) || !count($data) ) )                                  { $error = 'Помилка отримання даних!'; }
-        if( !$error && common::strtotime( $data['created_ts'] ) < ( time() - (60*60*24*14) ) )  { $error = 'Заборонено видаляти записи, створені пізні ніж 14 днів тому!'; }
+        //if( !$error && common::strtotime( $data['created_ts'] ) < ( time() - (60*60*24*14) ) )  { $error = 'Заборонено видаляти записи, створені пізні ніж 14 днів тому!'; }
         if( !$error && $data['quantity_left'] != $data['quantity_inc'] )                        { $error = 'Неможливо видалити реактив, який вже виданий в лабораторію!';  }
 
         ////////////////////////////////////

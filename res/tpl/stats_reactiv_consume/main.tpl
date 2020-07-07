@@ -30,12 +30,13 @@
 
     <div id="list" class="list">
 
-        <h2 id="table02">Статистика використання розчинів</h2>
         <table class="stats_table stats_by_purpose_id">
+            <caption>Статистика використання розчинів</caption>
             <tr class="head">
                 <th class="noselect reagent_name" data-sorter="1" data-type="txt" data-sort="reagent_name" colspan="2">Назва розчину</th>
                 <th class="noselect reactiv_quantity_inc" data-sorter="1" data-type="int" data-sort="reactiv_quantity_inc">Створено</th>
-                <th class="noselect reactiv_quantity_left" data-sorter="1" data-type="int" data-sort="reactiv_quantity_left">Залишилось в лабораторії</th>
+                <th class="noselect reactiv_quantity_left" data-sorter="1" data-type="int" data-sort="reactiv_quantity_left">Залишилось</th>
+                <th class="noselect consume_count" data-sorter="1" data-type="int" data-sort="consume_count">Використань</th>
                 <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity">Фактично використано</th>
             </tr>
             {table02}

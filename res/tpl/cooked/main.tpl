@@ -14,7 +14,7 @@
                             </div>
 
                             <div class="filter ch_filter">
-                                <input  id="filter-is_dead_0" class="input" data-group="is_dead" data-role="filter" type="checkbox" name="is_dead" value="0" checked="checked">
+                                <input  id="filter-is_dead_0" class="input" data-group="is_dead" data-role="filter" type="checkbox" name="is_dead" value="0" >
                                 <label for="filter-is_dead_0" class="label">Лише не зіпсовані</label>
                             </div>
 
@@ -24,7 +24,7 @@
                             </div>
 
                             <div class="filter ch_filter">
-                                <input  id="filter-quantity_left_more" class="input" data-group="quantity_left" data-role="filter" type="checkbox" name="quantity_left:more" value="0" checked="checked">
+                                <input  id="filter-quantity_left_more" class="input" data-group="quantity_left" data-role="filter" type="checkbox" name="quantity_left:more" value="0" >
                                 <label for="filter-quantity_left_more" class="label">Лише не використані</label>
                             </div>
                             <div class="clear"></div>

@@ -89,6 +89,7 @@ class stats
         $SQL = '
                     SELECT
                         stock.id,
+                        COUNT( consume.hash )           as consume_count,
                         SUM( consume.quantity )         as consume_quantity,
                         SUM( stock.quantity_inc )       as stock_quantity_inc,
                         SUM( stock.quantity_left )      as stock_quantity_left,
@@ -124,7 +125,6 @@ class stats
         cache::set( $cache_var, $data );
 
         return $data;
-
     }
 
     //////////////////////
@@ -202,9 +202,10 @@ class stats
         $SQL = '
             SELECT
                 reagent.id,
-                SUM( consume.quantity ) 					as consume_quantity,
-                SUM( stock.quantity_inc ) 				as stock_quantity_inc,
-                SUM( stock.quantity_left ) 				as stock_quantity_left,
+                COUNT( consume.hash )               as consume_count,
+                SUM( consume.quantity ) 		    as consume_quantity,
+                SUM( stock.quantity_inc ) 			as stock_quantity_inc,
+                SUM( stock.quantity_left ) 			as stock_quantity_left,
                 SUM( dispersion.quantity_inc ) 		as dispersion_quantity_inc,
                 SUM( dispersion.quantity_left ) 	as dispersion_quantity_left
 
@@ -314,10 +315,10 @@ class stats
         $SQL = '
             SELECT
                 reactiv.reactiv_menu_id,
+                COUNT( reactiv_consume.hash ) as consume_count,
                 SUM( reactiv_consume.quantity ) as reactiv_consume_quantity,
                 SUM( reactiv.quantity_inc ) as reactiv_quantity_inc,
                 SUM( reactiv.quantity_left ) as reactiv_quantity_left
-
             FROM
                 reactiv_consume
                 LEFT JOIN reactiv ON( reactiv.hash = reactiv_consume.reactiv_hash )
@@ -343,6 +344,272 @@ class stats
 
         return $data;
 
+    }
+
+    //////////////////////
+
+    public final function get_stats_consume_by_purpose_id_html( $filters = array() )
+    {
+        $data = $this->get_stats_consume_by_purpose_id_raw( $filters );
+
+        if( !is_array($data) || !count($data) ){ return false; }
+
+        $skin = 'stats_consume/by_purpose_id_line';
+
+        $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
+        $units   = ( new spr_manager( 'units' )   )->get_raw();
+        $purpose = ( new spr_manager( 'purpose' ) )->get_raw();
+
+        $tpl = new tpl;
+
+        $table = array();
+        foreach( $data as $purpose_id => $purpose_data )
+        {
+            $I = count( $purpose_data );
+
+            $first_line = true;
+            $rows = 0;
+
+            foreach( $purpose_data as $reagent_id => $reagent_data )
+            {
+                $rows++;
+
+                $tpl->load( $skin );
+
+                if( $first_line )
+                {
+                    $tpl->set_block( '!\[first\](.+?|)\[\/first\]!', '$1' );
+                    $tpl->set_block( '!\[not-first\](.+?|)\[\/not-first\]!', '' );
+                }
+                else
+                {
+                    $tpl->set_block( '!\[first\](.+?|)\[\/first\]!', '' );
+                    $tpl->set_block( '!\[not-first\](.+?|)\[\/not-first\]!', '$1' );
+                }
+
+                foreach( $reagent_data as $k=>$v )
+                {
+                    if( is_array($v) ){ continue; }
+                    $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
+                }
+
+                foreach( $reagent[$reagent_id] as $k=>$v )
+                {
+                    if( is_array($v) ){ continue; }
+                    $tpl->set( '{tag:reagent:'.$k.'}', common::db2html( $v ) );
+                }
+
+                foreach( $purpose[$purpose_id] as $k=>$v )
+                {
+                    if( is_array($v) ){ continue; }
+                    $tpl->set( '{tag:purpose:'.$k.'}', common::db2html( $v ) );
+                }
+
+                foreach( $units[$reagent[$reagent_id]['units_id']] as $k=>$v )
+                {
+                    if( is_array($v) ){ continue; }
+                    $tpl->set( '{tag:units:'.$k.'}', common::db2html( $v ) );
+                }
+
+                $tpl->set( '{I}', $I-- );
+                $tpl->compile( $skin );
+
+                $first_line = false;
+            }
+
+            $table[] = str_replace( '{rows}', $rows, $tpl->result( $skin ) );
+        }
+
+        $table = '<colgroup span="'.count($table).'"></colgroup>'."\n".'<tbody>'.implode( '</tbody><tbody>', $table ).'</tbody>';
+
+        return $table;
+    }
+
+    public final function get_stats_consume_by_purpose_id_raw( $filters = array() )
+    {
+        $WHERE = array();
+        $WHERE['consume.date']       = 'consume.date     > \'1970-01-01\'::date';
+        $WHERE['stock.id']           = 'stock.id         > \'0\'::integer';
+        $WHERE['stock.group_id']     = 'stock.group_id   = '.CURRENT_GROUP_ID.'';
+        $WHERE['using.purpose_id']   = '"using".purpose_id > 0';
+
+        $filters = is_array($filters) ? $filters : array();
+        if( isset($filters['consume_date:from']) )
+        {
+            $filters['consume_date:from'] = common::en_date( $filters['consume_date:from'], 'Y-m-d' );
+            $WHERE['consume.date:from']      = 'consume.date >= \'' . $this->db->safesql( $filters['consume_date:from'] ) . '\'::date';
+        }
+
+        if( isset($filters['consume_date:to']) )
+        {
+            $filters['consume_date:to'] = common::en_date( $filters['consume_date:to'], 'Y-m-d' );
+            $WHERE['consume.date:to']      = 'consume.date <= \'' . $this->db->safesql( $filters['consume_date:to'] ) . '\'::date';
+        }
+
+        if( is_array($WHERE) && count($WHERE) ){ $WHERE = 'WHERE '.implode( ' AND ', $WHERE ); }
+
+        $SQL = '
+            SELECT
+                "using".purpose_id,
+                stock.reagent_id,
+                SUM( consume.quantity ) as consume_quantity,
+                COUNT( consume.hash ) as consume_count
+            FROM
+                consume
+                LEFT JOIN consume_using ON( consume_using.consume_hash = consume.hash )
+                LEFT JOIN "using" ON( "using".hash = consume_using.using_hash )
+                LEFT JOIN dispersion ON( dispersion.id = consume.dispersion_id )
+                LEFT JOIN stock	ON( dispersion.stock_id = stock.id )
+            '.$WHERE.'
+            GROUP BY "using".purpose_id, stock.reagent_id
+            ORDER BY  consume_quantity DESC
+            ;
+        '.QUERY_CACHABLE;
+
+        $cache_var = 'stats-'.md5( $SQL ).'-raw';
+
+        $data = cache::get( $cache_var );
+        if( $data && is_array($data) ){ return $data; }
+        $data = array();
+
+        $SQL = $this->db->query( $SQL );
+
+        while( ( $row = $this->db->get_row($SQL) ) !== false )
+        {
+            if( !isset($data[$row['purpose_id']]) ){ $data[$row['purpose_id']] = array(); }
+            if( !isset($data[$row['purpose_id']][$row['reagent_id']]) ){ $data[$row['purpose_id']][$row['reagent_id']] = array(); }
+
+            $data[$row['purpose_id']][$row['reagent_id']] = $row;
+        }
+
+        cache::set( $cache_var, $data );
+
+        return $data;
+    }
+
+    //////////////////////
+
+
+    public final function get_stats_consume_dynamics_html( $filters = array() )
+    {
+        $data = $this->get_stats_consume_dynamics_raw( $filters );
+
+        if( !is_array($data) || !count($data) ){ return false; }
+
+        $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
+        $units   = ( new spr_manager( 'units' )   )->get_raw();
+
+        $tpl = new tpl;
+
+        $I = count( $data );
+        foreach( $data as $reagent_id => $reagent_data )
+        {
+            $tpl->load( 'stats_consume_dynamic/table_line' );
+
+            foreach( $reagent_data as $k=>$v )
+            {
+                if( is_array($v) ){ continue; }
+                $tpl->set( '{tag:'.$k.'}', common::db2html( $v ) );
+            }
+
+            if( isset( $reagent[$reagent_id] ) && is_array($reagent[$reagent_id]) )
+            {
+                foreach( $reagent[$reagent_id] as $k=>$v )
+                {
+                    if( is_array($v) ){ continue; }
+                    $tpl->set( '{tag:reagent:'.$k.'}', common::db2html( $v ) );
+                }
+
+                if( isset( $units[$reagent[$reagent_id]['units_id']] ) && is_array($units[$reagent[$reagent_id]['units_id']]) )
+                {
+                    foreach( $units[$reagent[$reagent_id]['units_id']] as $k=>$v )
+                    {
+                        if( is_array($v) ){ continue; }
+                        $tpl->set( '{tag:units:'.$k.'}', common::db2html( $v ) );
+                    }
+                }
+            }
+
+            $tpl->set( '{I}', $I-- );
+
+            $tpl->compile( 'stats_consume_dynamic/table_line' );
+        }
+
+        return $tpl->result( 'stats_consume_dynamic/table_line' );
+    }
+
+    public final function get_stats_consume_dynamics_raw( $filters = array() )
+    {
+        $WHERE = array();
+        $WHERE['consume.date']       = 'consume.date     > \'1970-01-01\'::date';
+        $WHERE['stock.id']           = 'stock.id         > \'0\'::integer';
+        $WHERE['stock.group_id']     = 'stock.group_id   = '.CURRENT_GROUP_ID.'';
+        $WHERE['stock.reagent_id']   = 'stock.reagent_id > 0';
+
+        $filters = is_array($filters) ? $filters : array();
+        if( isset($filters['consume_date:from']) )
+        {
+            $filters['consume_date:from'] = common::en_date( $filters['consume_date:from'], 'Y-m-d' );
+            $WHERE['consume.date:from']      = 'consume.date >= \'' . $this->db->safesql( $filters['consume_date:from'] ) . '\'::date';
+        }
+        else
+        {
+            $WHERE['consume.date:from']      = 'consume.date >= date_trunc( \'year\', NOW() )';
+        }
+
+        if( isset($filters['consume_date:to']) )
+        {
+            $filters['consume_date:to'] = common::en_date( $filters['consume_date:to'], 'Y-m-d' );
+            $WHERE['consume.date:to']      = 'consume.date <= \'' . $this->db->safesql( $filters['consume_date:to'] ) . '\'::date';
+        }
+        else
+        {
+            $WHERE['consume.date:to']      = 'consume.date < date_trunc( \'year\', NOW() + INTERVAL \'1 year\' )';
+        }
+
+        if( is_array($WHERE) && count($WHERE) ){ $WHERE = 'WHERE '.implode( ' AND ', $WHERE ); }
+
+        $SQL = '
+            SELECT
+                stock.reagent_id,
+                SUM( consume.quantity ) as consume_quantity,
+                SUM( ( ( extract( \'month\' from consume.date ) = 1 )::INTEGER * consume.quantity  )::FLOAT ) as consume_quantity_1,
+                SUM( ( ( extract( \'month\' from consume.date ) = 2 )::INTEGER * consume.quantity  )::FLOAT ) as consume_quantity_2,
+                SUM( ( ( extract( \'month\' from consume.date ) = 3 )::INTEGER * consume.quantity  )::FLOAT ) as consume_quantity_3,
+                SUM( ( ( extract( \'month\' from consume.date ) = 4 )::INTEGER * consume.quantity  )::FLOAT ) as consume_quantity_4,
+                SUM( ( ( extract( \'month\' from consume.date ) = 5 )::INTEGER * consume.quantity  )::FLOAT ) as consume_quantity_5,
+                SUM( ( ( extract( \'month\' from consume.date ) = 6 )::INTEGER * consume.quantity  )::FLOAT ) as consume_quantity_6,
+                SUM( ( ( extract( \'month\' from consume.date ) = 7 )::INTEGER * consume.quantity  )::FLOAT ) as consume_quantity_7,
+                SUM( ( ( extract( \'month\' from consume.date ) = 8 )::INTEGER * consume.quantity  )::FLOAT ) as consume_quantity_8,
+                SUM( ( ( extract( \'month\' from consume.date ) = 9 )::INTEGER * consume.quantity  )::FLOAT ) as consume_quantity_9,
+                SUM( ( ( extract( \'month\' from consume.date ) = 10 )::INTEGER * consume.quantity )::FLOAT ) as consume_quantity_10,
+                SUM( ( ( extract( \'month\' from consume.date ) = 11 )::INTEGER * consume.quantity )::FLOAT ) as consume_quantity_11,
+                SUM( ( ( extract( \'month\' from consume.date ) = 12 )::INTEGER * consume.quantity )::FLOAT ) as consume_quantity_12
+            FROM
+                consume
+                LEFT JOIN dispersion ON( dispersion.id = consume.dispersion_id )
+                LEFT JOIN stock ON( stock.id = dispersion.stock_id )
+            '.$WHERE.'
+            GROUP BY stock.reagent_id
+            ;
+        '.QUERY_CACHABLE;
+
+        $cache_var = 'stats-'.md5( $SQL ).'-raw';
+
+        $data = cache::get( $cache_var );
+        if( $data && is_array($data) ){ return $data; }
+        $data = array();
+
+        $SQL = $this->db->query( $SQL );
+
+        while( ( $row = $this->db->get_row($SQL) ) !== false )
+        {
+            $data[$row['reagent_id']] = $row;
+        }
+
+        cache::set( $cache_var, $data );
+
+        return $data;
     }
 
 }

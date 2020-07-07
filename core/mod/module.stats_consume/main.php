@@ -30,6 +30,7 @@ $tpl->set( '{consume_date:to}', $_POST['consume_date'][1] );
 
 $tpl->set( '{table01}', $_stats->get_stats_consume_by_stock_id_html( array( 'consume_date:from' => $_POST['consume_date'][0], 'consume_date:to' => $_POST['consume_date'][1], ) ) );
 $tpl->set( '{table02}', $_stats->get_stats_consume_by_reagent_id_html( array( 'consume_date:from' => $_POST['consume_date'][0], 'consume_date:to' => $_POST['consume_date'][1], ) ) );
+$tpl->set( '{table03}', $_stats->get_stats_consume_by_purpose_id_html( array( 'consume_date:from' => $_POST['consume_date'][0], 'consume_date:to' => $_POST['consume_date'][1], ) ) );
 $tpl->compile( 'stats_consume/main' );
 $tpl->ins( 'main', $tpl->result( 'stats_consume/main' ) );
 $tpl->clean( 'stats_consume/main' );

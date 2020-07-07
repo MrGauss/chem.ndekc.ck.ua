@@ -245,20 +245,31 @@ var sort = new function()
     {
         if( obj.hasClass('stats_table') )
         {
-            obj = obj.find( 'tr.data' );
+            obj.find('tbody').each( function()
+            {
+                var i = $(this).find( 'tr.data' ).length;
+
+                $(this).find( 'tr.data' ).each(function()
+                {
+                    $(this).find('.numi').text( i );
+                    i = i - 1;
+                });
+
+            } );
         }
         else
         {
             obj = obj.find( '.line' );
+            var i = obj.length;
+
+            obj.each(function()
+            {
+                $(this).find('.numi').text( i );
+                i = i - 1;
+            });
         }
 
-        var i = obj.length;
 
-        obj.each(function()
-        {
-            $(this).find('.numi').text( i );
-            i = i - 1;
-        });
 
     }
     this.init = function( obj )
