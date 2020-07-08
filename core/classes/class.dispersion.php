@@ -55,7 +55,7 @@ class dispersion
         if( !is_array($data4save) ){ return false; }
         if( !is_array($original_data) ){ return false; }
 
-        $fucktime_years     = 1;
+        $fucktime_years     = 10;
         $fucktime_period    = 60*60*24*365*$fucktime_years;
         $fucktime_ago       = time() - $fucktime_period;
         $fucktime_farevey   = time() + $fucktime_period;

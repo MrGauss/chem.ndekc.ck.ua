@@ -180,7 +180,7 @@ class spr_manager
 
         if( !$error )
         {
-            $SQL = 'DELETE FROM '.$this->table.' WHERE id='.$ID.';';
+            $SQL = 'DELETE FROM '.$this->table.' WHERE id='.$ID.' AND group_id = '.CURRENT_GROUP_ID.';';
             $this->db->query( $SQL );
         }
 
@@ -258,6 +258,7 @@ class spr_manager
         }
 
         if( array_key_exists( 'created_by_expert_id', $this->table_info ) ){ $SQL['created_by_expert_id'] = CURRENT_USER_ID; }
+        if( array_key_exists( 'group_id', $this->table_info ) ){ $SQL['group_id'] = CURRENT_GROUP_ID; }
 
         ///////////////////////////////////////////////////
 
@@ -328,14 +329,18 @@ class spr_manager
         }
         if( !isset($filters['id']) )    { $WHERE['id'] = '"'.$this->table.'"."id" > 0'; }
 
-        $WHERE = implode( ' AND ', $WHERE );
-        $WHERE = common::trim( $WHERE );
-        $WHERE = strlen($WHERE)>3 ? 'WHERE '.$WHERE : '';
+
 
         $ORDER = array();
 
         if( array_key_exists( 'position', $this->table_info ) ){ $ORDER[] = '"'.$this->table.'"."position" DESC'; }
         if( array_key_exists( 'name', $this->table_info ) ){ $ORDER[] = '"'.$this->table.'"."name" ASC'; }
+        if( array_key_exists( 'group_id', $this->table_info ) ){ $WHERE[] = '"'.$this->table.'"."group_id" IN( 0, '.CURRENT_GROUP_ID.' )'; }
+
+
+        $WHERE = implode( ' AND ', $WHERE );
+        $WHERE = common::trim( $WHERE );
+        $WHERE = strlen($WHERE)>3 ? 'WHERE '.$WHERE : '';
 
         $ORDER = implode( ', ', $ORDER );
         $ORDER = common::trim( $ORDER );

@@ -78,7 +78,7 @@ class recipes
         if( !$error )
         {
             $this->db->query( 'BEGIN;' );
-            $this->db->query( 'DELETE FROM '.self::DB_MAIN_TABLE.' WHERE id='.$ID.';' );
+            $this->db->query( 'DELETE FROM '.self::DB_MAIN_TABLE.' WHERE id='.$ID.' AND group_id='.CURRENT_GROUP_ID.';' );
             $this->db->query( 'DELETE FROM reactiv_menu_ingredients WHERE reactiv_menu_id='.$ID.';' );
             $this->db->query( 'COMMIT;' );
         }
@@ -159,6 +159,7 @@ class recipes
         access::check( 'spr', 'edit' );
 
         $ID = common::integer( $ID );
+        if( !is_numeric($ID) ){ return false; }
 
         if( !is_array($data) ){ return false; }
 
@@ -181,6 +182,7 @@ class recipes
         $SQL['name']        = $this->db->safesql( $data['name'] );
         $SQL['comment']     = $this->db->safesql( common::encode_string( common::htmlentities( $data['comment'] ) ) );
         $SQL['units_id']    = $this->db->safesql( $data['units_id'] );
+        $SQL['group_id']    = $this->db->safesql( CURRENT_GROUP_ID );
 
         ///////////////////////////////////////////////////
 
@@ -379,6 +381,7 @@ class recipes
         }
 
         $WHERE = array();
+        $WHERE['group_id'] = '"'.self::DB_MAIN_TABLE.'".group_id IN( 0, '.CURRENT_GROUP_ID.' )';
 
         if( isset($filters['id']) )
         {
@@ -395,7 +398,7 @@ class recipes
             }
 
         }
-        if( !isset($filters['id']) )    { $WHERE['id'] = '"'.self::DB_MAIN_TABLE.'"."id" > 0'; }
+        if( !isset($filters['id']) ){ $WHERE['id'] = '"'.self::DB_MAIN_TABLE.'"."id" > 0'; }
 
         $WHERE = implode( ' AND ', $WHERE );
         $WHERE = common::trim( $WHERE );
@@ -413,7 +416,7 @@ class recipes
                     ORDER by "'.self::DB_MAIN_TABLE.'"."name" ASC;
         '.db::CACHED;
 
-        $cache_var = 'spr-'.self::DB_MAIN_TABLE.'-'.md5( md5( $SQL ) . md5( serialize( $filters ) ) ).'';
+        $cache_var = 'spr-recipe-'.self::DB_MAIN_TABLE.'-'.md5( $SQL ).'';
 
         $data = false;
         $data = cache::get( $cache_var );
