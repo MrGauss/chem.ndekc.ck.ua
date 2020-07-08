@@ -440,6 +440,14 @@ $(document).ready( function()
         chem.clear_cache();
     } );
 
+    $('[data-role="show_or_hide"][data-content_id]').click(function()
+    {
+        var obj = $('#'+$(this).attr( 'data-content_id' ));
+
+        if( obj.hasClass( 'dnone' ) ){ obj.removeClass('dnone'); }
+        else{ obj.addClass('dnone'); }
+    });
+
 
 
 

@@ -13,6 +13,12 @@
 #main_frame #page_frame #list_frame .stats_table tr.data .stock_quantity_inc,
 #main_frame #page_frame #list_frame .stats_table tr.data .stock_quantity_left       { width: 7%; }
 
+#main_frame #page_frame #list_frame .stats_table tr.data .consume_quantity,
+#main_frame #page_frame #list_frame .stats_table tr.data .dispersion_quantity_inc,
+#main_frame #page_frame #list_frame .stats_table tr.data .dispersion_quantity_left,
+#main_frame #page_frame #list_frame .stats_table tr.data .stock_quantity_inc,
+#main_frame #page_frame #list_frame .stats_table tr.data .stock_quantity_left       { text-align: right; padding-right: 10px; }
+
 #main_frame #page_frame #list_frame .stats_table tr.data .purpose_name       { width: 20%; }
 
 #main_frame #page_frame #list_frame .stats_table tr td.stock_quantity_inc, #main_frame #page_frame #list_frame .stats_table tr th.stock_quantity_inc{ background: #FFFFBD; }
@@ -40,6 +46,9 @@
 #main_frame #page_frame #list_frame nav ul li{ margin: 5px; }
 
 #main_frame #page_frame #list_frame h2{ text-align: center; font-weight: bold; margin: 30px 10px 20px 10px; }
-#main_frame #page_frame #list_frame h2:first-of-type{ margin-top: 0px; }
+
+
+#table03chart{ height: 400px; }
+#table02chart{ height: 600px; }
 
 

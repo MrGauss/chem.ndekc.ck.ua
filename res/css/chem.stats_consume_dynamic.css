@@ -48,5 +48,28 @@
 
 
 #table01_chart{ height: 400px; }
+#table02_chart{ height: 400px; }
+#compare_chart{ height: 400px; }
+#compare_diff_chart{ height: 500px; }
 
 #main_frame #page_frame #list_frame .stats_table:last-of-type{ margin-bottom: 20px; }
+
+#compare_diff_chart .highcharts-graph.zone-0 {
+    stroke: #CC0000;
+}
+#compare_diff_chart .highcharts-area.zone-0 {
+    fill: #CC0000;
+}
+#compare_diff_chart .highcharts-point.zone-0 {
+    fill: #CC0000;
+}
+
+#compare_diff_chart .highcharts-graph.zone-1 {
+    stroke: #009900;
+}
+#compare_diff_chart .highcharts-area.zone-1 {
+    fill: #009900;
+}
+#compare_diff_chart .highcharts-point.zone-1 {
+    fill: #009900;
+}

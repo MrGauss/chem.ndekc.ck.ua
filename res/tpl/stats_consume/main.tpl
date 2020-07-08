@@ -1,3 +1,8 @@
+<link rel="stylesheet" type="text/css" href="{SKINDIR}/css/highcharts/highcharts.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="{SKINDIR}/css/highcharts/themes/grid-light.css" media="screen" />
+<script src="{SKINDIR}/js/highcharts/highcharts.js" type="text/javascript"></script>
+<script src="{SKINDIR}/js/highcharts/modules/item-series.js" type="text/javascript"></script>
+
 <div id="list_frame" class="stats">
 
     <div id="filters" class="filters">
@@ -30,8 +35,14 @@
 
     <div id="list" class="list">
 
+        <div class="block_info great">
+            <p>Статистичні дані відмічені як <b>"(за період)"</b> формуються згідно вищевстановленого фільтру.</p>
+            <p>Дані, що не мають такої відмітки, формуються на поточну дату.</p>
+        </div>
+
+        <h2>Статистика використання матеріалів (загалом)</h2>
+        <div id="table02chart"></div>
         <table id="table02" class="stats_table stats_by_purpose_id">
-            <caption>Статистика використання матеріалів (загалом)</caption>
             <thead>
                 <tr class="head">
                     <th class="noselect reagent_name" data-sorter="1" data-type="txt" data-sort="reagent_name" colspan="2">Назва реактиву чи витратного матеріалу</th>
@@ -39,8 +50,10 @@
                     <th class="noselect stock_quantity_left" data-sorter="1" data-type="int" data-sort="stock_quantity_left">Залишилось на складі</th>
                     <th class="noselect dispersion_quantity_inc" data-sorter="1" data-type="int" data-sort="dispersion_quantity_inc">Видано в лабораторію</th>
                     <th class="noselect dispersion_quantity_left" data-sorter="1" data-type="int" data-sort="dispersion_quantity_left">Залишилось в лабораторії</th>
-                    <th class="noselect consume_count" data-sorter="1" data-type="int" data-sort="consume_count">Використань</th>
-                    <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity">Фактично використано</th>
+                    <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity_full">Використано<br>всього</th>
+                    <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity">Використано<br>(за період)</th>
+
+                    <th class="noselect consume_count" data-sorter="1" data-type="int" data-sort="consume_count">Використань<br>(за період)</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,8 +70,10 @@
                     <th class="noselect stock_quantity_left" data-sorter="1" data-type="int" data-sort="stock_quantity_left">Залишилось на складі</th>
                     <th class="noselect dispersion_quantity_inc" data-sorter="1" data-type="int" data-sort="dispersion_quantity_inc">Видано в лабораторію</th>
                     <th class="noselect dispersion_quantity_left" data-sorter="1" data-type="int" data-sort="dispersion_quantity_left">Залишилось в лабораторії</th>
-                    <th class="noselect consume_count" data-sorter="1" data-type="int" data-sort="consume_count">Використань</th>
-                    <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity">Фактично використано</th>
+                    <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity_full">Використано<br>всього</th>
+                    <th class="noselect consume_quantity" data-sorter="1" data-type="int" data-sort="consume_quantity">Використано<br>(за період)</th>
+
+                    <th class="noselect consume_count" data-sorter="1" data-type="int" data-sort="consume_count">Використань<br>(за період)</th>
                 </tr>
             </thead>
             <tbody>
@@ -66,19 +81,22 @@
             </tbody>
         </table>
 
-        <table id="table02" class="stats_table stats_by_stock_id">
-            <caption>Статистика використання матеріалів за призначеннями</caption>
+        <h2>Статистика використання матеріалів за призначеннями</h2>
+
+        <div id="table03chart"></div>
+
+        <table id="table03" class="stats_table stats_by_stock_id">
             <thead>
                 <tr class="head">
                     <th class="noselect purpose_name" colspan="1">Мета використання (призначення)</th>
                     <th class="noselect reagent_name" colspan="2">Назва реактиву чи витратного матеріалу</th>
-
                     <th class="noselect consume_count">Використань</th>
                     <th class="noselect consume_quantity">Фактично використано</th>
                 </tr>
             </thead>
             {table03}
         </table>
+
 
 
 

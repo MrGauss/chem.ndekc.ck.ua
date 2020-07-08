@@ -30,6 +30,7 @@ $tpl->load( $curr_main_skin );
 
 
 $tpl->set( '{table01}', $_stats->get_stats_consume_dynamics_html( array() ) );
+$tpl->set( '{table02}', $_stats->get_stats_consume_dynamics_html( array( 'year_correction' => -1 ) ) );
 
 
 $tpl->compile( $curr_main_skin );

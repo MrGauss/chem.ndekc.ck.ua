@@ -319,7 +319,6 @@ class dispersion
 
     public final function get_raw( $filters = array() )
     {
-
         $WHERE = array();
         $WHERE['dispersion.group_id'] = '( dispersion.group_id = \''.CURRENT_GROUP_ID.'\'::INTEGER OR dispersion.group_id = 0 )';
 
