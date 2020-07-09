@@ -565,6 +565,8 @@ class cooked
         $data = $this->get_raw( array( 'hash' => $line_hash ) );
         $data = isset( $data[$line_hash] ) ? $data[$line_hash] : false;
 
+        //var_export($data);exit;
+
         if( !is_array($data) ){ return false; }
 
         if( !$data['inc_expert_id'] ){ $data['inc_expert_id'] = CURRENT_USER_ID; }

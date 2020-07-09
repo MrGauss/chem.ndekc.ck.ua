@@ -1,4 +1,4 @@
-<div class="line" data-hash="{tag:using:hash}">
+<div class="line" data-hash="{tag:using:hash}" data-purpose="{tag:purpose:attr}">
 
     <input type="hidden" data-role="sort" name="date" value="{tag:using:date_unix}">
     <input type="hidden" data-role="sort" name="purpose_id" value="{tag:purpose:id}">

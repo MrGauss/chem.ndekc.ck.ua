@@ -13,6 +13,16 @@
 #main_frame #page_frame #list_frame .line table td.consume .consume_elem .units_short_name{ }
 
 
+#main_frame #page_frame #list_frame .line[data-purpose="reactiv"]{ background-color: #DDDDDD; border-color: #666666; opacity: 0.5; }
+#main_frame #page_frame #list_frame .line[data-purpose="reactiv"] table td.consume .consume_elem{ background-color: #CFCFCF; border-color: #666666; }
+
+#main_frame #page_frame #list_frame .line[data-purpose="expertise"]{ background-color: #FFF2BD; border-color: #614E00; }
+#main_frame #page_frame #list_frame .line[data-purpose="expertise"] table td.consume .consume_elem{ background-color: #FFEDA3; border-color: #614E00; color: #0A0800; }
+
+#main_frame #page_frame #list_frame .line[data-purpose="other"]{ background-color: #E0F5FF; border-color: #006DA3; }
+#main_frame #page_frame #list_frame .line[data-purpose="other"] table td.consume .consume_elem{ background-color: #C2ECFF; border-color: #006DA3; }
+
+
 
 
 .default_editor .sides{  }

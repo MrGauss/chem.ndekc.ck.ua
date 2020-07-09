@@ -110,11 +110,9 @@ chem['spr_recipes'] = new function()
         {
            var list = $(this).parents('.default_editor').find('.ingredients');
            var empty = list.find('.ingredient[data-reagent_id="0"]');
-           var role = obj.find('option[value="'+obj.val()+'"]').parent().attr('data-role');
+           var role = obj.find('option[value="'+obj.val()+'"]').parents('optgroup[data-role]').attr('data-role');
 
-           //alert( obj.find('option[value="'+obj.val()+'"]').parent().attr('data-role') );
-
-                                // data-ingr_type="reagent"
+           // data-ingr_type="reagent"
            empty
             .clone()
             .appendTo( list )
@@ -171,6 +169,7 @@ chem['spr_recipes'] = new function()
 
                 $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ).trigger( "change" ); });
                 $('#'+did+'').find('.ingredients .ingredient').each(function(){ chem.spr_recipes.init_ingredient( $(this) ); });
+
                 $('#'+did+'').find('select[name="reagent_id"]').each(function(){ chem.spr_recipes.init_ingredient_select( $(this) ); });
 
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
@@ -233,13 +232,16 @@ chem['spr_recipes'] = new function()
 
                             $('#'+did).find('.ingredient[data-reagent_id][data-ingr_type="reactiv"]').each( function()
                             {
-                                var reagent_id = parseInt( $(this).attr( 'data-reagent_id' ) );
+                                var reactiv_id = parseInt( $(this).attr( 'data-reagent_id' ) );
 
-                                if( reagent_id > 0 )
+                                if( reactiv_id > 0 )
                                 {
-                                    save_post['save']['ingredients_reactiv'].push( reagent_id );
+                                    save_post['save']['ingredients_reactiv'].push( reactiv_id );
                                 }
                             } );
+
+                            //alert( save_post['save']['ingredients_reagent'] );
+                            //alert( save_post['save']['ingredients_reactiv'] );
 
                             $.ajax({ data: save_post }).done(function( _r )
                             {

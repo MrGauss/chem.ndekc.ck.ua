@@ -76,7 +76,7 @@ class using
             array (
                 'purpose_id' => common::integer( isset($data['purpose_id']) ? $data['purpose_id'] : false ),
                 'group_id' => CURRENT_GROUP_ID,
-                'date' => isset($data['date'])? common::en_date( $data['date'], 'Y-m-d' ) : false,
+                'date' => isset($data['date'])? common::en_date( $data['date'], 'Y-m-d' ) . ' ' . date( 'H:i:s' ) : false,
             );
 
         foreach( $data4db as $k => $v )
@@ -688,7 +688,7 @@ class using
 
         $SQL = array();
         $SQL['using'] = array();
-        $SQL['using']['date']       = date( 'Y-m-d', common::integer( isset($data['date']) ? strtotime($data['date']) : 0 ) );
+        $SQL['using']['date']       = date( 'Y-m-d', common::integer( isset($data['date']) ? strtotime($data['date']) : 0 ) ).' ' . date( 'H:i:s' );
         $SQL['using']['purpose_id'] = common::integer( isset($data['purpose_id']) ? $data['purpose_id'] : false );
         $SQL['using']['group_id']   = CURRENT_GROUP_ID;
         $SQL['using']['exp_number'] = $this->db->safesql( common::filter( isset($data['exp_number']) ? $data['exp_number'] : '' ) );

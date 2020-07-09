@@ -158,6 +158,8 @@ class recipes
     {
         access::check( 'spr', 'edit' );
 
+        //var_export($data);exit;
+
         $ID = common::integer( $ID );
         if( !is_numeric($ID) ){ return false; }
 
@@ -324,15 +326,17 @@ class recipes
     {
         $line_id = common::integer( $line_id );
 
+        $data = $this->get_raw( array( 'id' => $line_id ) );
+        $data = isset( $data[$line_id] ) ? $data[$line_id] : false;
+
+        if( !is_array($data) ){ return false; }
+
         $reagent = new spr_manager( 'reagent' );
         $reagent = $reagent->get_raw();
 
         $reactiv = ( new self )->get_raw();
 
-        $data = $this->get_raw( array( 'id' => $line_id ) );
-        $data = isset( $data[$line_id] ) ? $data[$line_id] : false;
 
-        if( !is_array($data) ){ return false; }
 
         $tpl = new tpl;
 
@@ -353,14 +357,16 @@ class recipes
             $data['ingredients_html'][] = '<div class="ingredient" data-ingr_type="reagent" data-reagent_id="'.$ingredient_data['reagent_id'].'" title="'.common::db2html( $reagent[$ingredient_data['reagent_id']]['name'] ).'">'.common::db2html( $reagent[$ingredient_data['reagent_id']]['name'] ).'</div>';
         }
 
-        foreach( $data['ingredients_reactiv'] as $ingredient_id => $ingredient_data )
+        foreach( $data['ingredients_reactiv'] as $recipe_id => $recipe_data )
         {
 
-            $data['ingredients_html'][] = '<div class="ingredient" data-ingr_type="reactiv" data-reagent_id="'.$ingredient_data['reactiv_id'].'" title="'.common::db2html( $reactiv[$ingredient_data['reactiv_id']]['name'] ).'">'.common::db2html( $reactiv[$ingredient_data['reactiv_id']]['name'] ).'</div>';
+            $data['ingredients_html'][] = '<div class="ingredient" data-ingr_type="reactiv" data-reagent_id="'.$recipe_data['reactiv_id'].'" title="'.common::db2html( $reactiv[$recipe_data['reactiv_id']]['name'] ).'">'.common::db2html( $reactiv[$recipe_data['reactiv_id']]['name'] ).'</div>';
         }
 
-        $data['ingredients_html'] = implode( ' ', $data['ingredients_html'] );
+        $data['ingredients_html'] = implode( "\n", $data['ingredients_html'] );
         $tpl->set( '{tag:ingredients_html}', $data['ingredients_html'] );
+
+
 
         $tpl->compile( $skin );
 
@@ -515,7 +521,7 @@ class recipes
                 SELECT
                     DISTINCT ON( reactiv_menu_reactives.unique_index )
                     reactiv_menu_reactives.reactiv_menu_id,
-                    reactiv_menu_reactives.reactiv_id,
+                    reactiv_menu.id as reactiv_id,
                     COALESCE( reactiv.quantity_left, 0 )::FLOAT as quantity_left,
                     reactiv_menu."name" as reactiv_name,
                     units.name,
@@ -537,11 +543,10 @@ class recipes
             {
                 if( !isset($data[$row['reactiv_menu_id']]['ingredients_reactiv']) ){ $data[$row['reactiv_menu_id']]['ingredients_reactiv'] = array(); }
 
-                $line['reactiv_id']      = common::integer( $row['reactiv_id'] );
-                $line['reactiv_menu_id'] = common::integer( $row['reactiv_menu_id'] );
-                $line['quantity_left']   = common::float( $row['quantity_left'] );
-
+                $data[$row['reactiv_menu_id']]['ingredients_reactiv'][$row['reactiv_id']] = array();
                 $data[$row['reactiv_menu_id']]['ingredients_reactiv'][$row['reactiv_id']] = $row;
+
+                //var_export($data[$row['reactiv_menu_id']]['ingredients_reactiv'][$row['reactiv_id']]);
 
                 $line = &$data[$row['reactiv_menu_id']]['ingredients_reactiv'][$row['reactiv_id']];
 

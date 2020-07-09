@@ -26,8 +26,8 @@
         [login]<script src="{SKINDIR}/js/jquery.scrollTo.min.js" type="text/javascript"></script>[/login]
         [login]<script src="{SKINDIR}/js/jquery-ui.js" type="text/javascript"></script>[/login]
         <script src="{SKINDIR}/js/window_resize.js" type="text/javascript"></script>
-        [login]<script src="{SKINDIR}/js/main.js" type="text/javascript"></script>[/login]
-        [login]<script src="{SKINDIR}/js/autocomplete.js" type="text/javascript"></script>[/login]
+        [login]<script src="{SKINDIR}/js/main.js?rand={RAND}" type="text/javascript"></script>[/login]
+        [login]<script src="{SKINDIR}/js/autocomplete.js?rand={RAND}" type="text/javascript"></script>[/login]
         [login][mod:{MOD}]<script src="{SKINDIR}/js/chem.{MOD}.js?rand={RAND}" type="text/javascript"></script>[/mod][/login]
 
         [login][mod:spr_clearence]<script src="{SKINDIR}/js/chem.spr_manager.js?rand={RAND}" type="text/javascript"></script>[/mod][/login]
