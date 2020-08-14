@@ -231,23 +231,39 @@ trait login
 	
 	public final static function set_cookie( $name, $value )
 	{
-		$expires = time() + (self::$COOKIE_LIFE_TIME*60*60);
-		setcookie( $name, $value, $expires, "/", DOMAIN, TRUE, TRUE );
+        $params = session_get_cookie_params();
+        $params['expires'] = time() + $params['lifetime'];
+        $params['SameSite'] = 'Strict';
+        unset( $params['lifetime'] );
+
+		setcookie( $name, $value, $params );
 	}
 
 	public static final function start_session( $sid = false )
 	{
-		$params = session_get_cookie_params();
-		$params['domain'] = DOMAIN;
-
-		$params['secure'] = true;
-		$params['httponly'] = true;
-		$params['lifetime'] = 60*60*self::$COOKIE_LIFE_TIME;
-
-        session_set_cookie_params($params['lifetime'], "/", $params['domain'], $params['secure'], true );
+	    $params = array
+        (
+            'lifetime' => 60*60*self::$COOKIE_LIFE_TIME,
+            'path' => '/',
+            'domain' => DOMAIN,
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'strict',
+        );
+        session_set_cookie_params( $params );
 
 		if ( $sid ){ session_id( $sid );  }
-		session_start();
+		session_start
+        (
+            array
+            (
+                'name' => 'SID',
+                'cookie_domain' => DOMAIN,
+                'cookie_secure' => true,
+                'cookie_httponly' => true,
+                'cookie_samesite' => 'strict',
+            )
+        );
 	}
 
     public final function logout()

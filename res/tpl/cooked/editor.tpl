@@ -11,7 +11,18 @@
 
     <div class="elem recipe">
         <label class="label">Рецепт приготування робочого реактиву</label>
-        <select data-important="1" class="input select" data-save="1" data-value="{tag:reactiv_menu_id}" value="{tag:reactiv_menu_id}" name="reactiv_menu_id"><option value="0">--</option>{select:recipes}</select>
+        <select data-important="0" class="input select" data-save="1" data-value="{tag:reactiv_menu_id}" value="{tag:reactiv_menu_id}" name="reactiv_menu_id">
+            <option value="0">--</option>
+            <option value="-1" data-ingredients_reagent="" data-ingredients_reactiv="">БЕЗ РЕЦЕПТУ</option>
+            {select:recipes}
+        </select>
+    </div>
+
+    <div class="clear"></div>
+
+    <div class="elem recipename norecipe dnone">
+        <label class="label">Назва</label>
+        <input data-important="0" class="input" type="text" name="name" value="{tag:name}" data-save="1" data-autocomplete="0">
     </div>
 
     <div class="clear"></div>
@@ -28,7 +39,7 @@
                     </div>
                     <div class="elem units">
                         <label class="label">Одиниці виміру</label>
-                        <select data-important="1" class="input select" data-value="0" value="0" name="units_id" disabled="disabled"><option value="0">--</option>{select:units}</select>
+                        <select data-important="1" data-save="1" class="input select" data-value="{tag:units_id}" value="0" name="units_id" disabled="disabled"><option value="0">--</option>{select:units}</select>
                     </div>
                     <div class="clear"></div>
                 </div>

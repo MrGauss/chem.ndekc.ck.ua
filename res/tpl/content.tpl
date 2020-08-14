@@ -54,6 +54,7 @@
             <div id="page_frame">
                 <div id="head" class="wpage">
                     <a data-role="home" href="/">Головна</a>
+                    [modinfo]<a data-role="modinfo" href="{mod:link}">{mod:name}</a>[/modinfo]
                     <a data-role="user" href="/">{user:surname} {user:name} {user:phname}</a>
                     <a data-role="logout" href="/index.php?mod=logout">Вихід</a>
                     <div class="clear"></div>

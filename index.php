@@ -47,6 +47,19 @@ require( CORE_DIR.DS.'init.php' );
 
 $tpl->load( 'content' );
 
+if( defined('_MOD_NAME_') && _MOD_NAME_ )
+{
+    $tpl->set( '[modinfo]', '' );
+    $tpl->set( '[/modinfo]', '' );
+    $tpl->set( '{mod:name}', _MOD_NAME_ );
+    $tpl->set( '{mod:area}', _MOD_ );
+    $tpl->set( '{mod:link}', HOME.'index.php?mod='._MOD_ );
+}
+else
+{
+    $tpl->set_block( '!\[modinfo\](.+?)\[\/modinfo\]!is', '' );
+}
+
 $tpl->compile( 'content' );
 
 //////////////////////////////////////////////////////////////////////////////////////////

@@ -208,10 +208,16 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #head{ top:     -2px; border-bottom: 1px solid #FFFFFF; height: 25px; padding-top: 5px; }
 #main_frame #page_frame #foot{ bottom:  -2px; border-top: 1px solid #FFFFFF; height: 20px;  }
 #main_frame #page_frame #foot .foot_logo_name{ cursor: pointer; }
-#main_frame #page_frame #head a{ color: #FFFFFF; display: block; width: 33.33%; float: left; }
-#main_frame #page_frame #head a[data-role="home"]{ text-align: left; }
-#main_frame #page_frame #head a[data-role="user"]{ text-align: center;  color: #00CC00; }
-#main_frame #page_frame #head a[data-role="logout"]{ text-align: right; color: #FF0000; }
+#main_frame #page_frame #head a{ color: #FFFFFF; position: absolute; top: 5px; left: 0px; } /* display: block; width: 33.33%; float: left; */
+
+#main_frame #page_frame #head a[data-role="home"]{ text-align: left; width: 80px; }
+#main_frame #page_frame #head a[data-role="modinfo"]{ left: 80px; color: #FFCC00; }
+
+#main_frame #page_frame #head a[data-role="user"]{ text-align: center;  width: 200px; color: #00CC00; left: calc( 50% - 100px ); right: auto; }
+
+#main_frame #page_frame #head a[data-role="logout"]{ text-align: right; color: #FF0000; left: auto; right: 0px; }
+
+
 
 #main_frame #page_frame #mainlist{ text-align: center;  }
 #main_frame #page_frame #mainlist .element{ display: inline-block; width: 140px; overflow: hidden; height: 140px; margin: 5px; text-align: center; opacity: 0.7; cursor: pointer; }

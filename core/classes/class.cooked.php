@@ -193,6 +193,18 @@ class cooked
         $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
         $units   = ( new spr_manager( 'units' )   )->get_raw();
         $recipes = ( new recipes()                )->get_raw();
+        $old_data = $this->get_raw( array( 'hash' => array( $reactiv_hash ) ) );
+
+        if( isset($old_data[$reactiv_hash]) )
+        {
+            $old_data = $old_data[$reactiv_hash];
+        }
+        else
+        {
+            $old_data = array();
+        }
+
+
 
         /////////
 
@@ -200,6 +212,7 @@ class cooked
         $SQL['reactiv'] = array();
 
         $SQL['reactiv']['reactiv_menu_id'] = common::integer( isset($data['reactiv_menu_id']) ? $data['reactiv_menu_id'] : false );
+
         $SQL['reactiv']['quantity_inc']    = common::float( isset($data['quantity_inc']) ? $data['quantity_inc'] : false );
         $SQL['reactiv']['inc_expert_id']   = common::integer( isset($data['inc_expert_id']) ? $data['inc_expert_id'] : false );
         $SQL['reactiv']['inc_expert_id']   = $reactiv_hash ? $SQL['reactiv']['inc_expert_id'] : CURRENT_USER_ID;
@@ -209,9 +222,11 @@ class cooked
         $SQL['reactiv']['safe_place']      = common::filter( isset($data['safe_place']) ? $data['safe_place'] : false );
         $SQL['reactiv']['safe_needs']      = common::filter( isset($data['safe_needs']) ? $data['safe_needs'] : false );
         $SQL['reactiv']['comment']         = common::filter( isset($data['comment']) ? $data['comment'] : false );
+        $SQL['reactiv']['name']            = common::filter( ( $SQL['reactiv']['reactiv_menu_id'] && isset($recipes[$SQL['reactiv']['reactiv_menu_id']]) ) ? $recipes[$SQL['reactiv']['reactiv_menu_id']]['name'] : ( isset($data['name']) ? $data['name'] : false ) );
+        $SQL['reactiv']['units_id']        = common::integer( ( $SQL['reactiv']['reactiv_menu_id'] && isset($recipes[$SQL['reactiv']['reactiv_menu_id']]) ) ? $recipes[$SQL['reactiv']['reactiv_menu_id']]['units_id'] : ( isset($data['units_id']) ? $data['units_id'] : false ) );
 
-
-        if( !$SQL['reactiv']['reactiv_menu_id'] )                                   { return self::error( 'Рецепт приготування не визначено!',              'reactiv_menu_id' ); }
+        if( isset($old_data['inc_expert_id']) && common::integer($old_data['inc_expert_id']) != 0 && $old_data['inc_expert_id'] != CURRENT_USER_ID )        { return self::error( 'Вам заборонено редагувати чужі записи!', false ); }
+        //if( !$SQL['reactiv']['reactiv_menu_id'] )                                   { return self::error( 'Рецепт приготування не визначено!',              'reactiv_menu_id' ); }
         if( !$SQL['reactiv']['quantity_inc'] )                                      { return self::error( 'Не визначена кількість приготованого реактиву!', 'quantity_inc' ); }
         if( strtotime($SQL['reactiv']['inc_date']) > time() )                       { return self::error( 'Дата приготування не може бути з майбутнього!',  'inc_date' ); }
         if( strtotime($SQL['reactiv']['inc_date']) < ( time() - $date_diap ) )      { return self::error( 'Дата приготування занадто давня!',               'inc_date' ); }
@@ -226,6 +241,7 @@ class cooked
         //if( strlen($SQL['reactiv']['safe_needs']) < 3 )     { return self::error( 'Умови зберігання занадто короткі!', 'safe_needs' ); }
 
         if( strlen($SQL['reactiv']['comment']) > 1000 )     { return self::error( 'Коментар занадто довгий! Це поле не для мемуарів!', 'comment' ); }
+
 
         //////////////////////////////////////////////////
         $SQL['consume'] = array();
@@ -278,7 +294,7 @@ class cooked
         //////////////////////////////////////////////////
         //
 
-        foreach( $recipes[$SQL['reactiv']['reactiv_menu_id']]['ingredients_reagent'] as $rid => $rdata )
+        foreach( ( $SQL['reactiv']['reactiv_menu_id'] == 0 ? array() : $recipes[$SQL['reactiv']['reactiv_menu_id']]['ingredients_reagent'] ) as $rid => $rdata )
         {
             if( !in_array( $rid, $_comp['reagent'] ) )
             {
@@ -286,7 +302,7 @@ class cooked
             }
         }
 
-        foreach( $recipes[$SQL['reactiv']['reactiv_menu_id']]['ingredients_reactiv'] as $rid => $rdata )
+        foreach( ( $SQL['reactiv']['reactiv_menu_id'] == 0 ? array() : $recipes[$SQL['reactiv']['reactiv_menu_id']]['ingredients_reactiv'] ) as $rid => $rdata )
         {
             if( !in_array( $rid, $_comp['reactiv'] ) )
             {
@@ -803,18 +819,16 @@ class cooked
         $SQL = '
             SELECT
                 reactiv.*,
-                reactiv_menu.name as reactiv_menu_name,
-                reactiv_menu.units_id,
+                reactiv.name as reactiv_menu_name,
                 units.name as units_name,
                 units.short_name as units_short_name
             FROM
                 reactiv
-                LEFT JOIN reactiv_menu ON( reactiv_menu.id = reactiv.reactiv_menu_id )
-                LEFT JOIN units ON( units.id = reactiv_menu.units_id )
+                LEFT JOIN units ON( units.id = reactiv.units_id )
             '.$WHERE.'
             ORDER by
                 reactiv.inc_date DESC,
-                reactiv_menu.name ASC;
+                reactiv.name ASC;
 
             '.db::CACHED;
 

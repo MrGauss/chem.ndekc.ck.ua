@@ -2,7 +2,7 @@
     <table>
         <tr>
             <td class="reagent">
-                <span class="name">{tag:menu:name}</span>
+                <span class="name">{tag:name}</span>
                 <span class="quantity_left">Залишилось: {tag:quantity_left} {tag:units:short_name}</span>
             </td>
             <td class="date">

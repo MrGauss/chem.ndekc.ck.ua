@@ -10,11 +10,14 @@
 #main_frame #page_frame #list_frame .line table td.coocked_by{ width: 120px; text-align: center; }
 #main_frame #page_frame #list_frame .line table td.composition{ width: auto; text-align: left; }
 
+.default_editor .elem.dnone{ display: none; }
+
 .default_editor table.panel{ width: 100%;  vertical-align: top; border: none; }
 .default_editor table.panel td{ width: auto; vertical-align: top; position: relative; border: none; }
 .default_editor table.panel td.side1{ width: 60%; }
 .default_editor table.panel td.side2{ width: 40%; }
 .default_editor table.panel td.side1 .elem{  }
+
 
 .default_editor                      { min-height: 20px; }
 .default_editor .elem                { width: 100%; margin: 0px; padding: 0px 5px 0px 5px;  }
@@ -56,7 +59,7 @@
 .default_editor .elem.recipe select option[data-all_available=""],
 .default_editor .elem.recipe select option[data-all_available="0"]{ background: red; display: none; }
 
-.default_editor .elem select[name="units_id"]{ border-color: #BFBFBF; background-color: #EBEBEB; background-image: none; }
+.default_editor .elem select[name="units_id"]:not(.without_recipe){ border-color: #BFBFBF; background-color: #EBEBEB; background-image: none; }
 
 .default_editor #composition.list .reagent{ background-color: #FFE9E5; border-color: #4C0000; color: #4C0000; opacity: 0.9; cursor: pointer; filter: grayscale( 0% ); }
 .default_editor #composition.list .reagent .input{ text-align: center; }

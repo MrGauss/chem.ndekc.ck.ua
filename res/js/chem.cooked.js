@@ -87,7 +87,6 @@ chem['cooked'] = new function()
 
     }
 
-
     this.sort_ingridients = function( obj )
     {
         if( chem.cooked._STILL_SORT ){ return false; }
@@ -123,53 +122,59 @@ chem['cooked'] = new function()
                                 ? selected_opt.attr('data-ingredients_reactiv').toString().split( ','.toString() )
                                 : 0;
 
-        //alert( ingredients_reactiv );
 
-        ///
-        dialog_window
-            .find('#ingridients .reagent[data-reagent_id]')
-                .removeClass( 'needed' )
-                .addClass( 'not_needed' )
-                .attr('data-position', 0 )
-                .prop('data-position', 0 );
-
-        dialog_window
-            .find('#ingridients .reagent[data-reactiv_menu_id]')
-                .removeClass( 'needed' )
-                .addClass( 'not_needed' )
-                .attr('data-position', 0 )
-                .prop('data-position', 0 );
-
-        for (var k in ingredients_reagent )
-        {
-            dialog_window.find('#ingridients')
-                .find('.reagent[data-role="reagent"][data-reagent_id="'+ingredients_reagent[k]+'"]')
-                    .addClass( 'needed' )
-                    .removeClass( 'not_needed' )
-                    .attr('data-position', 1 )
-                    .prop('data-position', 1 );
-        };
-
-        for (var k in ingredients_reactiv )
-        {
-            dialog_window.find('#ingridients')
-                .find('.reagent[data-reactiv_menu_id="' + ingredients_reactiv[k] + '"]')
-                    .addClass( 'needed' )
-                    .removeClass( 'not_needed' )
-                    .attr('data-position', 1 )
-                    .prop('data-position', 1 );
-        };
-        ///
-
-        chem.cooked.sort_ingridients( dialog_window.find('#ingridients') );
-        chem.cooked.resize_dialog( dialog_window, recipe_id );
-
-        //
-
+        /*
         dialog_window.find('select[name="units_id"]')
             .val( parseInt( selected_opt.attr('data-units_id') ) )
             .attr( 'disabled', 'disabled' )
             .prop( 'disabled', true );
+            */
+
+        if( recipe_id != 0 )
+        {
+            dialog_window
+                .find('#ingridients .reagent[data-reagent_id]')
+                    .removeClass( 'needed' )
+                    .addClass( 'not_needed' )
+                    .attr('data-position', 0 )
+                    .prop('data-position', 0 );
+
+            dialog_window
+                .find('#ingridients .reagent[data-reactiv_menu_id]')
+                    .removeClass( 'needed' )
+                    .addClass( 'not_needed' )
+                    .attr('data-position', 0 )
+                    .prop('data-position', 0 );
+
+            for (var k in ingredients_reagent )
+            {
+                dialog_window.find('#ingridients')
+                    .find('.reagent[data-role="reagent"][data-reagent_id="'+ingredients_reagent[k]+'"]')
+                        .addClass( 'needed' )
+                        .removeClass( 'not_needed' )
+                        .attr('data-position', 1 )
+                        .prop('data-position', 1 );
+            };
+
+            for (var k in ingredients_reactiv )
+            {
+                dialog_window.find('#ingridients')
+                    .find('.reagent[data-reactiv_menu_id="' + ingredients_reactiv[k] + '"]')
+                        .addClass( 'needed' )
+                        .removeClass( 'not_needed' )
+                        .attr('data-position', 1 )
+                        .prop('data-position', 1 );
+            };
+
+            //
+        }
+        else
+        {
+            dialog_window.find('select[name="units_id"]').attr( 'disabled', false ).prop( 'disabled', false ).attr( 'readonly', false ).prop( 'readonly', false ).removeClass('without_recipe').addClass('without_recipe');
+        }
+
+        chem.cooked.sort_ingridients( dialog_window.find('#ingridients') );
+
     }
 
     this.resize_dialog = function( dialog_window, recipe_id )
@@ -180,7 +185,16 @@ chem['cooked'] = new function()
         var param_panel_height  = 0;
         var label_height        = 0;
 
-        if( recipe_id > 0 )
+        if( recipe_id == -1 )
+        {
+            dialog_window.find('.norecipe').removeClass('dnone');
+        }
+        else
+        {
+            dialog_window.find('.norecipe').removeClass('dnone').addClass('dnone');
+        }
+
+        if( recipe_id > 0 || recipe_id == -1 )
         {
             dialog_window.find('.recipe_needed').removeClass('dnone');
             dialog_window.dialog( 'option', 'width', normal_width );
@@ -205,18 +219,20 @@ chem['cooked'] = new function()
         }
         else
         {
-            dialog_window.find('.recipe_needed').removeClass('dnone').addClass('dnone');
+            /*
+                dialog_window.find('.recipe_needed').removeClass('dnone').addClass('dnone');
 
-            dialog_window
-                .find( '.recipe_needed .input' )
-                .attr( 'disabled', 'disabled' )
-                .prop( 'disabled', true );
+                dialog_window
+                    .find( '.recipe_needed .input' )
+                    .attr( 'disabled', 'disabled' )
+                    .prop( 'disabled', true );
 
-            dialog_window.dialog( 'option', 'width', 415 );
+                dialog_window.dialog( 'option', 'width', 415 );
 
-            dialog_window
-                .find('table.panel .panel .list')
-                    .height( 100 );
+                dialog_window
+                    .find('table.panel .panel .list')
+                        .height( 100 );
+            */
         }
 
         dialog_window.dialog("widget").position({ my: "center", at: "center", of: window });
@@ -345,6 +361,13 @@ chem['cooked'] = new function()
             if( _r['form'] )
             {
                 $('#ajax').append( '<div id="'+did+'" data-needed_width="'+dialog_width+'" data-role="dialog:window" title="Приготування робочих реактивів: '+( line_hash ? 'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
+
+                /*var reactiv_menu_id = parseInt( $('#'+did+'').find('select[name="reactiv_menu_id"]').attr('data-value') );
+                if( line_hash && !reactiv_menu_id )
+                {
+                    reactiv_menu_id = -1;
+                    $('#'+did+'').find('select[name="reactiv_menu_id"]').attr( 'data-value', '-1' );
+                }*/
 
                 autocomplete.init( $('#'+did+'') );
 
