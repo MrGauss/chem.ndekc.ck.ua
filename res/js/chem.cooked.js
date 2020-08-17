@@ -122,14 +122,6 @@ chem['cooked'] = new function()
                                 ? selected_opt.attr('data-ingredients_reactiv').toString().split( ','.toString() )
                                 : 0;
 
-
-        /*
-        dialog_window.find('select[name="units_id"]')
-            .val( parseInt( selected_opt.attr('data-units_id') ) )
-            .attr( 'disabled', 'disabled' )
-            .prop( 'disabled', true );
-            */
-
         if( recipe_id != 0 )
         {
             dialog_window
@@ -166,11 +158,48 @@ chem['cooked'] = new function()
                         .prop('data-position', 1 );
             };
 
+            dialog_window.find('select[name="units_id"]')
+                    .val( selected_opt.attr('data-units_id') )
+                    .attr( 'disabled', true ).prop( 'disabled', true )
+                    .attr( 'readonly', true ).prop( 'readonly', true )
+                    .removeClass('without_recipe');
+
             //
         }
         else
         {
-            dialog_window.find('select[name="units_id"]').attr( 'disabled', false ).prop( 'disabled', false ).attr( 'readonly', false ).prop( 'readonly', false ).removeClass('without_recipe').addClass('without_recipe');
+
+            dialog_window
+                .find('#ingridients .reagent[data-reagent_id]')
+                    .removeClass( 'needed' )
+                    .removeClass( 'not_needed' )
+                    .addClass( 'needed' )
+                    .attr('data-position', 1 )
+                    .prop('data-position', 1 );
+
+            dialog_window
+                .find('#ingridients .reagent[data-reactiv_menu_id]')
+                    .removeClass( 'needed' )
+                    .removeClass( 'not_needed' )
+                    .addClass( 'needed' )
+                    .attr('data-position', 1 )
+                    .prop('data-position', 1 );
+
+            dialog_window.find('select[name="units_id"]')
+                    .val( '0' ) 
+                    .attr( 'disabled', false ).prop( 'disabled', false )
+                    .attr( 'readonly', false ).prop( 'readonly', false )
+                    .removeClass('without_recipe')
+                    .addClass('without_recipe');
+        }
+
+        if( recipe_id == 0 )
+        {
+            dialog_window.find('.norecipe').removeClass('dnone');
+        }
+        else
+        {
+            dialog_window.find('.norecipe').removeClass('dnone').addClass('dnone');
         }
 
         chem.cooked.sort_ingridients( dialog_window.find('#ingridients') );
@@ -185,7 +214,9 @@ chem['cooked'] = new function()
         var param_panel_height  = 0;
         var label_height        = 0;
 
-        if( recipe_id == -1 )
+        alert( recipe_id );
+
+        if( recipe_id == 0 )
         {
             dialog_window.find('.norecipe').removeClass('dnone');
         }
@@ -194,46 +225,28 @@ chem['cooked'] = new function()
             dialog_window.find('.norecipe').removeClass('dnone').addClass('dnone');
         }
 
-        if( recipe_id > 0 || recipe_id == -1 )
+
+        dialog_window.find('.recipe_needed').removeClass('dnone');
+        dialog_window.dialog( 'option', 'width', normal_width );
+
+        dialog_window
+            .find( '.recipe_needed .input' )
+                .attr( 'disabled', false)
+                .prop( 'disabled', false );
+
+        //
+
+        param_panel_height = 0;
+        dialog_window.find('#param_panel .elems_line').each(function()
         {
-            dialog_window.find('.recipe_needed').removeClass('dnone');
-            dialog_window.dialog( 'option', 'width', normal_width );
+            param_panel_height = param_panel_height + parseInt( $(this).height() );
+        });
 
-            dialog_window
-                .find( '.recipe_needed .input' )
-                    .attr( 'disabled', false)
-                    .prop( 'disabled', false );
-
-            //
-
-            param_panel_height = 0;
-            dialog_window.find('#param_panel .elems_line').each(function()
-            {
-                param_panel_height = param_panel_height + parseInt( $(this).height() );
-            });
-
-            label_height        = dialog_window.find('#param_panel .label:first').height();
+        label_height        = dialog_window.find('#param_panel .label:first').height();
 
             //dialog_window.find('.ingridients_panel').height( param_panel_height );
             //dialog_window.find('.ingridients_panel .list').height( ( ( param_panel_height - label_height ) / 2 ) - 27 );
-        }
-        else
-        {
-            /*
-                dialog_window.find('.recipe_needed').removeClass('dnone').addClass('dnone');
 
-                dialog_window
-                    .find( '.recipe_needed .input' )
-                    .attr( 'disabled', 'disabled' )
-                    .prop( 'disabled', true );
-
-                dialog_window.dialog( 'option', 'width', 415 );
-
-                dialog_window
-                    .find('table.panel .panel .list')
-                        .height( 100 );
-            */
-        }
 
         dialog_window.dialog("widget").position({ my: "center", at: "center", of: window });
     }

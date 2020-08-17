@@ -121,6 +121,9 @@ class reactiv_consume
                 reactiv_consume.consume_ts  as consume_date,
 
                 reactiv.reactiv_menu_id     as reactiv_menu_id,
+                reactiv.name                as reactiv_name,
+                reactiv.units_id            as reactiv_units_id,
+
                 reactiv_consume.inc_expert_id,
                 reactiv.inc_date            as reactiv_inc_date,
                 reactiv.dead_date           as reactiv_dead_date,

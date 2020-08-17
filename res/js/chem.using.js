@@ -1,5 +1,7 @@
 chem['using'] = new function()
 {
+    this._ADD_TRIGGER_ACTIVE = false;
+
     this.check_before_save = function( obj )
     {
         var did = obj.attr('id');
@@ -87,6 +89,8 @@ chem['using'] = new function()
 
     this.add_to_list = function( obj )
     {
+        chem.using._ADD_TRIGGER_ACTIVE = true;
+
         var empty = obj.parents( '[data-role="dialog:window"]' ).find('[id="' + obj.parent().attr( 'data-empty' ) + '"] .consume');
 
         obj
@@ -120,6 +124,8 @@ chem['using'] = new function()
 
                 $(this).parent().remove();
             } );
+
+        chem.using._ADD_TRIGGER_ACTIVE = false;
 
             /*.find( '[data-role="button"]' )
             .on('click',function()
@@ -356,6 +362,115 @@ chem['using'] = new function()
                     dialog["buttons"][bi]["class"] = "type2";
                     dialog["buttons"][bi]["data-role"] = "close_button";
                     bi++;
+
+                    /////////////////////////////////////////////
+                    // MEMORY
+
+                    if( parseInt( $('#'+did+'').find('select[name="purpose_id"]').val() ) != 3 )
+                    {
+                        dialog["buttons"][bi] = {};
+                        dialog["buttons"][bi]["text"]  = " ";
+                        dialog["buttons"][bi]["class"] = "type1";
+                        dialog["buttons"][bi]["data-role"] = "to_mem";
+                        dialog["buttons"][bi]["click"] = function()
+                        {
+                            var memory = {};
+
+                            $('#'+did+'').find('[data-save="1"]').each(function()
+                            {
+                                var name = $(this).attr('name').toString();
+                                var value = $(this).val().toString();
+                                memory[name] = value;
+                            });
+
+                            memory["consume_list"] = {};
+                            $('#'+did+'').find('#consume_list .consume[data-dispersion_id]').each(function()
+                            {
+                                var _item = $(this).attr('data-dispersion_id').toString();
+                                var _count = $(this).find('input[name="consume_quantity"]').val();
+
+                                memory["consume_list"][_item] = _count;
+                            });
+
+                            memory["reactiv_consume_list"] = {};
+                            $('#'+did+'').find('#reactiv_consume_list  .consume[data-reactiv_hash]').each(function()
+                            {
+                                var _item = $(this).attr('data-reactiv_hash').toString();
+                                var _count = $(this).find('input[name="consume_quantity"]').val();
+
+                                memory["reactiv_consume_list"][_item] = _count;
+                            });
+
+                            var mem_post = {};
+                                mem_post['ajax']        = 1;
+                                mem_post['action']      = 1;
+                                mem_post['subaction']   = 1;
+                                mem_post['mod']         = 'memory';
+                                mem_post['area']        = $('body').attr('data-mod');
+                                mem_post['save']        = memory;
+
+                            $.ajax({ data: mem_post }).done(function( _r )
+                            {
+                                _r = chem.txt2json( _r );
+                            });
+                        };
+                        bi++;
+
+
+                        dialog["buttons"][bi] = {};
+                        dialog["buttons"][bi]["text"]  = " ";
+                        dialog["buttons"][bi]["click"] = function()
+                        {
+                            var mem_post = {};
+                                mem_post['ajax']        = 1;
+                                mem_post['action']      = 2;
+                                mem_post['subaction']   = 1;
+                                mem_post['mod']         = 'memory';
+                                mem_post['area']        = $('body').attr('data-mod');
+
+                            $.ajax({ data: mem_post }).done(function( _r )
+                            {
+                                _r = chem.txt2json( _r );
+                                if( _r['saved'] )
+                                {
+                                    $( '#'+did+'' ).find( '[data-save="1"][name="obj_count"]' ).val( _r['saved']['obj_count'] ).trigger( "change" );
+                                    $( '#'+did+'' ).find( '[data-save="1"][name="purpose_id"]' ).val( _r['saved']['purpose_id'] ).trigger( "change" );
+
+                                    for( k in _r['saved']['consume_list'] )
+                                    {
+                                        $( '#'+did+'' ).find( '#dispersion_list .line[data-id="'+k+'"]' ).trigger( "click" );
+
+                                        while( chem.using._ADD_TRIGGER_ACTIVE )
+                                        {
+                                            setTimeout('', 10);
+                                        }
+
+                                        $( '#'+did+'' ).find( '#consume_list .consume[data-dispersion_id="'+k+'"]' ).find('input[name="consume_quantity"]').val( _r['saved']['consume_list'][k] ).trigger( "change" );
+                                    }
+
+                                    for( k in _r['saved']['reactiv_consume_list'] )
+                                    {
+                                        if( !$( '#'+did+'' ).find( '#cooked_list .line[data-hash="'+k+'"]' ).hasClass('dnone') )
+                                        {
+                                            $( '#'+did+'' ).find( '#cooked_list .line[data-hash="'+k+'"]' ).trigger( "click" );
+
+                                            while( chem.using._ADD_TRIGGER_ACTIVE )
+                                            {
+                                                setTimeout('', 10);
+                                            }
+
+                                            $( '#'+did+'' ).find( '#reactiv_consume_list .consume[data-reactiv_hash="'+k+'"]' ).find('input[name="consume_quantity"]').val( _r['saved']['reactiv_consume_list'][k] ).trigger( "change" );
+                                        }
+                                    }
+
+                                }
+                            });
+                        };
+                        dialog["buttons"][bi]["class"] = "type1";
+                        dialog["buttons"][bi]["data-role"] = "from_mem";
+                        bi++;
+                    }
+                    /////////////////////////////////////////////
 
                     if( line_hash != '' )
                     {

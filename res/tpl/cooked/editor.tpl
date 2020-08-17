@@ -13,7 +13,6 @@
         <label class="label">Рецепт приготування робочого реактиву</label>
         <select data-important="0" class="input select" data-save="1" data-value="{tag:reactiv_menu_id}" value="{tag:reactiv_menu_id}" name="reactiv_menu_id">
             <option value="0">--</option>
-            <option value="-1" data-ingredients_reagent="" data-ingredients_reactiv="">БЕЗ РЕЦЕПТУ</option>
             {select:recipes}
         </select>
     </div>

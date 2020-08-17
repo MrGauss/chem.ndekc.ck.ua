@@ -87,6 +87,74 @@ chem['stock'] = new function()
 
     }
 
+    //////////////////////////
+
+    this.transfer = function( obj )
+    {
+        chem.single_open( obj );
+
+        var stock_id  = obj.find('[name="id"]').val();
+        var stock_key = obj.find('[name="key"]').val();
+
+        var did_pref = 'stock-transfer-form';
+        var did = did_pref + '-' + stock_id + '-' + Math.floor((Math.random() * 1000000) + 1);
+
+        var post = {};
+            post['ajax'] = 1;
+            post['action'] = 1;
+            post['subaction'] = 1;
+            post['mod'] = 'transfer';
+            post['id']  = stock_id;
+            post['key'] = stock_key;
+
+        $.ajax({ data: post }).done(function( _r )
+        {
+            _r = chem.txt2json( _r );
+            if( _r['error'] ){ console.log( _r['error_text'] ); return false; }
+
+            if( _r['form'] )
+            {
+                $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Передача на склад іншої лабораторії">'+_r['form']+'</div>' );
+
+                autocomplete.init( $('#'+did+'') );
+
+                $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ); });
+                $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
+                $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
+
+
+                var bi = 0;
+                var dialog = {};
+                    dialog["zIndex"]        = 2010;
+                    dialog["modal"]         = true;
+                    dialog["autoOpen"]      = true;
+                    dialog["width"]         = '400';
+                    dialog["resizable"]     = false;
+                    dialog["buttons"]       = {};
+
+                    dialog["buttons"][bi]               = {};
+                    dialog["buttons"][bi]["text"]       = "Передати";
+                    dialog["buttons"][bi]["click"]      = function(){ chem.close_it( $('#'+did) ); };
+                    dialog["buttons"][bi]["class"]      = "type2";
+                    dialog["buttons"][bi]["data-role"]  = "close_button";
+                    bi++;
+
+                    dialog["buttons"][bi]               = {};
+                    dialog["buttons"][bi]["text"]       = "Скасувати";
+                    dialog["buttons"][bi]["click"]      = function(){ chem.close_it( $('#'+did) ); };
+                    dialog["buttons"][bi]["class"]      = "type1 right";
+                    dialog["buttons"][bi]["data-role"]  = "close_button";
+                    bi++;
+
+                $('#'+did).dialog( dialog );
+
+            }
+
+        });
+    }
+
+    //////////////////////////
+
     this.editor = function( obj )
     {
         chem.single_open( obj );
@@ -277,6 +345,19 @@ chem['stock'] = new function()
                     }
 
                     /////////////////////////////////////////////
+
+                    if( line_id )
+                    {
+                        dialog["buttons"][bi] = {};
+                        dialog["buttons"][bi]["text"]  = "Передати";
+                        dialog["buttons"][bi]["click"] = function()
+                        {
+                            chem.stock.transfer( $( '#'+did+'' ) );
+                        };
+                        dialog["buttons"][bi]["class"] = "type4 right";
+                        dialog["buttons"][bi]["data-role"] = "to_another_lab";
+                        bi++;
+                    }
 
                     dialog["buttons"][bi] = {};
                     dialog["buttons"][bi]["text"]  = "Видалити";

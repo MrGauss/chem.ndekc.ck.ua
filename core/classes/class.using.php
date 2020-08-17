@@ -511,6 +511,8 @@ class using
             {
                 foreach( $line['reactiv_hash'] as $reactive )
                 {
+                    //var_export( $reactive['units_id'] );exit;
+
                     $tpl->set( '[reactive]', '' );
                     $tpl->set( '[/reactive]', '' );
 
@@ -521,12 +523,14 @@ class using
                         $tpl->set( '{tag:reactive:'.$key.'}', common::db2html( $value ) );
                     }
 
+                    /*
                     foreach( isset($recipes[$reactive['reactiv_menu_id']])?$recipes[$reactive['reactiv_menu_id']]:array() as $key => $value )
                     {
                         if( is_array($value) ){ continue; }
                         $tags[] = '{tag:recipe:'.$key.'} : \''.common::db2html( $value ).'\'';
                         $tpl->set( '{tag:recipe:'.$key.'}', common::db2html( $value ) );
                     }
+                    */
 
                     foreach( isset($units[$reactive['units_id']])?$units[$reactive['units_id']]:array() as $key => $value )
                     {
@@ -568,6 +572,8 @@ class using
 
             foreach( $line['reactiv_consume_hash'] as $consume )
             {
+                // var_export($consume); exit;
+
                 if( !$consume_user_id )
                 {
                     $consume_user_id = common::integer( $consume['inc_expert_id'] );
@@ -580,16 +586,11 @@ class using
                     }
                 }
 
-                if( !isset($recipes[$consume['reactiv_menu_id']]) )
-                {
-                    var_export($line);exit;
-                }
-
                 $ingridients[] = '
                     <div class="consume_elem">
-                        <span class="reagent_name">'.common::db2html($recipes[$consume['reactiv_menu_id']]['name']).'</span>
+                        <span class="reagent_name">'.common::db2html($consume['reactiv_name']).'</span>
                         <span class="quantity">'.common::db2html($consume['quantity']).'</span>
-                        <span class="units_short_name">'.common::db2html($units[$recipes[$consume['reactiv_menu_id']]['units_id']]['short_name']).'</span>
+                        <span class="units_short_name">'.common::db2html($units[$consume['reactiv_units_id']]['short_name']).'</span>
                     </div>
                 ';
             }
@@ -632,6 +633,7 @@ class using
         $data = $data[$using_hash];
 
         if( $data['group_id'] != CURRENT_GROUP_ID ){ return self::error( 'Ви не маєте права видаляти записи з чужої лабораторії!' ); }
+        if( $data['expert_id'] != CURRENT_USER_ID ){ return self::error( 'Ви не маєте права видаляти чужі записи!' ); }
         if( $data['purpose_id'] == 3 ){ return self::error( 'Даний запис сформований автоматично та не може бути видалений!' ); }
         if( is_array($data['reactiv_hash']) && count($data['reactiv_hash']) ){ return self::error( 'Даний запис сформований автоматично та не може бути видалений!' ); }
 
@@ -679,12 +681,24 @@ class using
         $purpose = ( ( new spr_manager( 'purpose' )   )->get_raw()[$data['purpose_id']] );
         $reagent = ( new spr_manager( 'reagent' ) )->get_raw();
         $recipes = ( new recipes )->get_raw();
+        $old_data = $this->get_raw( array( 'hash' => $using_hash ) );
+
+        if( is_array($old_data) && isset($old_data[$using_hash]) )
+        {
+            $old_data = $old_data[$using_hash];
+        }
+        else
+        {
+            $old_data = array();
+        }
+
         /////////
 
-        // var_export($purpose);exit;
 
-        $data['user_id'] = common::integer( isset($data['user_id']) ? $data['user_id'] : CURRENT_USER_ID );
 
+        $data['user_id'] = common::integer( isset($old_data['expert_id']) ? $old_data['expert_id'] : CURRENT_USER_ID );
+
+        //var_export( $data );exit;
 
         $SQL = array();
         $SQL['using'] = array();
@@ -702,6 +716,8 @@ class using
             ?   'INSERT INTO "using" '.db::array2ins( $SQL['using'] )
             :   'UPDATE "using" SET '.db::array2upd( $SQL['using'] ).' WHERE group_id = '.CURRENT_GROUP_ID.' AND hash = \''.$this->db->safesql($_USING_HASH).'\' ';
         $SQL['using']['query'] = $SQL['using']['query'].' RETURNING hash;';
+
+        if( $old_data['expert_id'] != CURRENT_USER_ID ){ return self::error( 'Ви не можете редагувати чужі записи', false ); }
 
         if( strtotime($SQL['using']['date']) > time() ){ return self::error( 'Ви не можете створювати записи в майбутньому!', 'date' ); }
         if( strtotime($SQL['using']['date']) < ( time() - $date_diap ) ){ return self::error( 'Дуууже давня дата!', 'date' ); }

@@ -225,8 +225,12 @@ class cooked
         $SQL['reactiv']['name']            = common::filter( ( $SQL['reactiv']['reactiv_menu_id'] && isset($recipes[$SQL['reactiv']['reactiv_menu_id']]) ) ? $recipes[$SQL['reactiv']['reactiv_menu_id']]['name'] : ( isset($data['name']) ? $data['name'] : false ) );
         $SQL['reactiv']['units_id']        = common::integer( ( $SQL['reactiv']['reactiv_menu_id'] && isset($recipes[$SQL['reactiv']['reactiv_menu_id']]) ) ? $recipes[$SQL['reactiv']['reactiv_menu_id']]['units_id'] : ( isset($data['units_id']) ? $data['units_id'] : false ) );
 
+        //var_export($old_data);exit;
+
         if( isset($old_data['inc_expert_id']) && common::integer($old_data['inc_expert_id']) != 0 && $old_data['inc_expert_id'] != CURRENT_USER_ID )        { return self::error( 'Вам заборонено редагувати чужі записи!', false ); }
+
         //if( !$SQL['reactiv']['reactiv_menu_id'] )                                   { return self::error( 'Рецепт приготування не визначено!',              'reactiv_menu_id' ); }
+
         if( !$SQL['reactiv']['quantity_inc'] )                                      { return self::error( 'Не визначена кількість приготованого реактиву!', 'quantity_inc' ); }
         if( strtotime($SQL['reactiv']['inc_date']) > time() )                       { return self::error( 'Дата приготування не може бути з майбутнього!',  'inc_date' ); }
         if( strtotime($SQL['reactiv']['inc_date']) < ( time() - $date_diap ) )      { return self::error( 'Дата приготування занадто давня!',               'inc_date' ); }

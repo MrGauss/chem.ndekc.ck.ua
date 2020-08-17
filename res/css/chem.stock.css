@@ -59,6 +59,10 @@
 .ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="terms"]{ display: block; width: 80px; height: 40px; overflow: hidden; position: absolute; top: 0px; left: 400px; border: none; background: #8500CC url(../img/date_terms.png) no-repeat 50% 50%; opacity: 0.6; }
 .ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="terms"]:hover{ opacity: 1.0; }
 
+.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="to_another_lab"]{ display: block; width: 100px; height: 40px; overflow: hidden; position: absolute; top: 0px; left: 140px; border: none; background: #0069D1; }
+.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="to_another_lab"]:hover{ opacity: 1.0; }
+
+
 
 
 .default_editor.prolongation{  }
