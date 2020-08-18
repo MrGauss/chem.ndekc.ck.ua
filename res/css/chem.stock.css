@@ -89,5 +89,25 @@
 .default_editor.prolongation button.add_prolong{ display: inline-block; width: 200px; height: 40px; font-size: 1.0em; overflow: hidden; border: none; text-align: center; background: #006100; color: #FFFFFF; opacity: 0.8; }
 .default_editor.prolongation button.add_prolong:hover{ background: #006100; color: #FFFFFF; opacity: 1.0; }
 
+.default_editor.transfer .elem{ width: 100%; }
+.default_editor.transfer .elem.reagent{ width: 100%; }
+.default_editor.transfer .elem.quantity{ width: 70%; }
+.default_editor.transfer .elem.units{ width: 30%; }
+.default_editor.transfer .elem.to_stock_id,
+.default_editor.transfer .elem.to_expert_id{ background: #C7F1FF; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

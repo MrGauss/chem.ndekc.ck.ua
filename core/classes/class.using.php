@@ -698,7 +698,7 @@ class using
 
         $data['user_id'] = common::integer( isset($old_data['expert_id']) ? $old_data['expert_id'] : CURRENT_USER_ID );
 
-        //var_export( $data );exit;
+        //var_export( $old_data );exit;
 
         $SQL = array();
         $SQL['using'] = array();
@@ -717,7 +717,7 @@ class using
             :   'UPDATE "using" SET '.db::array2upd( $SQL['using'] ).' WHERE group_id = '.CURRENT_GROUP_ID.' AND hash = \''.$this->db->safesql($_USING_HASH).'\' ';
         $SQL['using']['query'] = $SQL['using']['query'].' RETURNING hash;';
 
-        if( $old_data['expert_id'] != CURRENT_USER_ID ){ return self::error( 'Ви не можете редагувати чужі записи', false ); }
+        if( isset($old_data['expert_id']) && $old_data['expert_id'] != CURRENT_USER_ID ){ return self::error( 'Ви не можете редагувати чужі записи', false ); }
 
         if( strtotime($SQL['using']['date']) > time() ){ return self::error( 'Ви не можете створювати записи в майбутньому!', 'date' ); }
         if( strtotime($SQL['using']['date']) < ( time() - $date_diap ) ){ return self::error( 'Дуууже давня дата!', 'date' ); }
