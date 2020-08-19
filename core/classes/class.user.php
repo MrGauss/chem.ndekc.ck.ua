@@ -309,8 +309,10 @@ class user
         else
         {
             $WHERE['expert.id']         = 'expert.id > 0';
-            //$WHERE['groups.region_id']  = 'groups.region_id = '.CURRENT_REGION_ID;
-            $WHERE['expert.group_id']   = 'expert.group_id  = '.CURRENT_GROUP_ID;
+            if( !isset($WHERE['expert.group_id']) || !$WHERE['expert.group_id'] )
+            {
+                $WHERE['expert.group_id']   = 'expert.group_id  = '.CURRENT_GROUP_ID;
+            }
         }
 
         $SQL = '

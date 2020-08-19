@@ -87,6 +87,21 @@ chem['using'] = new function()
 
     }
 
+    this.check_quantity = function( obj )
+    {
+        var max = parseInt( obj.attr( 'max' ) );
+        var val = parseInt( obj.val() );
+
+        if( val > max )
+        {
+            obj.removeClass( 'error' ).addClass( 'error' );
+        }
+        else
+        {
+            obj.removeClass( 'error' );
+        }
+    }
+
     this.add_to_list = function( obj )
     {
         chem.using._ADD_TRIGGER_ACTIVE = true;
@@ -124,6 +139,12 @@ chem['using'] = new function()
 
                 $(this).parent().remove();
             } );
+
+
+
+        obj.parents('.side').find( '.listline .consume input[name="consume_quantity"]' ).off()
+            .change(function(){ chem.using.check_quantity( $(this) ); })
+            .on('keyup',function(){ chem.using.check_quantity( $(this) ); });
 
         chem.using._ADD_TRIGGER_ACTIVE = false;
 
@@ -173,6 +194,10 @@ chem['using'] = new function()
                 $('#ajax').append( '<div id="'+did+'" data-role="dialog:window" title="Облік витрат: '+(line_hash?'редагування запису':'створення запису')+'">'+_r['form']+'</div>' );
 
                 autocomplete.init( $('#'+did+'') );
+
+                $('#'+did).find( '.listline .consume input[name="consume_quantity"]' ).off()
+                    .change(function(){ chem.using.check_quantity( $(this) ); })
+                    .on('keyup',function(){ chem.using.check_quantity( $(this) ); });
 
                 $('#'+did+'').find('input[name="search"]').on('keyup', function()
                 {

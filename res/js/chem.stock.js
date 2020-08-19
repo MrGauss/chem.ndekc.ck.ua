@@ -118,9 +118,45 @@ chem['stock'] = new function()
 
                 autocomplete.init( $('#'+did+'') );
 
-                $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ); });
+                $('#'+did+'').find('select[data-value]').each(function(){ $(this).val( $(this).attr('data-value') ).trigger( 'change' ); });
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
+
+                $('#'+did+' select[name="reagent_id"]').val( obj.find('select[name="reagent_id"]').val() )
+                    .attr( 'disabled', true )
+                    .prop( 'disabled', true )
+                    .trigger( 'change' );
+
+                $('#'+did+' input[name="quantity"]').attr( 'max', obj.find('input[name="quantity_left"]').val() )
+                $('#'+did+' input[name="units"]').val( obj.find('input[name="units"]').val() )
+                $('#'+did+' input[name="stock_id"]').val( obj.find('input[name="id"]').val() )
+                $('#'+did+' select[name="to_group_id"]').find('option[value='+ $('#'+did+' input[name="curr_group_id"]').val() +']').remove();
+
+                $('#'+did+' select[name="to_group_id"]').change( function()
+                {
+                    var post = {};
+                        post['ajax'] = 1;
+                        post['action'] = 100;
+                        post['subaction'] = 1;
+                        post['mod'] = 'transfer';
+                        post['id']  = $('#'+did+' input[name="id"]').val();
+                        post['key']  = $('#'+did+' input[name="key"]').val();
+                        post['to_group_id']  = $('#'+did+' select[name="to_group_id"]').val();
+
+                    $.ajax({ data: post }).done(function( _r )
+                    {
+                        _r = chem.txt2json( _r );
+                        if( _r['error'] ){ console.log( _r['error_text'] ); return false; }
+
+                        $('#'+did+' select[name="to_expert_id"]').find('option').not('option[value="0"]').remove();
+                        $('#'+did+' select[name="to_expert_id"]').append(_r['list']);
+
+                        $('#'+did+' select[name="to_reagent_id"]').find('option').not('option[value="0"]').remove();
+                        $('#'+did+' select[name="to_reagent_id"]').append(_r['reagents']);
+
+
+                    });
+                } );
 
 
                 var bi = 0;
@@ -134,7 +170,60 @@ chem['stock'] = new function()
 
                     dialog["buttons"][bi]               = {};
                     dialog["buttons"][bi]["text"]       = "Передати";
-                    dialog["buttons"][bi]["click"]      = function(){ chem.close_it( $('#'+did) ); };
+                    dialog["buttons"][bi]["click"]      = function()
+                    {
+                        var post = {};
+                            post['ajax']        = 1;
+                            post['action']      = 2;
+                            post['subaction']   = 1;
+                            post['mod']         = 'transfer';
+                            post['id']          = $('#'+did+' input[name="id"]').val();
+                            post['key']         = $('#'+did+' input[name="key"]').val();
+                            post['save']        = {};
+
+                        $('#'+did+' [data-save="1"]').each( function()
+                        {
+                            post['save'][$(this).attr('name')] = $(this).val();
+                        });
+
+                        $.ajax({ data: post }).done(function( _r )
+                        {
+                            try{ _r = jQuery.parseJSON( _r ); }catch(err){ chem.err( 'ERROR: '+err+"\n\n"+_r ); return false; }
+
+                            _r['error'] = parseInt(_r['error']);
+                            //_r['transfer_id'] = parseInt(_r['transfer_id']);
+
+                            if( parseInt(_r['error'])>0 )
+                            {
+
+                                chem.animate_opacity( $('#'+did+' .error_area'), _r['error_text'], 3000 );
+
+                                if( _r['err_area'] )
+                                {
+                                    _r['err_area'] = _r['err_area'].toString().split ( '|'.toString() );
+
+                                    $.each( _r['err_area'], function( index, value )
+                                    {
+                                        chem.BL( $('#'+did+'').find('[name="'+value+'"]'), 15, 'blred' );
+                                    } );
+                                }
+                            }
+                            else
+                            {
+                                if( _r['transfer_id'] > 0 )
+                                {
+                                    chem.close_it( $('#'+did) );
+                                    chem.close_it( obj );
+                                    chem.stock.reload();
+                                }
+                                else
+                                {
+                                    alert( _r['transfer_id'] );
+                                }
+                            }
+
+                        });
+                    };
                     dialog["buttons"][bi]["class"]      = "type2";
                     dialog["buttons"][bi]["data-role"]  = "close_button";
                     bi++;
@@ -147,7 +236,6 @@ chem['stock'] = new function()
                     bi++;
 
                 $('#'+did).dialog( dialog );
-
             }
 
         });

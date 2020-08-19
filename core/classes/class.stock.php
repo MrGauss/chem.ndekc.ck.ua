@@ -7,6 +7,7 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 //////////////////////////////////////////////////////////////////////////////////////////
 
 if( !class_exists( 'prolongation' ) ) { require( CLASSES_DIR.DS.'class.prolongation.php' ); }
+if( !class_exists( 'transfer' ) )     { require( CLASSES_DIR.DS.'class.transfer.php' ); }
 if( !trait_exists( 'basic' ) )        { require( CLASSES_DIR.DS.'trait.basic.php' ); }
 if( !trait_exists( 'spr' ) )          { require( CLASSES_DIR.DS.'trait.spr.php' ); }
 if( !trait_exists( 'db_connect' ) )   { require( CLASSES_DIR.DS.'trait.db_connect.php' ); }
@@ -38,6 +39,25 @@ class stock
         if( !$error && $ID && !$data4save['reagent_id'] )                                   { $error = 'Вкажіть реагент!'; $error_area = 'reagent_id'; }
 
         ///////////
+
+        $SQL = 'SELECT count(id) as count FROM transfer WHERE id > 0 AND to_stock_id = '.common::integer( $original_data['id'] ).';';
+        if( (new stock)->db->super_query( $SQL )['count'] > 0 )
+        {
+            if( $data4save['quantity_inc'] != $original_data['quantity_inc'] )
+            {
+                $error = 'В цьому записі заборонено редагувати кількість!'; $error_area = 'quantity_inc';
+            }
+
+            //var_export( $data4save ); var_export( $original_data ); exit;
+
+            if( $data4save['reagent_id']        != $original_data['reagent_id'] )       { $error = 'Ви не можете змінювати вид матеріалу чи реактиву!'; $error_area = 'reagent_id';             }
+            if( $data4save['create_date']       != $original_data['create_date'] )      { $error = 'В цьому записі заборонено редагувати дату створення!'; $error_area = 'create_date';         }
+            if( $data4save['inc_date']          != $original_data['inc_date'] )         { $error = 'В цьому записі заборонено редагувати дату надходження!'; $error_area = 'inc_date';          }
+            if( $data4save['reagent_state_id']  != $original_data['reagent_state_id'] ) { $error = 'В цьому записі заборонено редагувати форму надходження!'; $error_area = 'reagent_state_id'; }
+            if( $data4save['clearence_id']      != $original_data['clearence_id'] )     { $error = 'В цьому записі заборонено редагувати сутпінь чистоти!'; $error_area = 'clearence_id';       }
+            if( $data4save['nakladna_num']      != $original_data['nakladna_num'] )     { $error = 'В цьому записі заборонено редагувати номер накладної!'; $error_area = 'nakladna_num';       }
+
+        }
 
         $_date_areas = array( 'inc_date', 'create_date', 'dead_date', 'nakladna_date' );
 
@@ -82,6 +102,12 @@ class stock
 
         ///////////
 
+        ///////////////////////////////////////////////////
+
+        ///////////////////////////////////////////////////
+
+        ///////////
+
         if( $error != false )
         {
             if( _AJAX_ )
@@ -120,6 +146,14 @@ class stock
 
         ////////////////////////////////////
 
+        $SQL = 'SELECT count(id) as count FROM transfer WHERE id > 0 AND to_stock_id = '.common::integer( $ID ).';';
+        if( $this->db->super_query( $SQL )['count'] > 0 )
+        {
+            $error = 'Дана речовина чи матеріал Вам передали з іншої лабораторії, видалення заборонене!';
+        }
+
+        ////////////////////////////////////
+
         if( $error != false )
         {
             if( _AJAX_ ){ ajax::set_error( rand(10,99), $error ); return false; }
@@ -143,7 +177,6 @@ class stock
         if( !is_array($data) ){ return false; }
 
         $SQL = array();
-
         $SQL['inc_expert_id']       = CURRENT_USER_ID;
         $SQL['group_id']            = CURRENT_GROUP_ID;
         $SQL['reagent_id']          = common::integer($data['reagent_id']);
@@ -152,19 +185,14 @@ class stock
         $SQL['is_sertificat']       = common::integer($data['is_sertificat']);
         $SQL['is_suitability']      = common::integer($data['is_suitability']);
         $SQL['danger_class_id']     = common::integer($data['danger_class_id']);
-
         $SQL['quantity_inc']        = common::float($data['quantity_inc']);
-
         $SQL['inc_date']            = common::en_date($data['inc_date']     ,'Y-m-d');
         $SQL['create_date']         = common::en_date($data['create_date']  ,'Y-m-d');
         $SQL['dead_date']           = common::en_date($data['dead_date']    ,'Y-m-d');
-
         $SQL['nakladna_date']       = common::en_date($data['nakladna_date']    ,'Y-m-d');
         $SQL['nakladna_num']        = common::filter( isset($data['nakladna_num'])?$data['nakladna_num']:'' );
-
         $SQL['creator']             = common::filter( isset($data['creator'])?$data['creator']:'' );
         $SQL['provider']            = common::filter( isset($data['provider'])?$data['provider']:'' );
-
         $SQL['safe_needs']          = common::filter($data['safe_needs']);
         $SQL['safe_place']          = common::filter($data['safe_place']);
         $SQL['comment']             = common::filter($data['comment']);
@@ -178,7 +206,7 @@ class stock
 
         if( !self::check_data_before_save( $SQL, $ID?$this->get_raw(array('id'=>$ID))[$ID] : array() ) ){ return false; }
 
-        ///////////////////////////////////////////////////
+
 
         if( $ID > 0 )
         {
@@ -256,6 +284,47 @@ class stock
             if( in_array( $k, $_dates ) )
             {
                 $tpl->set( '{tag:'.$k.':Y}', common::en_date( $v, 'Y' ) );
+            }
+        }
+
+        if( $line_id > 0 )
+        {
+            $groups = ( new spr_manager('groups') )->get_raw( );
+
+            $transfer_html = array();
+            foreach( (new transfer)->get_raw( array( 'from_stock_id' => $line_id ) ) as $transfer_id => $transfer_data )
+            {
+                $to_user   = ( new user )->get_raw( array( 'id' => $transfer_data['to_expert_id'] ) )[$transfer_data['to_expert_id']];
+
+                $transfer_html[$transfer_id] = array();
+                $transfer_html[$transfer_id][] = '<td class="date">'.common::en_date(  $transfer_data['date'], 'Y.m.d' ).' '.common::en_date(  $transfer_data['date'], 'H:i:s' ).'</td>';
+                $transfer_html[$transfer_id][] = '<td class="group_name">'.common::db2html( $groups[$to_user['group_id']]['name'] ).'</td>';
+                $transfer_html[$transfer_id][] = '<td class="quantity">'.common::db2html( $transfer_data['quantity'] ).'</td>';
+                $transfer_html[$transfer_id][] = '<td class="units_short">'.common::db2html( $data['reagent_units_short'] ).'</td>';
+                $transfer_html[$transfer_id] = '<tr>'.implode( '', $transfer_html[$transfer_id] ).'</tr>';
+            }
+
+            if( count($transfer_html) )
+            {
+                $transfer_html = implode( "\n", $transfer_html );
+                $transfer_html =  '<tr>'
+                                    .'<th class="date">Дата</th>'
+                                    .'<th class="group_name">Куди передано</th>'
+                                    .'<th class="quantity" colspan="2">Кількість</th>'
+                                 .'</tr>'
+                                 .$transfer_html;
+
+                $transfer_html = '<table>'.$transfer_html.'</table>';
+
+                $tpl->set( '{transfer:list}', $transfer_html );
+                $tpl->set( '[transfer]', '' );
+                $tpl->set( '[/transfer]', '' );
+            }
+            else
+            {
+                $transfer_html = '';
+                $tpl->set( '{transfer:list}', '' );
+                $tpl->set_block( '!\[transfer\](.+?)\[\/transfer\]!', '' );
             }
         }
 

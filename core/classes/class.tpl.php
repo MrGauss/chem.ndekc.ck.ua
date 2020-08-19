@@ -180,6 +180,7 @@ class tpl
         $data = self::str_replace_if_exist( '{SKINDIR}', str_replace( ROOT_DIR, '', CURRENT_SKIN ), $data );
         $data = self::str_replace_if_exist( '{HOME}', HOMEURL, $data );
         $data = self::str_replace_if_exist( '{CURRENT_USER_LOGIN}', CURRENT_USER_LOGIN, $data );
+        $data = self::str_replace_if_exist( '{CURRENT_GROUP_ID}',   CURRENT_GROUP_ID, $data );
         $data = self::str_replace_if_exist( '{CURRENT_USER_ID}',    CURRENT_USER_ID, $data );
         $data = self::str_replace_if_exist( '{CURRENT_REGION_ID}',  CURRENT_REGION_ID, $data );
         $data = self::str_replace_if_exist( '{encoding}',           ENCODING, $data );
@@ -304,7 +305,6 @@ class tpl
         {
             $table_name = common::strtolower( common::filter( isset($match[1])?$match[1]:false ) );
             $selected   = common::integer( isset($match[2])?$match[2]:false );
-
             $data = str_replace( $match[0], common::table2select( $table_name, $selected ), $data );
         }
 

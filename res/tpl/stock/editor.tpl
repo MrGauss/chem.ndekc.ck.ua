@@ -5,6 +5,8 @@
 
     <input type="hidden" name="id" value="{tag:id}" />
     <input type="hidden" name="key" value="{tag:key}" />
+    <input type="hidden" name="quantity_left" value="{tag:quantity_left}" />
+    <input type="hidden" name="reagent_number" value="{tag:reagent_number}" />
 
     <div class="elem reagent">
         <label class="label">Назва реактиву чи витратного матеріалу</label>
@@ -113,6 +115,8 @@
         <label class="label">Особа, яка здійснила перевірку та взяла на облік</label>
         <input class="input" type="text" name="expert" value="{tag:expert_surname} {tag:expert_name} {tag:expert_phname}" readonly="readonly">
     </div>
+    <div class="clear"></div>
 
+    [transfer]<div class="transfers">{transfer:list}</div>[/transfer]
     <div class="clear"></div>
 </div>

@@ -96,6 +96,13 @@
 .default_editor.transfer .elem.to_stock_id,
 .default_editor.transfer .elem.to_expert_id{ background: #C7F1FF; }
 
+.default_editor .transfers{ padding: 5px 5px 5px  5px; background: #FFE5FF; max-height: 100px; overflow: scroll; overflow-x: hidden; }
+.default_editor .transfers table{ background: none; border-collapse: collapse; border: none; width: 100%; }
+.default_editor .transfers table td,.default_editor.transfers table th{ border-collapse: collapse; border: 1px solid #111111; width: auto; padding: 10px; text-align: center; }
+.default_editor .transfers table td.quantity{ text-align: right; padding-right: 3px; border-right: none; width: 50px; }
+.default_editor .transfers table td.units_short{ text-align: left; padding-left: 0px; border-left: none; width: 40px; }
+.default_editor .transfers table td.date{ width: 140px; }
+
 
 
 

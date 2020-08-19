@@ -28,6 +28,7 @@ class spr_manager
                                 'reagent',
                                 'purpose',
                                 'units',
+                                'groups',
                             );
 
     public static $_columns_not_allowed_to_save =
@@ -257,8 +258,9 @@ class spr_manager
             $SQL[$arg] = $this->db->safesql( common::filter($value) );
         }
 
-        if( array_key_exists( 'created_by_expert_id', $this->table_info ) ){ $SQL['created_by_expert_id'] = CURRENT_USER_ID; }
-        if( array_key_exists( 'group_id', $this->table_info ) ){ $SQL['group_id'] = CURRENT_GROUP_ID; }
+        if( array_key_exists( 'created_by_expert_id', $this->table_info ) ) { $SQL['created_by_expert_id'] = CURRENT_USER_ID;   }
+        if( array_key_exists( 'group_id', $this->table_info ) )             { $SQL['group_id'] = CURRENT_GROUP_ID;              }
+        if( array_key_exists( 'region_id', $this->table_info ) )            { $SQL['region_id'] = CURRENT_REGION_ID;            }
 
         ///////////////////////////////////////////////////
 
@@ -303,7 +305,7 @@ class spr_manager
 
     public final function get_raw( $filters = array() )
     {
-        if( !$this->table ){ common::err( 'Не зазначена таблиця довідника!' ); };
+        if( !$this->table ){ common::err( 'Не зазначена таблиця довідника!' ); }
 
         if( is_array($filters) )
         {
@@ -327,15 +329,21 @@ class spr_manager
             }
 
         }
-        if( !isset($filters['id']) )    { $WHERE['id'] = '"'.$this->table.'"."id" > 0'; }
+        if( !isset($filters['id']) )        { $WHERE['id'] = '"'.$this->table.'"."id" > 0'; }
+
+        if( isset($filters['group_id']) && array_key_exists( 'group_id', $this->table_info ) )
+        {
+            $WHERE['group_id'] = '"'.$this->table.'"."group_id" = \''.common::integer( isset($filters['group_id'])?$filters['group_id']:CURRENT_GROUP_ID ).'\'';
+        }
 
 
 
         $ORDER = array();
 
-        if( array_key_exists( 'position', $this->table_info ) ){ $ORDER[] = '"'.$this->table.'"."position" DESC'; }
-        if( array_key_exists( 'name', $this->table_info ) ){ $ORDER[] = '"'.$this->table.'"."name" ASC'; }
-        if( array_key_exists( 'group_id', $this->table_info ) ){ $WHERE[] = '"'.$this->table.'"."group_id" IN( 0, '.CURRENT_GROUP_ID.' )'; }
+        if( array_key_exists( 'position', $this->table_info ) )     { $ORDER[] = '"'.$this->table.'"."position" DESC';                              }
+        if( array_key_exists( 'name', $this->table_info ) )         { $ORDER[] = '"'.$this->table.'"."name" ASC';                                   }
+        if( array_key_exists( 'group_id', $this->table_info ) && !isset($WHERE['group_id']) )     { $WHERE[] = '"'.$this->table.'"."group_id" IN( 0, '.CURRENT_GROUP_ID.' )';     }
+        if( array_key_exists( 'region_id', $this->table_info ) )    { $WHERE[] = '"'.$this->table.'"."region_id" IN( 0, '.CURRENT_REGION_ID.' )';   }
 
 
         $WHERE = implode( ' AND ', $WHERE );

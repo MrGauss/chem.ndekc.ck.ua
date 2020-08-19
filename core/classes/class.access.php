@@ -27,6 +27,7 @@ class access
         if( !self::allow( $area, $area_action ) )
         {
             $err = 'Поточний користувач не має доступу до модулю "'._MOD_.'" з рівнем доступу "'.$ch.'"! Зверніться до адміністратора!';
+
             if( _AJAX_ )
             {
                 ajax::set_error( rand(10,99), $err );
@@ -42,9 +43,12 @@ class access
         return true;
     }
 
-    public static final function allow( $area, $area_action = false )
+    public static final function allow( $area, $area_action = false, $user_id = false )
     {
-        $levels = (new access)->get( CURRENT_USER_ID );
+
+        $user_id = common::integer( $user_id ? $user_id : CURRENT_USER_ID );
+
+        $levels = (new access)->get( $user_id );
 
         if( !is_array($levels) || !count($levels) ){ return false; }
 

@@ -25,6 +25,7 @@ class common
         if( $table_name == 'danger_class' )     { return spr_manager::make_select( 'danger_class',     common::integer($selected) ); }
         if( $table_name == 'units' )            { return spr_manager::make_select( 'units',            common::integer($selected) ); }
 
+        if( $table_name == 'groups' )           { return spr_manager::make_select( 'groups',            common::integer($selected) ); }
 
         return false;
     }
