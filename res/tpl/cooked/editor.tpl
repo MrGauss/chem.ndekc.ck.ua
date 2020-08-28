@@ -38,7 +38,7 @@
                     </div>
                     <div class="elem units">
                         <label class="label">ќдиниц≥ вим≥ру</label>
-                        <select data-important="1" data-save="1" class="input select" data-value="{tag:units_id}" value="0" name="units_id" disabled="disabled"><option value="0">--</option>{select:units}</select>
+                        <select data-important="1" data-save="1" class="input select" data-value="{tag:units_id}" value="{tag:units_id}" name="units_id" disabled="disabled"><option value="0">--</option>{select:units}</select>
                     </div>
                     <div class="clear"></div>
                 </div>

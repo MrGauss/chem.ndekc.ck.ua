@@ -186,7 +186,7 @@ chem['cooked'] = new function()
                     .prop('data-position', 1 );
 
             dialog_window.find('select[name="units_id"]')
-                    .val( '0' ) 
+
                     .attr( 'disabled', false ).prop( 'disabled', false )
                     .attr( 'readonly', false ).prop( 'readonly', false )
                     .removeClass('without_recipe')
