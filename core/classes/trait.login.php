@@ -253,15 +253,21 @@ trait login
         session_set_cookie_params( $params );
 
 		if ( $sid ){ session_id( $sid );  }
+
 		session_start
         (
             array
             (
                 'name' => 'SID',
-                'cookie_domain' => DOMAIN,
-                'cookie_secure' => true,
-                'cookie_httponly' => true,
-                'cookie_samesite' => 'strict',
+                'cookie_domain'   => $params['domain'],
+                'cookie_secure'   => $params['secure'],
+                'cookie_httponly' => $params['httponly'],
+                'cookie_samesite' => $params['samesite'],
+                'cookie_path'     => $params['path'],
+                'cookie_lifetime' => $params['lifetime'],
+                'gc_maxlifetime'  => $params['lifetime'],
+                'gc_probability'  => 1,
+                'gc_divisor'      => 100,
             )
         );
 	}
