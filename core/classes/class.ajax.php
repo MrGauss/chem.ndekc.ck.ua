@@ -37,7 +37,7 @@ class ajax
     return $result;
   }
 
-  public final static function set_error( $id = 1, $text )
+  public final static function set_error( $id = 1, $text = '' )
   {
     self::set_data( 'error', $id );
     self::set_data( 'error_text', $text );

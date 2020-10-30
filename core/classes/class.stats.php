@@ -64,7 +64,7 @@ class stats
         return $tpl->result( 'stats_consume/by_stock_id_line' );
     }
 
-    private final function get_stats_consume_by_stock_id_raw( $filters = array() )
+    private function get_stats_consume_by_stock_id_raw( $filters = array() )
     {
         $WHERE = array();
         $WHERE['consume.date']      = 'consume.date     > \'1970-01-01\'::date';
@@ -185,7 +185,7 @@ class stats
         return $tpl->result( 'stats_consume/by_reagent_id_line' );
     }
 
-    private final function get_stats_consume_by_reagent_id_raw( $filters = array() )
+    private function get_stats_consume_by_reagent_id_raw( $filters = array() )
     {
         $WHERE = array();
         $WHERE['consume.date']      = 'consume.date > \'1970-01-01\'::date';
@@ -304,7 +304,7 @@ class stats
         return $tpl->result( $skin );
     }
 
-    private final function get_stats_reactiv_consume_by_reagent_id_raw( $filters = array() )
+    private function get_stats_reactiv_consume_by_reagent_id_raw( $filters = array() )
     {
         $WHERE = array();
         $WHERE['reactiv_consume.date']  = 'reactiv_consume.date > \'1970-01-01\'::date';

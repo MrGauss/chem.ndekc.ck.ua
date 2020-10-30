@@ -386,7 +386,7 @@ class spr_manager
         return $data;
     }
 
-    private final function check_usage( $element_id = 0 )
+    private function check_usage( $element_id = 0 )
     {
         $element_id = common::integer( $element_id );
 
@@ -412,7 +412,7 @@ class spr_manager
         return false;
     }
 
-    private final function get_table_info()
+    private function get_table_info()
     {
         $SQL = 'SELECT
                     column_name,

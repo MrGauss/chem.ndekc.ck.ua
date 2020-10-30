@@ -77,7 +77,7 @@ trait login
         return $this->get_users( array( 'user.id' => CURRENT_USER_ID, 'user.region_id' => CURRENT_REGION_ID ) )[CURRENT_USER_ID];
     }
 
-    private final function get_users( $filters = array() )
+    private function get_users( $filters = array() )
     {
         $filters['user.id'] = isset($filters['user.id'])?self::integer( $filters['user.id'] ):false;
         $filters['user.region_id'] = isset($filters['user.region_id'])?self::integer( $filters['user.region_id'] ):false;
@@ -120,7 +120,7 @@ trait login
         return $data;
     }
 
-	private final function update_token()
+	private function update_token()
 	{
 		$token = str_shuffle( sha1( mt_rand( 0, 99999 ) ) );
 		$token = self::passencode( $token.USER_IP.(isset($_SERVER['HTTP_USER_AGENT'])?$_SERVER['HTTP_USER_AGENT']:md5(date('Y.m.d'))) );
@@ -131,7 +131,7 @@ trait login
 		return $token;
 	}
 
-	private final function check_token( $token )
+	private function check_token( $token )
 	{
 		$token = $this->strtolower( $this->db->safesql( $token ) );
 		
@@ -174,7 +174,7 @@ trait login
 		return CURRENT_USER_ID?true:false;
 	}
 	
-	private final function check_login_pass( $login, $pass )
+	private function check_login_pass( $login, $pass )
 	{
 		$login = $this->strtolower( $this->db->safesql( $login ) );
 		$pass  = $this->db->safesql( $pass );
@@ -218,7 +218,7 @@ trait login
 		return CURRENT_USER_ID?true:false;
 	}	
 	
-	private final static function passencode( $str )
+	private static function passencode( $str )
 	{
 		$i = 4;
 		while( $i > 0 )

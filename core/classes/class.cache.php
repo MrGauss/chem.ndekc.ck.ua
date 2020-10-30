@@ -132,7 +132,7 @@ class cache
             return true;
     }
 
-    static private final function get_cache_file_path( $name )
+    static private function get_cache_file_path( $name )
     {
         return CACHE_DIR.DS.'cache-'.self::strtolower( trim( $name ) ).'.[G-'.CURRENT_GROUP_ID.']['.self::CACHE_TYPE.'].php';
     }

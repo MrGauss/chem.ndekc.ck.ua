@@ -31,7 +31,7 @@ class tpl
         $this->tpl_dir = $skin_dir;
     }
 
-    public final function info( $title=false, $message, $level='notice' )
+    public final function info( $title=false, $message=false, $level='notice' )
     {
         $this->load( 'info' );
         $this->set( '{info:title}',     self::htmlspecialchars( $title ) );
@@ -146,7 +146,7 @@ class tpl
         return $data;
     }
 
-    public final function ins( $skin=false, $data )
+    public final function ins( $skin=false, $data=false )
     {
         if( !$skin ){ $skin = $this->current; }
         if( !isset($this->buffer[$skin]) ){ $this->buffer[$skin] = ''; }
@@ -165,7 +165,7 @@ class tpl
         unset( $this->buffer[$skin] );
     }
 
-    private final static function str_replace_if_exist( $from, $to, $data )
+    private static function str_replace_if_exist( $from, $to, $data )
     {
         if( strpos( $data, $from ) !== false )
         {
@@ -174,7 +174,7 @@ class tpl
         return $data;
     }
 
-    private final function parse_global_tags( $data )
+    private function parse_global_tags( $data )
     {
         $data = self::str_replace_if_exist( '{MOD}', _MOD_, $data );
         $data = self::str_replace_if_exist( '{SKINDIR}', str_replace( ROOT_DIR, '', CURRENT_SKIN ), $data );
@@ -206,7 +206,7 @@ class tpl
         return $data;
     }
 
-    private final function parse_tags_access( $data )
+    private function parse_tags_access( $data )
     {
         if( preg_match_all( '!\[access:(.+?)\](.+?)\[\/access\]!is', $data, $tag ) )
         {
@@ -238,7 +238,7 @@ class tpl
         return $data;
     }
 
-    private final function parse_tags_include( $data )
+    private function parse_tags_include( $data )
     {
         $tag = false;
         if( preg_match_all( '!\{\@include=([a-z0-9_\/]+?)\}!i', $data, $tag ) )
@@ -263,7 +263,7 @@ class tpl
         return $data;
     }
 
-    private final function parse_tags_login_nologin( $data )
+    private function parse_tags_login_nologin( $data )
     {
         if( preg_match( '!\[(login|nologin)\](.+?)\[\/\1\]!is', $data ) )
         {
@@ -275,7 +275,7 @@ class tpl
         return $data;
     }
 
-    private final function parse_tags_mod( $data )
+    private function parse_tags_mod( $data )
     {
         if( preg_match( '!\[(mod):(\w+?)\](.+?)\[\/\1\]!is', $data ) )
         {
@@ -285,7 +285,7 @@ class tpl
         return $data;
     }
 
-    private final function parse_tags_curr_user_info( $data )
+    private function parse_tags_curr_user_info( $data )
     {
         if( strpos( $data, '{curr.user:' ) )
         {
@@ -299,7 +299,7 @@ class tpl
         return $data;
     }
 
-    private final function parse_table_select( $data )
+    private function parse_table_select( $data )
     {
         while( preg_match( '!\{select:(\w+?)(:\d+?|)\}!i', $data, $match ) )
         {
@@ -311,7 +311,7 @@ class tpl
         return $data;
     }
 
-    private final function parse_tags_group( $data )
+    private function parse_tags_group( $data )
     {
         if( preg_match( '!\[(group:\d+?)\](.+?)\[\/\1\]!is', $data ) )
         {
@@ -330,7 +330,7 @@ class tpl
         return $data;
     }
 
-    private final function parse_tags_region( $data )
+    private function parse_tags_region( $data )
     {
         $matches = array();
         if( preg_match_all( '!\[(region):([0-9,]+?)\](.+?)\[\/\1\]!is', $data, $matches ) )

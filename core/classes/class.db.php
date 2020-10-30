@@ -189,13 +189,13 @@ class db
         pg_free_result($query_id);
     }
 
-    static private final function show_error( $error )
+    static private function show_error( $error )
     {
         echo $error;
         exit;
     }
 
-    private final static function log( $SQL )
+    private static function log( $SQL )
     {
         $file = CACHE_DIR.DS.'sql_log-'.date('Y.m.d').'.log';
 

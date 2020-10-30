@@ -47,7 +47,7 @@ class autocomplete
         return $data;
     }
 
-    private final function search( $table, $column, $term, $top10 = false )
+    private function search( $table, $column, $term, $top10 = false )
     {
         $table  = preg_replace( '!(\W+)!is', '', common::filter( $table ) );
         $column = preg_replace( '!(\W+)!is', '', common::filter( $column ) );
@@ -76,7 +76,7 @@ class autocomplete
         return $data;
     }
 
-    private final function get_table_info( $table )
+    private function get_table_info( $table )
     {
         $SQL = 'SELECT
                     column_name,

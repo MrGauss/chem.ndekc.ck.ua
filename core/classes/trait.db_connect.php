@@ -22,7 +22,7 @@ trait db_connect
 	}
 
 
-    /*private final function get_table_info()
+    /*private function get_table_info()
     {
         $SQL = 'SELECT
                     column_name,
