@@ -1,0 +1,18 @@
+#main_frame #page_frame #list_frame{ padding-top: 0px; }
+#main_frame #page_frame #list_frame #list{ margin-top: 0px; margin-bottom: 0px; height: 100%; }
+.server_stats{ padding: 10px; margin: 0px; }
+.server_stats table{ width: 60%; margin: 0px auto 5px auto; border: 1px solid rgba(51, 51, 51, 1); }
+.server_stats table caption{ padding: 10px; text-transform: uppercase; }
+.server_stats table th,
+.server_stats table td{ width: auto; border: 1px solid rgba(51, 51, 51, 1); border-collapse: collapse; padding: 5px; vertical-align: middle; }
+.server_stats table th{ height: 40px; }
+.server_stats table .param_name{ background: rgba(204, 204, 204, 1); text-align: right; width: 20%; }
+.server_stats table .param_value{ border-right: 3px double rgba(51, 51, 51, 1); text-align: left; width: 30%; }
+.server_stats table .param_value:last-of-type{ border-right: 1px solid rgba(51, 51, 51, 1); }
+
+.server_stats table th.param_name,
+.server_stats table th.param_value{ text-align: center; }
+
+.server_stats table.extensions th,
+.server_stats table.extensions td{ width: auto; }
+

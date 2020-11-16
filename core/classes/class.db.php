@@ -45,6 +45,16 @@ class db
         $this->version = $this->version['server'];
     }
 
+    public final function get_info( $param )
+    {
+        if( $param == 'host' ){ return $this->_DBHOST; }
+        if( $param == 'name' ){ return $this->_DBNAME; }
+        if( $param == 'user' ){ return $this->_DBUSER; }
+        if( $param == 'collate' ){ return $this->_COLLATE; }
+        if( $param == 'charset' ){ return $this->_CHARSET; }
+        return false;
+    }
+
     public final function __destruct()
     {
         if( $this->is_transaction ){ $this->transaction_rollback(); }
