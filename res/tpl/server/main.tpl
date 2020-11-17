@@ -48,6 +48,25 @@
             </tbody>
         </table>
 
+        <div class="logs_viewer">
+            <h3>nginx_access.log</h3>
+            <pre>{log:nginx_access.log}</pre>
+        </div>
+
+        <div class="logs_viewer">
+            <h3>nginx_error.log</h3>
+            <pre>{log:nginx_error.log}</pre>
+        </div>
+
+        <div class="logs_viewer">
+            <h3>php_error.log</h3>
+            <pre>{log:php_error.log}</pre>
+        </div>
+
+        <div class="logs_viewer">
+            <h3>postgresql.log</h3>
+            <pre>{log:postgresql.log}</pre>
+        </div>
     </div>
 
 

@@ -25,7 +25,7 @@ define ( 'USER_IP',         $_SERVER['REMOTE_ADDR'] );
 define ( 'CHARSET',         'CP1251' );
 define ( 'ENCODING',        'Windows-1251' );
 define ( 'CACHE_TYPE',      'FILE' );
-define ( 'LOGS_DIR',        dirname( ROOT_DIR ).DS.'logs' );
+define ( 'LOGS_DIR',        dirname( ROOT_DIR ).DS.'log' );
 define ( 'TEMP_DIR',        dirname( ROOT_DIR ).DS.'tmp' );
 define ( 'DYNAMIC_SALT',    md5( date('Y.m.d') . sha1( DOMAIN ) . USER_IP ) );
 
