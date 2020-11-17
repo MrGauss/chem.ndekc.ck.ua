@@ -41,8 +41,6 @@
                     <th class="param_value">Версія</th>
                     <th class="param_name">Назва</th>
                     <th class="param_value">Версія</th>
-                    <th class="param_name">Назва</th>
-                    <th class="param_value">Версія</th>
                 </tr>
             </thead>
             <tbody>

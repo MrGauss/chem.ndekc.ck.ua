@@ -1,12 +1,13 @@
 <?php
 
-if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
+//////////////////////////////////////////////////////////////////////////////////////////
 
-if( !defined('_MOD_NAME_') ){ define('_MOD_NAME_', false ); }
+if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
+if( !defined('_MOD_NAME_') ){ define('_MOD_NAME_', 'Статистика серверу' ); }
 
 $skin = 'server/table_line';
 $i = 0;
-$cols = 3;
+$cols = 2;
 
 foreach( get_loaded_extensions() as $extension )
 {
