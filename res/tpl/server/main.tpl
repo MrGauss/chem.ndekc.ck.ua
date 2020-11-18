@@ -48,25 +48,46 @@
             </tbody>
         </table>
 
+        [log:nginx_access.log]
         <div class="logs_viewer">
             <h3>nginx_access.log</h3>
+            <span>{log:nginx_access.log:mod}</span>
+            <span class="filesize">{log:nginx_access.log:size}</span>
             <pre>{log:nginx_access.log}</pre>
         </div>
-
+        [/log]
+        [log:nginx_error.log]
         <div class="logs_viewer">
             <h3>nginx_error.log</h3>
+            <span class="filesize">{log:nginx_error.log:size}</span>
+            <span>{log:nginx_error.log:mod}</span>
             <pre>{log:nginx_error.log}</pre>
         </div>
-
+        [/log]
+        [log:php_error.log]
         <div class="logs_viewer">
             <h3>php_error.log</h3>
+            <span class="filesize">{log:php_error.log:size}</span>
+            <span>{log:php_error.log:mod}</span>
             <pre>{log:php_error.log}</pre>
         </div>
-
+        [/log]
+        [log:postgresql.log]
         <div class="logs_viewer">
             <h3>postgresql.log</h3>
+            <span>{log:postgresql.log:mod}</span>
+            <span class="filesize">{log:postgresql.log:size}</span>
             <pre>{log:postgresql.log}</pre>
         </div>
+        [/log]
+        [log:sql.log]
+        <div class="logs_viewer">
+            <h3>sql.log</h3>
+            <span>{log:sql.log:mod}</span>
+            <span class="filesize">{log:sql.log:size}</span>
+            <pre>{log:sql.log}</pre>
+        </div>
+        [/log]
     </div>
 
 

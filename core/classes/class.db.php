@@ -207,13 +207,30 @@ class db
 
     private static function log( $SQL )
     {
-        $file = CACHE_DIR.DS.'sql_log-'.date('Y.m.d').'.log';
+        $file = LOGS_DIR.DS.'sql.log';
+
+        $L = 100;
+        $DATE = "DATE:".str_repeat(' ', 6).date('Y.m.d H:i:s');
+        $AJAX = "AJAX:".str_repeat(' ', 6).( defined('_AJAX_')?( _AJAX_?'TRUE':'FALSE' ):'not defined' )."";
+        $MOD  = "MOD:".str_repeat(' ', 7).( defined('_MOD_')?( _MOD_?_MOD_:'FALSE' ):'not defined' )."";
+        $SUBMOD  = "SUBMOD:".str_repeat(' ', 4).( defined('_SUBMOD_')?( _SUBMOD_?_SUBMOD_:'FALSE' ):'not defined' )."";
+        $ACTION  = "ACTION:".str_repeat(' ', 4).( defined('_ACTION_')?( _ACTION_?_ACTION_:'FALSE' ):'not defined' )."";
+        $SUBACTION  = "SUBACTION:".str_repeat(' ', 1).( defined('_SUBACTION_')?( _SUBACTION_?_SUBACTION_:'FALSE' ):'not defined' )."";
+        $USER_ID  = "USER_ID:".str_repeat(' ', 3).( defined('CURRENT_USER_ID')?( CURRENT_USER_ID?CURRENT_USER_ID:'FALSE' ):'not defined' )."";
+        $REGION_ID  = "REGION_ID:".str_repeat(' ', 1).( defined('CURRENT_REGION_ID')?( CURRENT_REGION_ID?CURRENT_REGION_ID:'FALSE' ):'not defined' )."";
 
         $SQL =
-                 "-------------------------\n"
-                ."-- ".date('Y.m.d H:i:s')." --\n"
-                . $SQL
-                ."\n-------------------------"
+                 str_repeat( '-', $L )."\n"
+                ."-- ".$DATE  . str_repeat( ' ', $L - strlen($DATE)     - 6 ) . " --\n"
+                ."-- ".$AJAX  . str_repeat( ' ', $L - strlen($AJAX)     - 6 ) . " --\n"
+                ."-- ".$MOD   . str_repeat( ' ', $L - strlen($MOD)      - 6 ) . " --\n"
+                ."-- ".$SUBMOD. str_repeat( ' ', $L - strlen($SUBMOD)   - 6 ) . " --\n"
+                ."-- ".$ACTION. str_repeat( ' ', $L - strlen($ACTION)   - 6 ) . " --\n"
+                ."-- ".$SUBACTION. str_repeat( ' ', $L - strlen($SUBACTION)   - 6 ) . " --\n"
+                ."-- ".$USER_ID. str_repeat( ' ', $L - strlen($USER_ID)   - 6 ) . " --\n"
+                ."-- ".$REGION_ID. str_repeat( ' ', $L - strlen($REGION_ID)   - 6 ) . " --\n"
+                ."\n".$SQL."\n"
+                ."\n".str_repeat( '-', $L )
                 ."\n\n";
 
         $fop =  fopen( $file, 'a' );
@@ -239,7 +256,6 @@ class db
         fclose( $fop );
 
         return true;
-
     }
 
     public function version()

@@ -56,6 +56,27 @@ switch ( _ACTION_ )
         ajax::set_data( 'lines', $using->get_html( $_POST['filters'], 'using/line' ) );
     break;
 
+    case 1000:
+
+        //$dompdf = new dompdf;
+
+        $_POST['filters'] = ( isset($_POST['filters']) && is_array($_POST['filters']) )?$_POST['filters']:array();
+
+        $tpl->load( 'using/print_main' );
+        $tpl->set( '{list}', (new using) -> get_html( $_POST['filters'], 'using/print_line' ) );
+        $tpl->compile( 'using/print_main' );
+
+        echo strtr( $tpl->result( 'using/print_main' ), array
+        (
+            '{user_memory}' => round(memory_get_peak_usage()/1024,2).' kb',
+            '{queries}' => isset($db->counters['queries'])?$db->counters['queries']:0,
+            '{queries_cached}' => isset($db->counters['cached'])?$db->counters['cached']:0,
+        ) );
+
+        exit;
+
+    break;
+
     default:
         common::err( 'Дія невідома!' );
 }

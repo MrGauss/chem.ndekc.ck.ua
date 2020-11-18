@@ -56,23 +56,28 @@
         $tpl->set( '{tag:server_'.strtolower($k).'}', common::db2html( $v ) );
     }
 
-    foreach( array( 'nginx_access', 'nginx_error', 'php_error', 'postgresql', ) as $log_file )
+    foreach( array( 'nginx_access', 'nginx_error', 'php_error', 'postgresql', 'sql' ) as $log_file )
     {
         $log_file = LOGS_DIR.DS.$log_file.'.log';
 
         if( !file_exists($log_file) || !is_file($log_file ) ){ continue; }
 
-        $file_size = filesize($log_file);
-
-        if( $file_size == 0 )
+        if( !is_readable( $log_file ) || ( $file_size = filesize($log_file) ) == 0  )
         {
             $tpl->set( '{log:'. basename($log_file) .'}', '' );
+            $tpl->set( '{log:'. basename($log_file) .':mod}', '' );
+            $tpl->set( '{log:'. basename($log_file) .':size}', '' );
+            $tpl->set_block( '!\[log:'. basename($log_file) .'\](.+?)\[\/log\]!is', '' );
             continue;
         }
 
-        $fopen = fopen( $log_file, 'rb' );
+        $fopen   =   fopen( $log_file, 'rb' );
         $tpl->set( '{log:'. basename($log_file) .'}', common::db2html( fread( $fopen, $file_size ) ) );
-        fclose($fopen);
+                     fclose($fopen);
+
+        $tpl->set( '{log:'. basename($log_file) .':mod}', date( 'Y.m.d H:i:s', filemtime($log_file) ) );
+        $tpl->set( '{log:'. basename($log_file) .':size}', round( $file_size / 1024, 1 ).' kb' );
+        $tpl->set_block( '!\[log:'. basename($log_file) .'\](.+?)\[\/log\]!is', '$1' );
     }
 
     $tpl->set_block( '!\{log:(.+?)\}!i', '' );

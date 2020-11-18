@@ -455,12 +455,15 @@ class using
         $tpl = new tpl;
 
         $I = count( $data );
+        $J = 0;
         foreach( $data as $line )
         {
 
             $tpl->load( $skin );
 
             $line['numi'] = $I--;
+            $line['numa'] = ++$J;
+            $line['hash_segm'] = preg_replace( '!(\w{8})!i', '$1 ', $line['hash'] );
 
             $tags = array();
 
