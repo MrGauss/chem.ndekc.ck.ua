@@ -23,7 +23,7 @@
             html,body,div,main,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,fieldset,input,textarea,span{margin: 0; padding: 0; -moz-box-sizing: border-box; box-sizing: border-box; }
             table, tr, tr{ -moz-box-sizing: border-box; box-sizing: border-box; -webkit-box-sizing: border-box; }
             input, textarea, select, button, body{  }
-            body{ color: #222222; background: #FFFFFF; }
+            body{ color: #222222; background: #FFFFFF; padding: 20mm; font-size: 11pt; }
             *{
                 font-kerning: normal;
                 -webkit-font-kerning: normal;
@@ -76,17 +76,25 @@
 
             /*********************************/
 
-            body{ padding: 2mm; font-size: 14pt; }
-            table.data{ width: 100%; border: 1px solid rgba(17, 17, 17, 1); border-collapse: collapse; }
+            table.data{ width: 100%; margin: 0px auto 0px auto; border: 1px solid rgba(17, 17, 17, 1); border-collapse: collapse; }
             table.data th,
             table.data td{ width: auto; border: 1px solid rgba(17, 17, 17, 1); border-collapse: collapse; padding: 1mm; }
             table.data td.numi{ width: 5%; text-align: center; }
-            table.data td.hash{ width: 5%; text-align: center; font-family: "Courier New", Courier, monospace; font-size: 10pt; text-transform: uppercase; }
+            table.data td.hash{ width: 7%; text-align: center; font-family: "Courier New", Courier, monospace; font-size: 10pt; text-transform: uppercase; }
             table.data td.using_date{ width: 10%; text-align: center; }
-            table.data td.purpose_name{ width: 15%; text-align: center; }
-            table.data td.name{ width: 10%; text-align: center; }
-            table.data td.expert{ width: auto; text-align: center; }
-            table.data td.consume{ width: 40%; text-align: left; }
+            table.data td.purpose_name{ width: 10%; text-align: center; }
+            table.data td.purpose_info{ width: 13%; text-align: center; }
+            table.data td.expert{ width: 20%; text-align: center; }
+            table.data td.consume{ width: auto; text-align: left; }
+
+            table.data td               div.fxw{ overflow: hidden; word-wrap: break-word; }
+            table.data td.numi          div.fxw{ text-align: center; }
+            table.data td.hash          div.fxw{ text-align: center; }
+            table.data td.using_date    div.fxw{ text-align: center; }
+            table.data td.purpose_name  div.fxw{ text-align: center; }
+            table.data td.purpose_info  div.fxw{ text-align: center; }
+            table.data td.expert        div.fxw{ text-align: center; }
+            table.data td.consume       div.fxw{ text-align: left; }
 
             table.data td.consume .consume_elem{ display: block; padding: 1mm 0px 1mm 0px; margin: 0mm 2mm 0mm 2mm; border-bottom: 1px dashed rgba(34, 34, 34, 1); }
             table.data td.consume .consume_elem:last-of-type{ border-bottom: none; }
@@ -96,16 +104,15 @@
     </head>
     <body data-mod="{MOD}" data-rand="{RAND}" data-region_id="{CURRENT_REGION_ID}" data-user="{CURRENT_USER_LOGIN}">
         <table class="data" border="1" style="border-collapse: collapse; border-color: rgba(0, 0, 0, 1); border-width: 3px;">
-
         <tr>
-            <th style="border-collapse: collapse; border-color: rgba(0, 0, 0, 1); border-width: 1px; text-align: center;" class="numi">№ п/п</th>
-            <th style="border-collapse: collapse; border-color: rgba(0, 0, 0, 1); border-width: 1px; text-align: center;" class="hash">Хеш запису</th>
-            <th style="border-collapse: collapse; border-color: rgba(0, 0, 0, 1); border-width: 1px; text-align: center;" class="using_date">Дата використання</th>
-            <th style="border-collapse: collapse; border-color: rgba(0, 0, 0, 1); border-width: 1px; text-align: center;" class="purpose_name" colspan="2">Мета використання</th>
-            <th style="border-collapse: collapse; border-color: rgba(0, 0, 0, 1); border-width: 1px; text-align: center;" class="expert">Хто використав</th>
-            <th style="border-collapse: collapse; border-color: rgba(0, 0, 0, 1); border-width: 1px; text-align: center;" class="consume">Що використано</th>
+            <th class="numi"><div class="fxw">№<br>п/п</div></th>
+            <th class="hash"><div class="fxw">Хеш<br>запису</div></th>
+            <th class="using_date"><div class="fxw">Дата</div></th>
+            <th class="purpose_name"><div class="fxw">Мета</div></th>
+            <th class="purpose_info"><div class="fxw">Куди<br>використано</div></th>
+            <th class="expert"><div class="fxw">Хто<br>використав</div></th>
+            <th class="consume"><div class="fxw">Що<br>використано</div></th>
         </tr>
-
             {list}
         </table>
     </body>

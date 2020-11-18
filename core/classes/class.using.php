@@ -42,6 +42,20 @@ class using
         return true;
     }
 
+    public final static function filters( $data )
+    {
+        $FILTERS = array();
+
+        $FILTERS['reagent_id']          = common::integer( isset( $data['reagent_id'] ) ? $data['reagent_id'] : 0 );
+        $FILTERS['purpose_id']          = common::integer( isset( $data['purpose_id'] ) ? $data['purpose_id'] : 0 );
+        $FILTERS['expert_id']           = common::integer( isset( $data['expert_id'] ) ? $data['expert_id'] : 0 );
+        $FILTERS['using_date'] = array();
+        $FILTERS['using_date']['from']     = common::trim( isset( $data['using_date_from'] ) ? date('d.m.Y',  strtotime($data['using_date_from'] )) : '01.'.date('m.Y')   );
+        $FILTERS['using_date']['to']       = common::trim( isset( $data['using_date_to'] ) ? date('d.m.Y',    strtotime($data['using_date_to']   )) :       date('d.m.Y') );
+
+        return $FILTERS;
+    }
+
     public final function update_consume_using( $using_hash = false, $consume_hash = array() )
     {
         $using_hash = common::filter_hash( $using_hash );
@@ -128,6 +142,21 @@ class using
         }
         /////////////////////
 
+        if( isset($filters['using_date']) )
+        {
+            if( !is_array($filters['using_date']) )
+            {
+                $filters['using_date'] = array( 'from' => $filters['using_date'], 'to' => $filters['using_date'] );
+            }
+
+            if( isset($filters['using_date']['from']) ){ $filters['using_date']['from'] = date( 'Y-m-d', strtotime( $filters['using_date']['from'] ) );  }
+            if( isset($filters['using_date']['to']) ){ $filters['using_date']['to'] = date( 'Y-m-d', strtotime( $filters['using_date']['to'] ) );  }
+
+            if( isset($filters['using_date']['from']) && isset($filters['using_date']['to']) )
+            {
+                $WHERE['using_date'] = '( "using".date >= \''.$filters['using_date']['from'].'\'::date AND "using".date <= \''.$filters['using_date']['to'].'\'::date ) ';
+            }
+        }
 
         /////////////////////
         if( isset($filters['reactiv_menu_id']) )
@@ -146,6 +175,74 @@ class using
         }
         /////////////////////
 
+        /////////////////////
+        if( isset($filters['reagent_id']) )
+        {
+            $filters['reagent_id']  = common::integer( $filters['reagent_id'] );
+            if( !is_array($filters['reagent_id']) ){ $filters['reagent_id'] = array( $filters['reagent_id'] ); }
+
+            $filters['reagent_id'] = array_unique($filters['reagent_id']);
+            sort( $filters['reagent_id'] );
+
+            while( is_array($filters['reagent_id']) && count($filters['reagent_id']) && isset($filters['reagent_id'][0]) && $filters['reagent_id'][0] == 0 )
+            {
+                unset( $filters['reagent_id'][0] );
+                sort( $filters['reagent_id'] );
+            }
+
+            if( count($filters['reagent_id']) )
+            {
+                $filters['reagent_id'] = array_map( array( $this->db, 'safesql' ), $filters['reagent_id'] );
+                $WHERE['reagent_id']   = 'stock.reagent_id IN('. implode( ', ', array_values( $filters['reagent_id'] ) ) .')';
+            }
+        }
+        /////////////////////
+
+        /////////////////////
+        if( isset($filters['purpose_id']) )
+        {
+            $filters['purpose_id']  = common::integer( $filters['purpose_id'] );
+            if( !is_array($filters['purpose_id']) ){ $filters['purpose_id'] = array( $filters['purpose_id'] ); }
+
+            $filters['purpose_id'] = array_unique($filters['purpose_id']);
+            sort( $filters['purpose_id'] );
+
+            while( is_array($filters['purpose_id']) && count($filters['purpose_id']) && isset($filters['purpose_id'][0]) && $filters['purpose_id'][0] == 0 )
+            {
+                unset( $filters['purpose_id'][0] );
+                sort( $filters['purpose_id'] );
+            }
+
+            if( count($filters['purpose_id']) )
+            {
+                $filters['purpose_id'] = array_map( array( $this->db, 'safesql' ), $filters['purpose_id'] );
+                $WHERE['purpose_id']   = '"using".purpose_id IN('. implode( ', ', array_values( $filters['purpose_id'] ) ) .')';
+            }
+        }
+        /////////////////////
+
+        /////////////////////
+        if( isset($filters['expert_id']) )
+        {
+            $filters['expert_id']  = common::integer( $filters['expert_id'] );
+            if( !is_array($filters['expert_id']) ){ $filters['expert_id'] = array( $filters['expert_id'] ); }
+
+            $filters['expert_id'] = array_unique($filters['expert_id']);
+            sort( $filters['expert_id'] );
+
+            while( is_array($filters['expert_id']) && count($filters['expert_id']) && isset($filters['expert_id'][0]) && $filters['expert_id'][0] == 0 )
+            {
+                unset( $filters['expert_id'][0] );
+                sort( $filters['expert_id'] );
+            }
+
+            if( count($filters['expert_id']) )
+            {
+                $filters['expert_id'] = array_map( array( $this->db, 'safesql' ), $filters['expert_id'] );
+                $WHERE['expert_id']   = '"using".expert_id IN('. implode( ', ', array_values( $filters['expert_id'] ) ) .')';
+            }
+        }
+        /////////////////////
 
         /////////////////////
         if( isset($filters['hash']) )
@@ -173,7 +270,7 @@ class using
 
         /////////////////////
 
-        $WHERE = count($WHERE) ? 'WHERE '.implode( ' AND ', $WHERE ) : '';
+        $WHERE = count($WHERE) ? 'WHERE '."\n\t\t\t\t".implode( "\n\t\t\t\t".'AND'."\n\t\t\t\t", $WHERE ) : '';
 
         /////////////////////
 
@@ -196,16 +293,21 @@ class using
                     "using"
                         LEFT JOIN consume_using ON( consume_using.using_hash = "using".hash )
                             LEFT JOIN consume ON( consume.hash = consume_using.consume_hash )
+                                LEFT JOIN dispersion ON( dispersion.id = consume.dispersion_id )
+                                    LEFT JOIN stock ON( stock.id = dispersion.stock_id )
+
                         LEFT JOIN reactiv_consume_using ON( reactiv_consume_using.using_hash = "using".hash )
                             LEFT JOIN reactiv_consume ON( reactiv_consume.hash = reactiv_consume_using.consume_hash )
+
                         LEFT JOIN reactiv_ingr_reactiv ON( reactiv_ingr_reactiv.consume_hash = reactiv_consume.hash )
                         LEFT JOIN reactiv_ingr_reagent ON( reactiv_ingr_reagent.consume_hash = consume.hash )
                         LEFT JOIN reactiv ON( reactiv.hash = reactiv_ingr_reactiv.reactiv_hash OR reactiv.hash = reactiv_ingr_reagent.reactiv_hash )
             '.$WHERE.'
             GROUP BY "using".hash
             ORDER BY "using".date DESC;
-            ;';
+            ';
 
+        //echo $SQL;exit;
 
         $cache_var = 'using-'.md5( $SQL ).'-raw';
 

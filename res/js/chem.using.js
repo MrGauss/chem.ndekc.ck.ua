@@ -83,6 +83,10 @@ chem['using'] = new function()
                         } );
                 }
             }
+            else
+            {
+                $('#content #list_frame .list .line[data-hash]').off().remove();
+            }
         });
 
     }

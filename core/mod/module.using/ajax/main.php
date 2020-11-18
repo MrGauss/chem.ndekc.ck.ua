@@ -49,11 +49,9 @@ switch ( _ACTION_ )
     break;
 
     case 4:
-
-        $_POST['filters'] = ( isset($_POST['filters']) && is_array($_POST['filters']) )?$_POST['filters']:array();
         $using = new using;
 
-        ajax::set_data( 'lines', $using->get_html( $_POST['filters'], 'using/line' ) );
+        ajax::set_data( 'lines', $using->get_html( using::filters($_POST['filters']), 'using/line' ) );
     break;
 
     case 1000:
@@ -66,12 +64,19 @@ switch ( _ACTION_ )
         $tpl->set( '{list}', (new using) -> get_html( $_POST['filters'], 'using/print_line' ) );
         $tpl->compile( 'using/print_main' );
 
-        echo strtr( $tpl->result( 'using/print_main' ), array
+        $content =  strtr( $tpl->result( 'using/print_main' ), array
         (
             '{user_memory}' => round(memory_get_peak_usage()/1024,2).' kb',
             '{queries}' => isset($db->counters['queries'])?$db->counters['queries']:0,
             '{queries_cached}' => isset($db->counters['cached'])?$db->counters['cached']:0,
         ) );
+
+        header( 'Content-Disposition: attachment; filename="'.common::win2utf( 'Використання реактивів та розхідних матеріалів '.date( 'Y.m.d H-i-s' ) ).'.html"' );
+        header( 'Content-Type: text/html' );
+        header( 'Content-Length: ' . strlen( $content ) );
+        header( 'Connection: close' );
+
+        echo $content;
 
         exit;
 
