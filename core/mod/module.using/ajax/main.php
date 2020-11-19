@@ -51,17 +51,55 @@ switch ( _ACTION_ )
     case 4:
         $using = new using;
 
+        $_POST['filters'] = ( isset($_POST['filters']) && is_array($_POST['filters']) )?$_POST['filters']:array();
         ajax::set_data( 'lines', $using->get_html( using::filters($_POST['filters']), 'using/line' ) );
     break;
 
     case 1000:
-
-        //$dompdf = new dompdf;
-
-        $_POST['filters'] = ( isset($_POST['filters']) && is_array($_POST['filters']) )?$_POST['filters']:array();
+        $_REQUEST['filters'] = ( isset($_REQUEST['filters']) && is_array($_REQUEST['filters']) )?$_REQUEST['filters']:array();
 
         $tpl->load( 'using/print_main' );
-        $tpl->set( '{list}', (new using) -> get_html( $_POST['filters'], 'using/print_line' ) );
+
+        $_REQUEST['filters'] = using::filters( $_REQUEST['filters'] );
+
+        foreach( $_REQUEST['filters'] as $filter_name => $filter_value )
+        {
+            if( is_array($filter_value) ){ continue; }
+            $tpl->set( '{filter:'.$filter_name.'}', $filter_value );
+        }
+        $tpl->set( '{filter:using_date_from}',      $_REQUEST['filters']['using_date']['from'] );
+        $tpl->set( '{filter:using_date_to}',        $_REQUEST['filters']['using_date']['to'] );
+
+        $tpl->set( '{list}', (new using) -> get_html( $_REQUEST['filters'], 'using/print_line' ) );
+
+        $caption = 'Використання';
+
+        if( isset($_REQUEST['filters']['reagent_id']) && $_REQUEST['filters']['reagent_id'] )
+        {
+            $reagent = ( new spr_manager('reagent') )->get_raw( array( 'id'=>$_REQUEST['filters']['reagent_id'] ) )[$_REQUEST['filters']['reagent_id']];
+            $caption = common::trim( $caption ) . ' реактиву (розхідного матеріалу) "'. common::db2html( $reagent['name'] ) .'"';
+        }
+        else
+        {
+            $caption = common::trim( $caption ) . ' реактивів та розхідних матеріалів';
+        }
+
+        $caption = common::trim( $caption ) . ' за період з '.$_REQUEST['filters']['using_date']['from'].' по '.$_REQUEST['filters']['using_date']['to'].'';
+
+        if( isset($_REQUEST['filters']['expert_id']) && $_REQUEST['filters']['expert_id'] )
+        {
+            $expert = ( new user() )->get_raw( array( 'id'=>$_REQUEST['filters']['expert_id'] ) )[$_REQUEST['filters']['expert_id']];
+            $caption = common::trim( $caption ) . ' експертом: '. common::db2html( $expert['surname'].' '.$expert['name'].' '.$expert['phname'] ) .'';
+        }
+
+        if( isset($_REQUEST['filters']['purpose_id']) && $_REQUEST['filters']['purpose_id'] )
+        {
+            $purpose = ( new spr_manager('purpose') )->get_raw( array( 'id'=>$_REQUEST['filters']['purpose_id'] ) )[$_REQUEST['filters']['purpose_id']];
+            $caption = common::trim( $caption ) . ', з метою: '. common::db2html( $purpose['name'] ) .'';
+        }
+
+        $tpl->set( '{caption}', $caption );
+
         $tpl->compile( 'using/print_main' );
 
         $content =  strtr( $tpl->result( 'using/print_main' ), array

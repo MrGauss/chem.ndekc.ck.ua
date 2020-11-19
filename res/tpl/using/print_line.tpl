@@ -1,4 +1,4 @@
-<tr>
+<tr class="{tag:using:numb}">
     <td class="numi" data-numi="{tag:using:numi}" data-numa="{tag:using:numa}"><div class="fxw">{tag:using:numa}</div></td>
     <td class="hash"><div class="fxw">{tag:using:hash_segm}</div></td>
     <td class="using_date"><div class="fxw">{tag:using:date}</div></td>

@@ -565,6 +565,9 @@ class using
 
             $line['numi'] = $I--;
             $line['numa'] = ++$J;
+            $line['numb'] = ($line['numa'] & 1) ? 'odd' : 'even';
+
+
             $line['hash_segm'] = preg_replace( '!(\w{8})!i', '$1 ', $line['hash'] );
 
             $tags = array();

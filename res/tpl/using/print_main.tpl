@@ -23,7 +23,7 @@
             html,body,div,main,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,fieldset,input,textarea,span{margin: 0; padding: 0; -moz-box-sizing: border-box; box-sizing: border-box; }
             table, tr, tr{ -moz-box-sizing: border-box; box-sizing: border-box; -webkit-box-sizing: border-box; }
             input, textarea, select, button, body{  }
-            body{ color: #222222; background: #FFFFFF; padding: 20mm; font-size: 11pt; }
+            body{ color: #222222; background: #FFFFFF; padding: 2mm; font-size: 11pt; }
             *{
                 font-kerning: normal;
                 -webkit-font-kerning: normal;
@@ -77,6 +77,9 @@
             /*********************************/
 
             table.data{ width: 100%; margin: 0px auto 0px auto; border: 1px solid rgba(17, 17, 17, 1); border-collapse: collapse; }
+            table.data caption{ text-align: center; font-size: 11pt; font-weight: bold; text-transform: uppercase; padding: 5mm; }
+            table.data tr.odd td{ background: #FFFFFF; }
+            table.data tr.even td{ background: #F0F6FF; }
             table.data th,
             table.data td{ width: auto; border: 1px solid rgba(17, 17, 17, 1); border-collapse: collapse; padding: 1mm; }
             table.data td.numi{ width: 5%; text-align: center; }
@@ -104,6 +107,7 @@
     </head>
     <body data-mod="{MOD}" data-rand="{RAND}" data-region_id="{CURRENT_REGION_ID}" data-user="{CURRENT_USER_LOGIN}">
         <table class="data" border="1" style="border-collapse: collapse; border-color: rgba(0, 0, 0, 1); border-width: 3px;">
+            <caption>{caption}</caption>
         <tr>
             <th class="numi"><div class="fxw">№<br>п/п</div></th>
             <th class="hash"><div class="fxw">Хеш<br>запису</div></th>

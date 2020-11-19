@@ -557,6 +557,21 @@ chem['using'] = new function()
         {
             chem.using.reload();
         });
+
+        $('#content #list_frame #filters #print').on( "click", function()
+        {
+            var post = {};
+                post['ajax']        = 1;
+                post['action']      = 1000;
+                post['mod']         = $('body').attr('data-mod');
+                post['filters']     = {};
+
+            $('#filters').find('[data-role="filter"]').each(function(){ post['filters'][$(this).attr('name')] = $(this).val(); });
+
+            var url = window.location.origin + window.location.pathname + '?' + jQuery.param( post );
+
+            window.location.replace( url );
+        });
     }
 }
 
