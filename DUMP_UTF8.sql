@@ -4354,7 +4354,6 @@ INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", 
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('35b49bf5480fe5a0cb0e7001b5184d54', '2021-01-15 12:28:44.337437', 1014, 12, 2, '2021-01-15 12:28:44.337437', '2021-01-15');
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('65361da1f63d2d839f0ec7cfae4525ae', '2021-01-15 12:28:44.337437', 1018, 12, 0.014, '2021-01-15 12:28:44.337437', '2021-01-15');
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('16b3587e396008c8e8b3cfe975e76ddf', '2021-01-19 15:14:42.601754', 1025, 13, 2, '2021-01-19 15:14:42.601754', '2021-01-19');
-INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('6e0c462e0a1caa53c52d06a1a7cf721b', '2021-01-19 17:50:49.969786', 36, 4, 2, '2021-01-19 17:50:49.969786', '2021-01-19');
 INSERT INTO "public"."consume" ("hash", "ts", "dispersion_id", "inc_expert_id", "quantity", "consume_ts", "date") VALUES ('4243af212b01172e30b0266558468235', '2021-01-19 17:51:09.504122', 36, 4, 3, '2021-01-19 17:51:09.504122', '2021-01-19');
 
 
@@ -7192,7 +7191,6 @@ INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('6c8
 INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('35b49bf5480fe5a0cb0e7001b5184d54', '165b00a9b100434f2abea8f00f756ca0');
 INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('65361da1f63d2d839f0ec7cfae4525ae', '165b00a9b100434f2abea8f00f756ca0');
 INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('16b3587e396008c8e8b3cfe975e76ddf', '9295bb669071848295acd076c64d3ef3');
-INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('6e0c462e0a1caa53c52d06a1a7cf721b', 'df3eeebf69645121bf952b20b661c0d4');
 INSERT INTO "public"."consume_using" ("consume_hash", "using_hash") VALUES ('4243af212b01172e30b0266558468235', 'a735015f2fd4de5621fe55a1f6782c29');
 
 
@@ -7346,7 +7344,7 @@ INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (1014, 128, '2020-07-15 12:23:21.463932', 3, 10, 1000, 642, 1, '2020-07-01', 'Передано в лабораторію для використання', '2020-07-15 12:23:21.463932+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (1018, 277, '2020-08-04 14:55:09.865043', 3, 3, 20, 15.133000000000013, 1, '2020-08-04', 'Передано в лабораторію для використання', '2020-08-04 14:55:09.865043+03');
 INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (1025, 284, '2020-10-05 13:47:49.058544', 3, 5, 2500, 1638, 1, '2020-09-18', 'Передано в лабораторію для використання', '2020-10-05 13:47:49.058544+03');
-INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (36, 312, '2020-05-18 16:50:52.101473', 3, 3, 2500, 2073, 1, '2020-05-13', 'Передано в лабораторію для використання', '2020-05-18 16:50:52.101473+03');
+INSERT INTO "public"."dispersion" ("id", "stock_id", "ts", "inc_expert_id", "out_expert_id", "quantity_inc", "quantity_left", "group_id", "inc_date", "comment", "created_ts") VALUES (36, 312, '2020-05-18 16:50:52.101473', 3, 3, 2500, 2075, 1, '2020-05-13', 'Передано в лабораторію для використання', '2020-05-18 16:50:52.101473+03');
 
 
 --
@@ -7368,7 +7366,7 @@ INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (12, 'Гордійчук', 'Валентина', 'Вікторівна', 1, '2021-01-15 12:28:44.557463', 'hordiychuk_valya', '0bcbb0befa821880bd31949f3632496f', '24c6559d06d04116c0ee44c8b80e8abb', 1, '192.168.2.39', 4);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2021-01-18 15:35:14.757912', 'shinkarenko', '1174b4363b1661f9b2c480440a97deea', '134b7fb00123770349616766e6650d49', 1, '192.168.2.127', 3);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (13, 'Мишенко', 'Євгеній', 'Віталійович', 1, '2021-01-19 15:14:42.800273', 'myshenko_zhenya', 'b485aaa67c84eee5c00eed9122b79b18', 'd15ba950373c8d7aa644236b08186e4f', 1, '192.168.2.57', 4);
-INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (4, 'Курочка', 'Альона', 'Вікторівна', 1, '2021-01-19 17:51:09.667078', 'kurochka_alona', 'af4e253d3578fb2770d8b8d040f00d39', '11a0560d6d58e89c6a9ab0b9b2a61d27', 1, '192.168.2.43', 4);
+INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (4, 'Курочка', 'Альона', 'Вікторівна', 1, '2021-01-22 13:44:32.008337', 'kurochka_alona', 'af4e253d3578fb2770d8b8d040f00d39', 'ed620cf33822d449cf88f71299987bf8', 1, '192.168.2.43', 4);
 
 
 --
@@ -13459,7 +13457,6 @@ INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_num
 INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment", "expert_id") VALUES ('0385eb998b7bf2ce960909293eb237d3', 1, '2021-01-15 12:27:47', 1, '2/101', '1970-01-01', 1, '', '', 12);
 INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment", "expert_id") VALUES ('165b00a9b100434f2abea8f00f756ca0', 1, '2021-01-15 12:28:44', 1, '2/85', '1970-01-01', 1, '', '', 12);
 INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment", "expert_id") VALUES ('9295bb669071848295acd076c64d3ef3', 1, '2021-01-19 15:14:42', 1, '2/133', '1970-01-01', 1, '', '', 13);
-INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment", "expert_id") VALUES ('df3eeebf69645121bf952b20b661c0d4', 1, '2021-01-19 17:50:49', 1, '2/143', '1970-01-01', 1, '', '', 4);
 INSERT INTO "public"."using" ("hash", "purpose_id", "date", "group_id", "exp_number", "exp_date", "obj_count", "tech_info", "ucomment", "expert_id") VALUES ('a735015f2fd4de5621fe55a1f6782c29', 1, '2021-01-19 17:51:09', 1, '2/143', '1970-01-01', 1, '', '', 4);
 
 
