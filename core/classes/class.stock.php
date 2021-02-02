@@ -185,7 +185,7 @@ class stock
         $SQL['is_sertificat']       = common::integer($data['is_sertificat']);
         $SQL['is_suitability']      = common::integer($data['is_suitability']);
         $SQL['danger_class_id']     = common::integer($data['danger_class_id']);
-        $SQL['quantity_inc']        = common::float($data['quantity_inc']);
+        $SQL['quantity_inc']        = common::numeric($data['quantity_inc']);
         $SQL['inc_date']            = common::en_date($data['inc_date']     ,'Y-m-d');
         $SQL['create_date']         = common::en_date($data['create_date']  ,'Y-m-d');
         $SQL['dead_date']           = common::en_date($data['dead_date']    ,'Y-m-d');
@@ -254,7 +254,7 @@ class stock
             if( strpos( $data[$_date], '.197' ) !== false ){ $data[$_date] = ''; }
         }
 
-        $data['quantity_inc'] = common::float( $data['quantity_inc'] );
+        $data['quantity_inc'] = common::numeric( $data['quantity_inc'] );
 
         if( $data['quantity_inc'] == 0 ){ $data['quantity_inc'] = ''; }
 
@@ -377,7 +377,7 @@ class stock
             $tpl->set( '{tag:inc_date}', common::db2html( date( 'Y.m.d', $line['inc_date_unix'] ) ) );
             $tpl->set( '{tag:inc_date:Y}', common::db2html( date( 'Y', $line['inc_date_unix'] ) ) );
 
-            $line['quantity_used'] = common::float( $line['quantity_dispersed'] ) - common::float( $line['quantity_not_used'] );
+            $line['quantity_used'] = common::numeric( common::numeric( $line['quantity_dispersed'] ) - common::numeric( $line['quantity_not_used'] ) );
 
             $line['reagent_number_separete'] = explode( '-', $line['reagent_number'] );
             $line['reagent_number_separete'] = common::integer( $line['reagent_number_separete'] );
@@ -489,14 +489,14 @@ class stock
 
             if( isset($filters['quantity_left']) )
             {
-                $filters['quantity_left'] = common::float( $filters['quantity_left'] );
-                $WHERE['stock.quantity_left'] = 'stock.quantity_left = \''.$filters['quantity_left'].'\'::float ';
+                $filters['quantity_left'] = common::numeric( $filters['quantity_left'] );
+                $WHERE['stock.quantity_left'] = 'stock.quantity_left = \''.$filters['quantity_left'].'\' ';
             }
 
             if( isset($filters['quantity_left:more']) )
             {
-                $filters['quantity_left:more'] = common::float( $filters['quantity_left:more'] );
-                $WHERE['stock.quantity_left:more'] = 'stock.quantity_left > \''.$filters['quantity_left:more'].'\'::float ';
+                $filters['quantity_left:more'] = common::numeric( $filters['quantity_left:more'] );
+                $WHERE['stock.quantity_left:more'] = 'stock.quantity_left > \''.$filters['quantity_left:more'].'\' ';
             }
 
         }
@@ -539,6 +539,11 @@ class stock
         $SQL = $this->db->query( $SQL );
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
+            $row['quantity_left']       = common::numeric( $row['quantity_left'] );
+            $row['quantity_inc']        = common::numeric( $row['quantity_inc'] );
+            $row['quantity_dispersed']  = common::numeric( $row['quantity_dispersed'] );
+            $row['quantity_not_used']   = common::numeric( $row['quantity_not_used'] );
+
             $data[$row['id']] = $row;
         }
 

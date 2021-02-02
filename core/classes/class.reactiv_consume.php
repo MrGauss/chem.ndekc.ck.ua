@@ -22,7 +22,7 @@ class reactiv_consume
 
         $data2db =  array(
                         'reactiv_hash'  => common::filter_hash(     isset($data['reactiv_hash'])  ? $data['reactiv_hash']   : false ),
-                        'quantity'      => common::float(           isset($data['quantity'])      ? $data['quantity']       : false ),
+                        'quantity'      => common::numeric(           isset($data['quantity'])      ? $data['quantity']       : false ),
                         'inc_expert_id' => common::integer(         isset($data['inc_expert_id']) ? $data['inc_expert_id']  : false ),
                         'date'          => isset($data['date']) ? common::en_date( $data['date'], 'Y-m-d' ) : false,
                     );
@@ -53,7 +53,7 @@ class reactiv_consume
         $old_data = $this->get_raw( array( 'consume_hash' => $hash ) );
         if( isset($old_data[$hash]) ){ $old_data = $old_data[$hash]; }
 
-        $old_data['quantity'] = common::float( isset($old_data['quantity']) ? $old_data['quantity'] : 0 );
+        $old_data['quantity'] = common::numeric( isset($old_data['quantity']) ? $old_data['quantity'] : 0 );
 
         //if( !$data['utilisation'] && strtotime(date('Y-m-d 00:00:01')) > strtotime($cooked['dead_date']) ){ return self::error( time().' - '.strtotime($cooked['dead_date']).'Розчин "'.addslashes($recipe['name']).'" зіпсований, його неможливо використати!' ); }
         if( !$data['utilisation'] && strtotime($data2db['date']) > strtotime($cooked['dead_date']) ){ return self::error( 'Розчин "'.addslashes($recipe['name']).'" зіпсований, його неможливо використати!' ); }
@@ -153,6 +153,11 @@ class reactiv_consume
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
             $row['consume_hash'] = common::filter_hash( $row['consume_hash'] );
+
+            $row['quantity']                 = common::numeric( $row['quantity'] );
+            $row['reactiv_quantity_inc']     = common::numeric( $row['reactiv_quantity_inc'] );
+            $row['reactiv_quantity_left']    = common::numeric( $row['reactiv_quantity_left'] );
+
             $data[$row['consume_hash']] = $row;
         }
         return $data;

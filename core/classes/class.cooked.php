@@ -213,7 +213,7 @@ class cooked
 
         $SQL['reactiv']['reactiv_menu_id'] = common::integer( isset($data['reactiv_menu_id']) ? $data['reactiv_menu_id'] : false );
 
-        $SQL['reactiv']['quantity_inc']    = common::float( isset($data['quantity_inc']) ? $data['quantity_inc'] : false );
+        $SQL['reactiv']['quantity_inc']    = common::numeric( isset($data['quantity_inc']) ? $data['quantity_inc'] : false );
         $SQL['reactiv']['inc_expert_id']   = common::integer( isset($data['inc_expert_id']) ? $data['inc_expert_id'] : false );
         $SQL['reactiv']['inc_expert_id']   = $reactiv_hash ? $SQL['reactiv']['inc_expert_id'] : CURRENT_USER_ID;
         $SQL['reactiv']['group_id']        = CURRENT_GROUP_ID;
@@ -272,7 +272,7 @@ class cooked
                     $SQL['consume']['reagent'][$ingridient['dispersion_id']] = array
                     (
                         'dispersion_id' => common::integer( $ingridient['dispersion_id'] ),
-                        'quantity'      => common::float(   $ingridient['quantity'] ),
+                        'quantity'      => common::numeric(   $ingridient['quantity'] ),
                         'inc_expert_id' => common::integer( $SQL['reactiv']['inc_expert_id'] ),
                         'date'          => $SQL['reactiv']['inc_date'],
                         'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,
@@ -286,7 +286,7 @@ class cooked
                     $SQL['consume']['reactiv'][$ingridient['reactiv_hash']] = array
                     (
                         'reactiv_hash'  => $this->db->safesql(common::filter_hash( $ingridient['reactiv_hash'] )),
-                        'quantity'      => common::float(   $ingridient['quantity'] ),
+                        'quantity'      => common::numeric(   $ingridient['quantity'] ),
                         'inc_expert_id' => common::integer( $SQL['reactiv']['inc_expert_id'] ),
                         'date'          => $SQL['reactiv']['inc_date'],
                         'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,
@@ -788,14 +788,14 @@ class cooked
         {
             if( isset($filters['quantity_left:more']) )
             {
-                $filters['quantity_left:more'] = common::float($filters['quantity_left:more']);
-                $WHERE['reactiv.quantity_left']   = 'reactiv.quantity_left > \''. $filters['quantity_left:more'] .'\'::float';
+                $filters['quantity_left:more'] = common::numeric($filters['quantity_left:more']);
+                $WHERE['reactiv.quantity_left']   = 'reactiv.quantity_left > \''. $filters['quantity_left:more'] .'\'';
             }
 
             if( isset($filters['quantity_left']) )
             {
-                $filters['quantity_left'] = common::float($filters['quantity_left']);
-                $WHERE['reactiv.quantity_left']   = 'reactiv.quantity_left = \''. $filters['quantity_left'] .'\'::float';
+                $filters['quantity_left'] = common::numeric($filters['quantity_left']);
+                $WHERE['reactiv.quantity_left']   = 'reactiv.quantity_left = \''. $filters['quantity_left'] .'\'';
             }
 
             if( isset($filters['is_dead']) )
@@ -849,6 +849,10 @@ class cooked
 
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
+
+            $row['quantity_inc']       = common::numeric( $row['quantity_inc'] );
+            $row['quantity_left']      = common::numeric( $row['quantity_left'] );
+
             $row['hash'] = common::filter_hash( $row['hash'] );
             $data[$row['hash']] = $row;
             $data[$row['hash']]['composition'] = array();
@@ -891,6 +895,8 @@ class cooked
             {
                 //var_export($row);exit;
 
+                $row['consume_quantity']       = common::numeric( $row['consume_quantity'] );
+
                 $data[$row['hash']]['composition']['reagent'][$row['reagent_id']] = $row;
 
                 if( !isset($data[$row['hash']]['using_hash']) || !$data[$row['hash']]['using_hash'] ){ $data[$row['hash']]['using_hash'] = $row['using_hash']; }
@@ -927,6 +933,8 @@ class cooked
 
             while( ( $row = $this->db->get_row( $SQL ) ) !== false )
             {
+
+                $row['consume_quantity']       = common::numeric( $row['consume_quantity'] );
 
                 $data[$row['hash']]['composition']['reactiv'][$row['reactiv_hash']] = $row;
 

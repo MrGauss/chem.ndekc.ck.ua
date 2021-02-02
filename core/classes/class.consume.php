@@ -18,7 +18,7 @@ class consume
     {
         $data2db = array(
             'dispersion_id' => common::integer( isset($data['dispersion_id'])?$data['dispersion_id']:false ),
-            'quantity'      => common::float(  isset($data['quantity'])?$data['quantity']:false ),
+            'quantity'      => common::numeric(  isset($data['quantity'])?$data['quantity']:false ),
             'inc_expert_id' => common::integer( isset($data['inc_expert_id'])?$data['inc_expert_id']:false ),
             'date'          => isset($data['date'])? common::en_date( $data['date'], 'Y-m-d' ) : false,
         );
@@ -47,7 +47,7 @@ class consume
 
         $old_data = $this->get_raw( array( 'consume_hash' => $hash ) );
         $old_data = ( is_array($old_data) && count($old_data) ) ? reset( $old_data ) : array();
-        $old_data['quantity'] = isset($old_data['quantity']) ? common::float( $old_data['quantity'] ) : 0;
+        $old_data['quantity'] = isset($old_data['quantity']) ? common::numeric( $old_data['quantity'] ) : 0;
 
         if( ( $data2db['quantity'] - $old_data['quantity'] ) > $dispersion['quantity_left'] ){ return self::error( 'Ви намагаєесь використати речовини "'.addslashes( $reagent['name'] ).' ['.$stock['reagent_number'].']" більше, ніж є в лабораторії!' ); }
 
@@ -144,6 +144,10 @@ class consume
             $row['consume_hash'] = common::filter_hash( $row['consume_hash'] ? $row['consume_hash'] : '' );
             $row['reactiv_hash'] = common::filter_hash( $row['reactiv_hash'] ? $row['reactiv_hash'] : '' );
             $row['using_hash']   = common::filter_hash( $row['using_hash'] ? $row['using_hash'] : '' );
+
+            $row['quantity']                    = common::numeric( $row['quantity'] );
+            $row['dispersion_quantity_inc']     = common::numeric( $row['dispersion_quantity_inc'] );
+            $row['dispersion_quantity_left']    = common::numeric( $row['dispersion_quantity_left'] );
 
             $data[$row['consume_hash']] = $row;
         }

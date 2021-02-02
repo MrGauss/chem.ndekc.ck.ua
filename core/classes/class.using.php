@@ -880,7 +880,7 @@ class using
             $SQL['consume']['reagent'][$k] = array
             (
                 'dispersion_id' => common::integer( $ingridient['dispersion_id'] ),
-                'quantity'      => common::float(   $ingridient['quantity'] ),
+                'quantity'      => common::numeric(   $ingridient['quantity'] ),
                 'inc_expert_id' => common::integer( $data['user_id'] ),
                 'date'          => $SQL['using']['date'],
                 'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,
@@ -907,7 +907,7 @@ class using
             $SQL['consume']['reactiv'][$k] = array
             (
                 'reactiv_hash'  => $this->db->safesql(common::filter_hash( $ingridient['reactiv_hash'] )),
-                'quantity'      => common::float(   $ingridient['quantity'] ),
+                'quantity'      => common::numeric(   $ingridient['quantity'] ),
                 'inc_expert_id' => common::integer( $data['user_id'] ),
                 'date'          => $SQL['using']['date'],
                 'hash'          => isset($ingridient['consume_hash']) ? $ingridient['consume_hash'] : false,

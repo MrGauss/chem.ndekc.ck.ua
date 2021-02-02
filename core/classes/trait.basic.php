@@ -149,6 +149,17 @@ trait basic
         return strval($data);
     }
 
+    static public final function numeric( $data )
+    {
+        if( !is_numeric( $data ) && !is_scalar( $data ) && !is_null( $data ) && !is_array( $data )  ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string or array only! Given: '.gettype( $data ) ); }
+        if( is_array($data) ){ return array_map( 'self::numeric', $data ); }
+
+        $data = self::float( $data );
+        $data = round( $data, 4 );
+
+        return $data;
+    }
+
     static public final function nice_number( $data, $b=1, $a=3 )
     {
         if( !is_numeric( $data ) && !is_scalar( $data )   ){ self::err( ''.__CLASS__.'::'.__METHOD__.' accepts string only! Given: '.gettype( $data ) ); }

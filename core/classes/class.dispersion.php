@@ -137,7 +137,7 @@ class dispersion
         $SQL['group_id']            = CURRENT_GROUP_ID;
         $SQL['stock_id']            = common::integer($data['stock_id']);
         $SQL['out_expert_id']       = common::integer($data['out_expert_id']);
-        $SQL['quantity_inc']        = common::float($data['quantity_inc']);
+        $SQL['quantity_inc']        = common::numeric($data['quantity_inc']);
         $SQL['inc_date']            = common::en_date($data['inc_date'] ,'Y-m-d');
         $SQL['comment']             = common::filter($data['comment']);
 
@@ -371,26 +371,26 @@ class dispersion
 
             if( isset($filters['quantity_left:more']) )
             {
-                $filters['quantity_left:more'] = common::float( $filters['quantity_left:more'] );
-                $WHERE['quantity_left:more'] = ' dispersion.quantity_left > \''.$filters['quantity_left:more'].'\'::FLOAT';
+                $filters['quantity_left:more'] = common::numeric( $filters['quantity_left:more'] );
+                $WHERE['quantity_left:more'] = ' dispersion.quantity_left > \''.$filters['quantity_left:more'].'\'';
             }
 
             if( isset($filters['quantity_left:less']) )
             {
-                $filters['quantity_left:less'] = common::float( $filters['quantity_left:less'] );
-                $WHERE['quantity_left:less'] = ' dispersion.quantity_left < \''.$filters['quantity_left:less'].'\'::FLOAT';
+                $filters['quantity_left:less'] = common::numeric( $filters['quantity_left:less'] );
+                $WHERE['quantity_left:less'] = ' dispersion.quantity_left < \''.$filters['quantity_left:less'].'\'';
             }
 
             if( isset($filters['quantity_left:is']) )
             {
-                $filters['quantity_left:is'] = common::float( $filters['quantity_left:is'] );
-                $WHERE['quantity_left:is'] = ' dispersion.quantity_left = \''.$filters['quantity_left:is'].'\'::FLOAT';
+                $filters['quantity_left:is'] = common::numeric( $filters['quantity_left:is'] );
+                $WHERE['quantity_left:is'] = ' dispersion.quantity_left = \''.$filters['quantity_left:is'].'\'';
             }
 
             if( isset($filters['quantity_left']) )
             {
-                $filters['quantity_left'] = common::float( $filters['quantity_left'] );
-                $WHERE['quantity_left:is'] = ' dispersion.quantity_left = \''.$filters['quantity_left'].'\'::FLOAT';
+                $filters['quantity_left'] = common::numeric( $filters['quantity_left'] );
+                $WHERE['quantity_left:is'] = ' dispersion.quantity_left = \''.$filters['quantity_left'].'\'';
             }
         }
 
@@ -441,6 +441,9 @@ class dispersion
 
         while( ( $row = $this->db->get_row($SQL) ) !== false )
         {
+            $row['quantity_inc']       = common::numeric( $row['quantity_inc'] );
+            $row['quantity_left']      = common::numeric( $row['quantity_left'] );
+
             $data[$row['id']] = $row;
         }
 
