@@ -50,6 +50,8 @@ chem['using'] = new function()
 
             if( _r['lines'] )
             {
+
+
                 if( line_hash != '' )
                 {
                     $('#content #list_frame .list .line[data-hash="'+line_hash+'"]')
@@ -220,7 +222,6 @@ chem['using'] = new function()
 
                 });
 
-
                 $('#'+did+'').find('select[name="purpose_id"]').on('change', function()
                 {
                     $('#'+did).find('.elem[data-purpose]')
@@ -377,7 +378,7 @@ chem['using'] = new function()
                                         if( _r['hash'] != '' )
                                         {
 
-                                            setTimeout( function(){ chem.using.reload( _r['hash'] ); } , 1 );
+                                            setTimeout( function(){ chem.using.reload(); } , 1 );  /// setTimeout( function(){ chem.using.reload( _r['hash'] ); } , 1 );
                                             setTimeout( function(){ chem.close_it( $('#'+did) ); } , 2 );
                                             setTimeout( function(){ $('#content #list_frame [data-hash="'+_r['hash']+'"]').trigger( "click" ); } , 3 );
                                         }

@@ -204,8 +204,6 @@ class cooked
             $old_data = array();
         }
 
-
-
         /////////
 
         $SQL = array();
@@ -425,9 +423,11 @@ class cooked
         }
         ///////////////////////////////
         $this->db->transaction_commit();
-        $this->db->free();
 
         cache::clean();
+
+        $this->db->free();
+
         return $SQL['reactiv']['hash'];
     }
 
@@ -834,7 +834,6 @@ class cooked
             ORDER by
                 reactiv.inc_date DESC,
                 reactiv.name ASC;
-
             '.db::CACHED;
 
         //echo $SQL;exit;

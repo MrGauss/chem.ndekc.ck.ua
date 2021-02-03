@@ -19,7 +19,7 @@
     [access:admin:access]<div class="element i21"><a href="/index.php?mod=access"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Рівні<br>доступу</span></a></div><div class="hr_vertval"></div>[/access]
     <div class="element i13"><a href="/index.php?mod=pink_shkurdoda"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Пофарбуй<br>Шкурдоду</span></a></div>
     [access:server:stats]
-    <div class="hr_vertval"></div><div class="element i91"><a href="/index.php?mod=server"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Статистика<br>серверу</span></a></div>
+    <!-- div class="hr_vertval"></div><div class="element i91"><a href="/index.php?mod=server"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Статистика<br>серверу</span></a></div -->
     [/access]
 
     [access:spr:edit]

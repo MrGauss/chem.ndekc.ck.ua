@@ -154,7 +154,7 @@ class using
 
             if( isset($filters['using_date']['from']) && isset($filters['using_date']['to']) )
             {
-                $WHERE['using_date'] = '( "using".date >= \''.$filters['using_date']['from'].'\'::date AND "using".date <= \''.$filters['using_date']['to'].'\'::date ) ';
+                $WHERE['using_date'] = '( "using"."date"::date >= \''.$filters['using_date']['from'].'\'::date AND "using"."date"::date <= \''.$filters['using_date']['to'].'\'::date ) ';
             }
         }
 
@@ -174,6 +174,8 @@ class using
             }
         }
         /////////////////////
+
+        //var_export( $WHERE );exit;
 
         /////////////////////
         if( isset($filters['reagent_id']) )
@@ -928,9 +930,10 @@ class using
         }
 
         $this->db->transaction_commit();
-        $this->db->free();
 
         cache::clean();
+
+        $this->db->free();
 
         return $_USING_HASH;
     }

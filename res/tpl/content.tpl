@@ -19,7 +19,7 @@
     	<title>ейяоепрмю яксфаю лбя сйпю╞мх</title>
 
         <link rel="stylesheet" type="text/css" href="{SKINDIR}/css/jquery.css" media="screen" />
-        <link rel="stylesheet" type="text/css" href="{SKINDIR}/css/style.css?rand={RAND}" media="screen" />
+        <link rel="stylesheet" type="text/css" href="{SKINDIR}/css/style.css" media="screen" />
         [login][mod:{MOD}]<link rel="stylesheet" type="text/css" href="{SKINDIR}/css/chem.{MOD}.css?rand={RAND}" media="screen" />[/mod][/login]
         <script src="{SKINDIR}/js/jquery.js" type="text/javascript"></script>
         [login]<script src="{SKINDIR}/js/jquery.mask.js" type="text/javascript"></script>[/login]
