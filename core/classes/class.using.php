@@ -944,6 +944,90 @@ class using
 
 
 
+    public final function save_template( $data )
+    {
+        if( !is_array($data) ){ return false; }
+        if( !isset($data['name']) ){ return false; }
+        if( !is_array($data['ingridients']) || !count($data['ingridients']) ){ return false; }
+
+        $data = common::filter( $data );
+
+        if( strlen($data['name']) > 32 ){ $data['name'] = substr( $data['name'], 0, 32 ); }
+
+        $data['name'] = $this->db->safesql( $data['name'] );
+        $data['ingridients'] = common::trim( $data['ingridients'] );
+        $data['ingridients'] = common::filter( $data['ingridients'] );
+
+        sort( $data['ingridients'] );
+
+        $data['ingridients'] = implode( ' ; ', $data['ingridients'] );
+        $data['ingridients'] = $this->db->safesql( $data['ingridients'] );
+
+        $SQL = 'DELETE FROM templates WHERE expert_id = '.CURRENT_USER_ID.' AND ingridients = \''.$data['ingridients'].'\';';
+        $this->db->query( $SQL );
+
+        $SQL = 'INSERT INTO templates ( expert_id, name, ingridients ) VALUES ( '.CURRENT_USER_ID.', \''.$data['name'].'\', \''.$data['ingridients'].'\' ) RETURNING id;';
+        $SQL = $this->db->query( $SQL );
+        $ID = $SQL ? $this->db->get_row( $SQL ) : array();
+        $ID = isset($ID['id']) ? $ID['id'] : false;
+
+        cache::clean('using');
+        return $ID;
+    }
+
+    public final function remove_template( $id )
+    {
+        $id = common::integer( $id );
+        $SQL = 'DELETE FROM templates WHERE expert_id = '.CURRENT_USER_ID.' AND id = \''.$id.'\';';
+        $this->db->query( $SQL );
+
+        $this->db->free();
+
+        cache::clean('using');
+
+        return true;
+    }
+    public final function get_templates_html()
+    {
+        $data = array();
+
+        $data[] = '<div data-id="0" class="template" title="Œ˜ËÒÚËÚË"><p>-- Œ◊»—“»“» --</p></div>';
+
+        foreach( $this->get_templates_raw() as $id => $line )
+        {
+            $data[$id] = '<div class="template" title="'.$line['ingridients'].'" data-ingridients="'.$line['ingridients'].'" data-id="'.$line['id'].'"><p>'.$line['name'].'</p><span class="remove" data-id="'.$line['id'].'"></span></div>';
+        }
+        return implode( "\n", $data );
+    }
+
+    private function get_templates_raw()
+    {
+        $cache_var = 'using-templates-'.CURRENT_USER_ID;
+        $data = cache::get( $cache_var );
+
+        if( $data && is_array($data) ){ return $data; }
+
+        $data = array();
+
+        $SQL = $this->db->query( 'SELECT * FROM templates WHERE expert_id = '.CURRENT_USER_ID.' ORDER BY name ASC;' );
+        while( ( $row = $this->db->get_row($SQL) ) != false )
+        {
+            $row['ingridients'] = explode( ';', $row['ingridients'] );
+            $row['ingridients'] = common::trim( $row['ingridients'] );
+            $row['ingridients'] = implode( ' ; ', $row['ingridients'] );
+            $data[ $row['id'] ] = common::stripslashes( $row );
+        }
+
+        cache::set( $cache_var, $data );
+        return $data;
+    }
+
+
+
+
+
+
+
 
 
 

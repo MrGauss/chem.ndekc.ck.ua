@@ -55,6 +55,28 @@ switch ( _ACTION_ )
         ajax::set_data( 'lines', $using->get_html( using::filters($_POST['filters']), 'using/line' ) );
     break;
 
+
+
+
+
+    case 15:
+
+        ajax::set_data( 'templates', ( new using )->get_templates_html() );
+
+    break;
+
+    case 16:
+        $using = new using;
+        $using->save_template( isset( $_POST['save'] ) ? $_POST['save'] : array() );
+
+        ajax::set_data( 'templates', $using->get_templates_html() );
+    break;
+
+    case 17:
+        $using = new using;
+        ajax::set_data( 'templates', $using->remove_template( isset( $_POST['template_id'] ) ? $_POST['template_id'] : false ) );
+    break;
+
     case 1000:
         $_REQUEST['filters'] = ( isset($_REQUEST['filters']) && is_array($_REQUEST['filters']) )?$_REQUEST['filters']:array();
 

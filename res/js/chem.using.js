@@ -506,15 +506,128 @@ chem['using'] = new function()
                         dialog["buttons"][bi]["text"]  = " ";
                         dialog["buttons"][bi]["mouseenter"] = function()
                         {
-                            alert( 'mouseenter: show_templates' );
+
                         }
                         dialog["buttons"][bi]["mouseleave"] = function()
                         {
-                            alert( 'mouseleave: show_templates' );
+
                         }
                         dialog["buttons"][bi]["click"] = function()
                         {
-                            alert( 'CLICK: show_templates' );
+                            if( $( '#templates_frame' ).attr('id') ){ return false; }
+
+                            $(this).parent().append
+                                    (
+                                          '<div id="templates_frame" class="dnone">'
+                                        + '<div class="create_new"><input type="text" name="template_name" class="input" value="" placeholder="¬вед≥ть назву дл€ збереженн€ поточного набору"><button id="template_save" type="button">&nbsp;</button></div>'
+                                        + '<div class="templates_list"></div>'
+                                        + '</div>'
+                                    );
+
+                            $('#templates_frame').on('DOMNodeInserted', '.templates_list', function()
+                            {
+                                $( '#templates_frame .templates_list' ).find( '.template p' ).each( function()
+                                {
+                                    $(this).off().click( function()
+                                    {
+                                        var id = parseInt( $(this).parent().attr('data-id') );
+
+                                        if( id == 0 )
+                                        {
+                                            $('#dispersion_list .line') .removeClass( 'dnone' );
+                                            $('#cooked_list .line')     .removeClass( 'dnone' );
+                                        }
+                                        else
+                                        {
+                                            var ingridients = $(this).parent().attr('data-ingridients').split(';');
+
+                                            $('#dispersion_list .line') .addClass( 'dnone' );
+                                            $('#cooked_list .line')     .addClass( 'dnone' );
+
+                                            ingridients.forEach(function(item, i, arr)
+                                            {
+                                                item = item.trim().toLowerCase();
+
+                                                $('#dispersion_list .line').each( function()
+                                                {
+                                                    if( $(this).attr('data-name').toLowerCase() == item ){ $(this).removeClass( 'dnone' ) }
+                                                } );
+
+                                                $('#cooked_list .line').each( function()
+                                                {
+                                                    if( $(this).attr('data-name').toLowerCase() == item ){ $(this).removeClass( 'dnone' ) }
+                                                } );
+                                            });
+                                        }
+
+                                    });
+                                } );
+                                $('#templates_frame .templates_list').find('.template .remove').each(function()
+                                {
+                                    $(this).off().click( function()
+                                    {
+                                        var post = {};
+                                            post['ajax'] = 1;
+                                            post['action'] = 17;
+                                            post['subaction'] = 1;
+                                            post['mod'] = $('body').attr('data-mod');
+                                            post['template_id'] = parseInt( $(this).attr('data-id') );
+
+                                        $.ajax({ data: post }).done(function( _r )
+                                        {
+                                            _r = chem.txt2json( _r );
+                                            if( _r['error'] ){ console.log( _r['error_text'] ); return false; }
+                                            $( '#templates_frame .templates_list' ).find('.template[data-id="'+post['template_id']+'"]').remove();
+                                        });
+
+                                    } );
+                                });
+                            });
+
+                            var post = {};
+                                post['ajax'] = 1;
+                                post['action'] = 15;
+                                post['subaction'] = 1;
+                                post['mod'] = $('body').attr('data-mod');
+
+                            $.ajax({ data: post }).done(function( _r )
+                            {
+                                _r = chem.txt2json( _r );
+                                if( _r['error'] ){ console.log( _r['error_text'] ); return false; }
+                                $( '#templates_frame .templates_list' ).html( _r['templates'] );
+                            });
+
+                            $( '#templates_frame' ).removeClass( 'dnone' );
+                            $( '#templates_frame #template_save').click(function()
+                            {
+                                var inp = $(this).parent().find('[name="template_name"]');
+                                var _list = [];
+
+                                $( '#'+did + ' #consume_list .consume' ).each(function(){ _list.push( $(this).find('.reagent_name').text() ); });
+                                $( '#'+did + ' #reactiv_consume_list .consume' ).each(function(){ _list.push( $(this).find('.reagent_name').text() ); });
+
+                                if( inp.val().length < 5 ){ chem.BL_RED( inp ); return false; }
+                                if( inp.val().length > 64 ){ chem.BL_RED( inp ); return false; }
+
+                                var post = {};
+                                    post['ajax'] = 1;
+                                    post['action'] = 16;
+                                    post['subaction'] = 1;
+                                    post['mod'] = $('body').attr('data-mod');
+                                    post['save'] = {};
+                                    post['save']['name']        = inp.val();
+                                    post['save']['ingridients'] = _list;
+
+                                $.ajax({ data: post }).done(function( _r )
+                                {
+                                    inp.val( '' );
+                                    _r = chem.txt2json( _r );
+                                    if( _r['error'] ){ console.log( _r['error_text'] ); return false; }
+
+                                    $( '#templates_frame .templates_list' ).html( _r['templates'] );
+                                });
+                            });
+                            $( '#templates_frame' ).mouseleave(function(){ $(this).remove(); });
                         };
                         dialog["buttons"][bi]["class"] = "type3";
                         dialog["buttons"][bi]["data-role"] = "show_templates";
