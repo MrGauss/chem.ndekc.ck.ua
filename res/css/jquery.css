@@ -2328,14 +2328,17 @@ a:visited.ui-button{
 .ui-button[data-role="save"]{ background-color: #006600; border-color: #006600; width: 40px; overflow: hidden; position: absolute; }
 
 .ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="from_mem"],
+.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="show_templates"],
 .ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="to_mem"]{ display: block; width: 40px; height: 40px; overflow: hidden; position: absolute; top: 0px; left: 330px; border: none; }
 .ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="to_mem"]{ left: 280px; }
+.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="show_templates"]{ left: 420px; }
 
 .ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="delete"]{ position: relative; left: 0px; }
 .ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="rd_list"]{ position: relative; left: -100px; width: 160px; }
 
-.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="from_mem"]{ background: #0A6100 url(../img/button_load.png) 50% 50% no-repeat; }
-.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="to_mem"]{   background: #003366 url(../img/button_save.png) 50% 50% no-repeat; }
+.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="from_mem"]{        background: #0A6100 url(../img/button_load.png) 50% 50% no-repeat;  }
+.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="to_mem"]{          background: #003366 url(../img/button_save.png) 50% 50% no-repeat;  }
+.ui-dialog .ui-dialog-buttonpane button.ui-button[data-role="show_templates"]{  background: #FFA263 url(../img/templates_icon_28px.png) 50% 50% no-repeat; border: 1px solid #222222; }
 
 .ui-dialog .ui-dialog-buttonpane button.ui-button.right{ position: absolute; left: 0px; }
 

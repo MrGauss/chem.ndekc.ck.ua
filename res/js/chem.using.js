@@ -499,6 +499,26 @@ chem['using'] = new function()
                         dialog["buttons"][bi]["class"] = "type1";
                         dialog["buttons"][bi]["data-role"] = "from_mem";
                         bi++;
+
+
+
+                        dialog["buttons"][bi] = {};
+                        dialog["buttons"][bi]["text"]  = " ";
+                        dialog["buttons"][bi]["mouseenter"] = function()
+                        {
+                            alert( 'mouseenter: show_templates' );
+                        }
+                        dialog["buttons"][bi]["mouseleave"] = function()
+                        {
+                            alert( 'mouseleave: show_templates' );
+                        }
+                        dialog["buttons"][bi]["click"] = function()
+                        {
+                            alert( 'CLICK: show_templates' );
+                        };
+                        dialog["buttons"][bi]["class"] = "type3";
+                        dialog["buttons"][bi]["data-role"] = "show_templates";
+                        bi++;
                     }
                     /////////////////////////////////////////////
 
