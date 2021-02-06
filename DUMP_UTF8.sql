@@ -7458,8 +7458,8 @@ INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (2, 'Шкурдода', 'Сергій', 'Вікторович', 1, '2021-02-05 12:40:24.516857', 'shkurdoda', '51a5a9d6da5ed7f1cbab419e5bbfbbac', 'df12add50c59e31f0ecdb5b5a145883b', 1, '192.168.2.118', 3);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (5, 'Конопацька', 'Інна', 'Сергіївна', 1, '2021-02-05 12:41:56.778596', 'konopatska_inna', '20aeaf4de82c24111073d14eb83b0140', 'cbf35f158cc76934e976d60a589ac0c9', 1, '192.168.2.58', 4);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (12, 'Гордійчук', 'Валентина', 'Вікторівна', 1, '2021-02-05 12:00:45.371559', 'hordiychuk_valya', '0bcbb0befa821880bd31949f3632496f', '6cafe3dd64ff417bab753fd7d3172ad7', 1, '192.168.2.39', 4);
-INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2021-02-05 12:59:06.895533', 'root', '855cb86bd065112c52899ef9ea7b9918', '3d542e0731018c6815652aefb80c91a8', 1, '192.168.137.3', 1);
 INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (3, 'Шинкаренко', 'Дмитро', 'Юрійович', 1, '2021-02-05 12:39:54.261582', 'shinkarenko', '1174b4363b1661f9b2c480440a97deea', '5679c0adb3247c423399623894e35e73', 1, '192.168.2.127', 3);
+INSERT INTO "public"."expert" ("id", "surname", "name", "phname", "visible", "ts", "login", "password", "token", "group_id", "last_ip", "access_id") VALUES (1, 'Пташкін', 'Роман', 'Леонідович', 1, '2021-02-05 20:51:11.413927', 'root', '855cb86bd065112c52899ef9ea7b9918', 'b95feea168ba3ec7d28ef14a363514d7', 1, '78.137.32.90', 1);
 
 
 --
@@ -12454,6 +12454,7 @@ INSERT INTO "public"."stock" ("id", "ts", "reagent_id", "quantity_inc", "inc_dat
 --
 
 INSERT INTO "public"."templates" ("id", "expert_id", "name", "ingridients") VALUES (11, 5, 'канабіс', 'Етанол ; Розчин натрій гідроксиду (1%) (для дослідженя канабісу) ; Розчин натрій гідроксиду (5%) (мікроскопія) ; Розчин натрій гідроксиду 0,1 н. (якісні реакції) ; Система 4.1 (петролейний ефір (80-110)-діетиловий ефір) для ТШХ ; Тривкий синій Б ; Хлороформ для хроматографії ; о-Ксилол');
+INSERT INTO "public"."templates" ("id", "expert_id", "name", "ingridients") VALUES (14, 1, '-ТЕСТ-', 'Гексан для хроматографії ; Метанол для хроматографії ; Реактив Маркі ; Розчин натрій гідроксиду (1.0 н)');
 
 
 --
@@ -13820,7 +13821,7 @@ SELECT pg_catalog.setval('"public"."stock_id_seq"', 1327, true);
 -- Name: templates_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('"public"."templates_id_seq"', 13, true);
+SELECT pg_catalog.setval('"public"."templates_id_seq"', 14, true);
 
 
 --

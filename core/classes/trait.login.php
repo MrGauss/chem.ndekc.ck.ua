@@ -10,7 +10,7 @@ trait login
 {
 	private static $COOKIE_LIFE_TIME = 1;
 	private static $PASS_SALT        = 'sd$mo-2l;mpfNKs,svf2eae6rerh$%&43@@!Dl6kv3hkro83v*&(';
-	
+
 	private $logged = false;
 
 	public final function is_logged()
@@ -179,7 +179,7 @@ trait login
 		$login = $this->strtolower( $this->db->safesql( $login ) );
 		$pass  = $this->db->safesql( $pass );
 
-        echo '<!-- '.$login.':'.$pass.' -->';
+        // echo '<!-- '.$login.':'.$pass.' -->';
 
 		$SQL = '
                 SELECT
