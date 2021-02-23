@@ -1,4 +1,4 @@
-<div class="line" data-id="{tag:id}" data-inc_date="{tag:inc_date_unix}">
+<div class="line" data-precursor="{tag:is_precursor}" data-id="{tag:id}" data-inc_date="{tag:inc_date_unix}">
     <table>
         <tr>
             <td class="numi">{tag:numi}</td>

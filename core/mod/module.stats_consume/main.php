@@ -11,6 +11,8 @@ $_POST['consume_date'] = isset($_POST['consume_date']) && is_array($_POST['consu
 $_POST['consume_date'][0] = isset($_POST['consume_date'][0]) ? $_POST['consume_date'][0] : '01.01.'.date('Y');
 $_POST['consume_date'][1] = isset($_POST['consume_date'][1]) ? $_POST['consume_date'][1] : '31.12.'.date('Y');
 
+$_POST['is_precursor'] = ( isset($_POST['is_precursor']) ? common::integer( $_POST['is_precursor'] ) : 0 ) ? 1 : 0;
+
 $_POST['consume_date'][0] = strtotime( $_POST['consume_date'][0] );
 $_POST['consume_date'][1] = strtotime( $_POST['consume_date'][1] );
 
@@ -28,10 +30,19 @@ $tpl->load( 'stats_consume/main' );
 $tpl->set( '{consume_date:from}', $_POST['consume_date'][0] );
 $tpl->set( '{consume_date:to}', $_POST['consume_date'][1] );
 
+$tpl->set( '{is_precursor}',    $_POST['is_precursor'] ? 'checked="checked"' : '' );
 
-$tpl->set( '{table01}', $_stats->get_stats_consume_by_stock_id_html( array( 'consume_date:from' => $_POST['consume_date'][0], 'consume_date:to' => $_POST['consume_date'][1], ) ) );
-$tpl->set( '{table02}', $_stats->get_stats_consume_by_reagent_id_html( array( 'consume_date:from' => $_POST['consume_date'][0], 'consume_date:to' => $_POST['consume_date'][1], ) ) );
-$tpl->set( '{table03}', $_stats->get_stats_consume_by_purpose_id_html( array( 'consume_date:from' => $_POST['consume_date'][0], 'consume_date:to' => $_POST['consume_date'][1], ) ) );
+$FILTERS = array
+(
+    'consume_date:from' => $_POST['consume_date'][0],
+    'consume_date:to' => $_POST['consume_date'][1],
+    'precursor_only' => $_POST['is_precursor'],
+);
+
+
+$tpl->set( '{table01}', $_stats->get_stats_consume_by_stock_id_html(   $FILTERS ) );
+$tpl->set( '{table02}', $_stats->get_stats_consume_by_reagent_id_html( $FILTERS ) );
+$tpl->set( '{table03}', $_stats->get_stats_consume_by_purpose_id_html( $FILTERS ) );
 $tpl->compile( 'stats_consume/main' );
 $tpl->ins( 'main', $tpl->result( 'stats_consume/main' ) );
 $tpl->clean( 'stats_consume/main' );

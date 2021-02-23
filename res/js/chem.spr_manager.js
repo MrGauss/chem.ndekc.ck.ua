@@ -136,6 +136,13 @@ chem['spr_manager'] = new function()
                 $('#'+did+'').find('input[name*="date"]').each(function(){ chem.init_datepicker( $(this) ); });
                 $('#'+did+' [data-mask]').each(function(){ chem.init_mask( $(this) ); });
 
+                $('#'+did+' input[type="checkbox"][data-value]').each(function()
+                {
+                    var checked = parseInt( $(this).attr( 'data-value' ) ) ? true : false;
+
+                    $(this).prop( "checked", checked ).attr( "checked", checked );
+                });
+
                 var width = 413;
 
 
@@ -173,9 +180,14 @@ chem['spr_manager'] = new function()
                                 save_post['key'] = $('#'+did).find('input[name="key"]').val();
                                 save_post['save'] = {};
 
-                            $('#'+did).find('[data-save="1"]').each( function()
+                            $('#'+did).find('[data-save="1"]').not('[type="checkbox"]').each( function()
                             {
                                 save_post['save'][$(this).attr('name').toString()] = $(this).val().toString();
+                            } );
+
+                            $('#'+did).find('[data-save="1"][type="checkbox"]').each( function()
+                            {
+                                save_post['save'][$(this).attr('name').toString()] = $(this).prop( "checked" ) ? 1 : 0;
                             } );
 
                             $.ajax({ data: save_post }).done(function( _r )

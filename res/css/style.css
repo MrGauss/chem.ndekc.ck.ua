@@ -395,6 +395,7 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 .default_editor select option   { font-size: 1.0em; cursor: pointer; }
 .default_editor .elem           { display: block; float: left; width: 50%; padding: 5px 5px 10px 5px; box-sizing: border-box; margin: 0px auto; }
 .default_editor .elem .label    { display: block; width: 100%; color: #123859; text-transform: uppercase; font-weight: bold; text-align: center; }
+.default_editor .elem .label[for]    { cursor: pointer; }
 .default_editor .elem .input    { width: 100%; height: 32px; text-align: center; padding: 0px 5px 0px 5px;  }
 .default_editor .error_area     { padding: 20px; text-align: center; font-weight: bold; font-size: 1.1em; color: #940000; border: 1px solid #940000; background: #FFDBDB url(../img/important-red-32px.png) no-repeat 5px 50%; margin-bottom: 5px; }
 .default_editor .good_area      { padding: 20px; text-align: center; font-weight: bold; font-size: 1.1em; color: #006600; border: 1px solid #006600; background: #E3FFDB url(../img/important-green-32px.png) no-repeat 5px 50%;; margin-bottom: 5px; }

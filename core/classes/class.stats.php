@@ -84,6 +84,12 @@ class stats
             $WHERE['consume.date:to']      = 'consume.date <= \'' . $this->db->safesql( $filters['consume_date:to'] ) . '\'::date';
         }
 
+        if( isset($filters['precursor_only']) && common::integer($filters['precursor_only']) )
+        {
+            $filters['precursor_only'] = common::integer( $filters['precursor_only'] );
+            $WHERE['precursor_only']   = 'reagent.is_precursor = 1';
+        }
+
         $COUNTER = $WHERE['consume.date'].''
                         .(isset($WHERE['consume.date:from'])?' AND '.$WHERE['consume.date:from']:'')
                         .(isset($WHERE['consume.date:to'])?' AND '.$WHERE['consume.date:to']:'');

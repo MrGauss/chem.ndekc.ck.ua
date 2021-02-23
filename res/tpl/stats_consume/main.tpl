@@ -25,6 +25,15 @@
                                 <div class="clear"></div>
                             </div>
 
+                            <div class="fbox">
+
+                                <div class="filter ch_filter">
+                                    <input  id="filter-is_precursor" class="input" data-group="is_precursor" data-role="filter" type="checkbox" name="is_precursor" value="1" {is_precursor}>
+                                    <label for="filter-is_precursor" class="label">Лише прекурсори</label>
+                                </div>
+
+                            </div>
+
                         </div>
                     </td>
                     <td class="search_button"><button id="search" type="submit">Формувати</button></td>
