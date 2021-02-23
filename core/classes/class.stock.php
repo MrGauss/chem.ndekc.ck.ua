@@ -506,9 +506,10 @@ class stock
         $SQL = '
             SELECT
                 stock.*,
-                reagent.name    as reagent_name,
-                units.name      as reagent_units,
-                units.short_name   as reagent_units_short,
+                reagent.name            as reagent_name,
+                reagent.is_precursor    as is_precursor,
+                units.name              as reagent_units,
+                units.short_name        as reagent_units_short,
 
                 groups.region_id,
 

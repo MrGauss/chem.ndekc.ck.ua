@@ -290,12 +290,16 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #list_frame .line.header table td:hover{ background: #BFBFBF; }
 #main_frame #page_frame #list_frame .line.header table td.active{ background: #BFBFBF; }
 
+#main_frame #page_frame #list_frame .line .precursor_label,
 #main_frame #page_frame #list_frame .line .using_perc{ display: none; position: absolute; bottom: 0px; left: 0px; height: 14px; padding: 1px 0px 0px 0px; width: 140px; overflow: hidden; background: #39A331; opacity: 0.8; text-align: center; font-size: 0.7em; letter-spacing: 0.05em; text-transform: uppercase; color: #FFFFFF; font-weight: bold; }
 #main_frame #page_frame #list_frame .line.fully_used  .using_perc.fully_used{ display: block; background-color: #5F5F5F; }
 #main_frame #page_frame #list_frame .line.almost_used .using_perc.almost_used{ display: block; background-color: #8A0000; }
 #main_frame #page_frame #list_frame .line.half_used   .using_perc.half_used{ display: block; }
 #main_frame #page_frame #list_frame .line.not_used    .using_perc.not_used{ display: block; }
 
+#main_frame #page_frame #list_frame .line[data-is_precursor="1"]{ border-color: #FF0099; background-color: #FFDBF1; }
+#main_frame #page_frame #list_frame .line .precursor_label{ left: calc( 50% - 70px ); top: 0px; bottom: auto; border-color: #FF0099; background-color: #FF0099; }
+#main_frame #page_frame #list_frame .line[data-is_precursor="1"] .precursor_label{ display: block; }
 
 #main_frame #page_frame #list_frame{ padding-top: var(--list-filters-area-height); }
 #main_frame #page_frame #list_frame #filters{ height: var(--list-filters-area-height); }
@@ -360,6 +364,10 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
         50% { background-color: #FFA8A8; }
         100% { background-color: #FFE5E5; }
 }
+
+/* ------------------- */
+
+
 
 /* ------------------- */
 

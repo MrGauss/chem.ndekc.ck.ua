@@ -313,6 +313,17 @@ class spr_manager
         }
 
         $WHERE = array();
+        $JOIN  = array();
+
+        if( array_key_exists( 'group_id', $this->table_info ) && $this->table != 'groups' )
+        {
+            $JOIN['groups'] = 'LEFT JOIN groups ON(  "'.$this->table.'".group_id = groups.id )';
+        }
+
+        if( $this->table=='reagent' )
+        {
+            $JOIN['units'] = 'LEFT JOIN units ON( units.id = reagent.units_id )';
+        }
 
         if( isset($filters['id']) )
         {
@@ -336,15 +347,23 @@ class spr_manager
             $WHERE['group_id'] = '"'.$this->table.'"."group_id" = \''.common::integer( isset($filters['group_id'])?$filters['group_id']:CURRENT_GROUP_ID ).'\'';
         }
 
-
-
         $ORDER = array();
 
-        if( array_key_exists( 'position', $this->table_info ) )     { $ORDER[] = '"'.$this->table.'"."position" DESC';                              }
-        if( array_key_exists( 'name', $this->table_info ) )         { $ORDER[] = '"'.$this->table.'"."name" ASC';                                   }
-        if( array_key_exists( 'group_id', $this->table_info ) && !isset($WHERE['group_id']) )     { $WHERE[] = '"'.$this->table.'"."group_id" IN( 0, '.CURRENT_GROUP_ID.' )';     }
-        if( array_key_exists( 'region_id', $this->table_info ) )    { $WHERE[] = '"'.$this->table.'"."region_id" IN( 0, '.CURRENT_REGION_ID.' )';   }
+        if( array_key_exists( 'position', $this->table_info ) )                                   { $ORDER['position']      = '"'.$this->table.'"."position" DESC';                              }
+        if( array_key_exists( 'name', $this->table_info ) )                                       { $ORDER['name']          = '"'.$this->table.'"."name" ASC';                                   }
+        if( array_key_exists( 'group_id', $this->table_info ) && !isset($WHERE['group_id']) )     { $WHERE['group_id']      = '"'.$this->table.'"."group_id" IN( 0, '.CURRENT_GROUP_ID.' )';     }
+        if( array_key_exists( 'region_id', $this->table_info ) )                                  { $WHERE['region_id']     = '"'.$this->table.'"."region_id" IN( 0, '.CURRENT_REGION_ID.' )';   }
 
+
+        if( array_key_exists( 'group_id', $this->table_info ) && isset($filters['by_region']) && $this->table != 'groups' && isset($JOIN['groups']) )
+        {
+            $WHERE['group_id'] = false;
+            unset( $WHERE['group_id'] );
+
+            $WHERE['region_id'] = 'groups.region_id IN( 0, '.CURRENT_REGION_ID.' ) ';
+        }
+
+        $JOIN = implode( "\n", $JOIN );
 
         $WHERE = implode( ' AND ', $WHERE );
         $WHERE = common::trim( $WHERE );
@@ -360,9 +379,11 @@ class spr_manager
                         '.(($this->table=='reagent')?', "units"."name" as units_name':'').'
                     FROM
                         "'.$this->table.'"
-                        '.(($this->table=='reagent')?'LEFT JOIN units ON( units.id = reagent.units_id )':'').'
+                        '.$JOIN.'
                     '.$WHERE.'
                     '.$ORDER.'; '.db::CACHED;
+
+        //cache::set( 'spr_manager_SQL_'.$this->table, $SQL );
 
         $cache_var = self::CACHE_CONST.'-'.$this->table.'-'.crc32($SQL);
 

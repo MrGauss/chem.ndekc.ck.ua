@@ -1,5 +1,5 @@
 <div id="mainlist">
-    [access:stock:view]<div class="element i01"><a href="/index.php?mod=stock"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Склад</span></a></div>[/access]
+    [access:stock:view]<div class="element i01"><a href="/index.php?mod=stock"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Склад<br>лабораторії</span></a></div>[/access]
     [access:dispersion:view]<div class="element i02"><a href="/index.php?mod=dispersion"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Лабораторія</span></a></div>[/access]
 
     [access:stock:view|dispersion:view]<div class="hr_vertval"></div>[/access]

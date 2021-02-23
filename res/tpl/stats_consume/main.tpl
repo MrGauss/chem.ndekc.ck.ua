@@ -32,6 +32,11 @@
                                     <label for="filter-is_precursor" class="label">Лише прекурсори</label>
                                 </div>
 
+                                <div class="filter ch_filter">
+                                    <input  id="filter-by_region" class="input" data-group="by_region" data-role="filter" type="checkbox" name="by_region" value="1" {by_region}>
+                                    <label for="filter-by_region" class="label">По всій області</label>
+                                </div>
+
                             </div>
 
                         </div>

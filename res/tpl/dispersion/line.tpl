@@ -1,4 +1,4 @@
-<div class="line {tag:not_used_class}" data-id="{tag:id}" data-inc_date="{tag:inc_date_unix}" data-lifetime="{tag:lifetime}" data-quantity_inc="{tag:quantity_inc}" data-quantity_left="{tag:quantity_left}" data-not_used_perc="{tag:not_used_perc}">
+<div class="line {tag:not_used_class}" data-id="{tag:id}" data-is_precursor="{tag:is_precursor}" data-inc_date="{tag:inc_date_unix}" data-lifetime="{tag:lifetime}" data-quantity_inc="{tag:quantity_inc}" data-quantity_left="{tag:quantity_left}" data-not_used_perc="{tag:not_used_perc}">
 
     <input type="hidden" data-role="sort" name="reagent" value="{tag:reagent:name}">
     <input type="hidden" data-role="sort" name="number" value="{tag:reagent_number:1}-{tag:reagent_number:0}">
@@ -27,4 +27,5 @@
     <div class="using_perc almost_used">Закінчується</div>
     <!-- div class="using_perc half_used">Не дохуя, але є</div -->
     <!-- div class="using_perc not_used">Ще дохуя</div -->
+    <div class="precursor_label">Прекурсор</div>
 </div>
