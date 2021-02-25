@@ -28,7 +28,7 @@ class stock
 
         $ID = common::integer( isset($original_data['id']) ? $original_data['id'] : false );
 
-        $error = false;
+        $error      = false;
         $error_area = false;
 
         ///////////
@@ -40,7 +40,7 @@ class stock
 
         ///////////
 
-        $SQL = 'SELECT count(id) as count FROM transfer WHERE id > 0 AND to_stock_id = '.common::integer( $original_data['id'] ).';';
+        $SQL = 'SELECT count(id) as count FROM transfer WHERE id > 0 AND to_stock_id = '.common::integer( $ID ).';';
         if( (new stock)->db->super_query( $SQL )['count'] > 0 )
         {
             if( $data4save['quantity_inc'] != $original_data['quantity_inc'] )
