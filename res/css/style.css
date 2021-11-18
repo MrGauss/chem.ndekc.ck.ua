@@ -405,7 +405,7 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 .default_editor .elem .label    { display: block; width: 100%; color: #123859; text-transform: uppercase; font-weight: bold; text-align: center; }
 .default_editor .elem .label[for]    { cursor: pointer; }
 .default_editor .elem .input    { width: 100%; height: 32px; text-align: center; padding: 0px 5px 0px 5px;  }
-.default_editor .error_area     { padding: 20px; text-align: center; font-weight: bold; font-size: 1.1em; color: #940000; border: 1px solid #940000; background: #FFDBDB url(../img/important-red-32px.png) no-repeat 5px 50%; margin-bottom: 5px; }
+.default_editor .error_area     { padding: 20px; text-align: center; font-weight: bold; font-size: 1.1em; color: #940000; border: 1px solid #940000; background: #FFDBDB url(../img/important-red-32px.png) no-repeat 5px 50%; margin-bottom: 5px; white-space: pre-line; }
 .default_editor .good_area      { padding: 20px; text-align: center; font-weight: bold; font-size: 1.1em; color: #006600; border: 1px solid #006600; background: #E3FFDB url(../img/important-green-32px.png) no-repeat 5px 50%;; margin-bottom: 5px; }
 .default_editor .edit_info      { padding: 20px 20px 20px 40px; text-align: center; font-size: 1.1em; font-weight: bold; color: #A87000; border: 1px solid #FAA700; background: #FFF4BD url(../img/important-yellow-32px.png) no-repeat 5px 50%; margin-top: 5px; margin-bottom: 0px; }
 

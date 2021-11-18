@@ -891,13 +891,27 @@ class using
             if( $purpose['attr'] == 'utilisation' ){ $SQL['consume']['reagent'][$k]['utilisation'] = 1; }
 
             $SQL['consume']['reagent'][$k]['hash'] = $consume->save( $SQL['consume']['reagent'][$k] );
+
             if( $SQL['consume']['reagent'][$k]['hash'] )
             {
                 $this->db->super_query( 'INSERT INTO consume_using ( using_hash, consume_hash ) VALUES ( \''.$_USING_HASH.'\', \''.$SQL['consume']['reagent'][$k]['hash'].'\' );' );
             }
             else
             {
-                return self::error( 'Помилка збереження використаних речовин чи матеріалів!' );
+                if(
+                    isset($GLOBALS['_ajax_result'])
+                    && is_array($GLOBALS['_ajax_result'])
+                    && isset($GLOBALS['_ajax_result']['error'])
+                    && isset($GLOBALS['_ajax_result']['error_text'])
+                    && common::integer($GLOBALS['_ajax_result']['error']) > 0
+                )
+                {
+                    return self::error( 'Помилка збереження використаних речовин чи матеріалів!'."\r\n".$GLOBALS['_ajax_result']['error_text'], 'reagent:'.$SQL['consume']['reagent'][$k]['dispersion_id'] );
+                }
+                else
+                {
+                    return self::error( 'Помилка збереження використаних речовин чи матеріалів!' );
+                }
             }
         }
 
@@ -925,7 +939,20 @@ class using
             }
             else
             {
-                return self::error( 'Помилка збереження використаних розчинів!' );
+                if(
+                    isset($GLOBALS['_ajax_result'])
+                    && is_array($GLOBALS['_ajax_result'])
+                    && isset($GLOBALS['_ajax_result']['error'])
+                    && isset($GLOBALS['_ajax_result']['error_text'])
+                    && common::integer($GLOBALS['_ajax_result']['error']) > 0
+                )
+                {
+                    return self::error( 'Помилка збереження використаних розчинів!'."\r\n".$GLOBALS['_ajax_result']['error_text'], 'reactiv:'.$SQL['consume']['reactiv'][$k]['reactiv_hash'] );
+                }
+                else
+                {
+                    return self::error( 'Помилка збереження використаних розчинів!' );
+                }
             }
         }
 

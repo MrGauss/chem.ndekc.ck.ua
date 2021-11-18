@@ -75,6 +75,8 @@
 .default_editor .listline .consume table td.quantity .input[name="units_short_name"]{    width: 25px; border: none; text-align: left; background: none; }
 .default_editor .listline .consume table td.quantity .reagent_units_short{ display: block; width: 25px; overflow: hidden; float: right; text-align: center; }
 
+.default_editor .listline .consume.blred{ background-color: #FF9494; border-color: #7A0000; opacity: 1.0; }
+
 .default_editor .selectable_list{ border: 1px solid #3F3F3F; margin: 10px 0px 0px 0px; padding: 5px; height: 200px; width: 100%; overflow: hidden; overflow-y: scroll; }
 .default_editor .selectable_list .line{ width: 100%; padding: 7px 5px 7px 5px; margin: 3px 0px 2px 0px; border: 1px solid #3F3F3F; background: #FFF9E5; opacity: 0.75; cursor: pointer; position: relative; }
 .default_editor .selectable_list .line[data-quantity_inc="0"]{ display: none; }

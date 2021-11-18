@@ -118,10 +118,10 @@ chem['using'] = new function()
             .removeClass('dnone')
             .addClass( 'dnone' );
 
-        empty.attr( 'data-consume_hash', '' );
-        empty.attr( 'data-reactiv_hash', obj.attr('data-hash') );
-        empty.attr( 'data-dispersion_id', obj.attr('data-id') );
-        empty.attr( 'data-key', '' );
+        empty.attr( 'data-consume_hash',    '' );
+        empty.attr( 'data-reactiv_hash',    obj.attr('data-hash') );
+        empty.attr( 'data-dispersion_id',   obj.attr('data-id') );
+        empty.attr( 'data-key',             '' );
 
         empty.find('.reagent_name').html(               obj.find('.name').html() );
         empty.find('.reagent_number').html(             obj.find('.number').html() );
@@ -129,6 +129,8 @@ chem['using'] = new function()
 
         empty.find('[name="consume_quantity"]').attr('max', obj.attr('data-quantity_left') ).attr( 'value', '0' ).val( '0' );
         empty.find('[name="units_short_name"]').attr( 'value', obj.attr('data-units') ).val( obj.attr('data-units') );
+
+        // data-err_area
 
         empty
             .clone()
@@ -354,7 +356,7 @@ chem['using'] = new function()
 
                                 if( parseInt(_r['error'])>0 )
                                 {
-                                    chem.animate_opacity( $('#'+did+' .error_area'), _r['error_text'], 3000 );
+                                    chem.animate_opacity( $('#'+did+' .error_area'), _r['error_text'], 4000 );
 
                                     if( _r['err_area'] )
                                     {
@@ -362,7 +364,21 @@ chem['using'] = new function()
 
                                         $.each( _r['err_area'], function( index, value )
                                         {
-                                            chem.BL( $('#'+did+'').find('[name="'+value+'"]'), 15, 'blred' );
+                                            if( value.indexOf( 'reagent:' ) !== -1 )
+                                            {
+                                                value = value.replace( 'reagent:', '' );
+                                                chem.BL( $('#'+did+' #consume_list').find('[data-dispersion_id="'+value+'"]').stop(), 15, 'blred' );
+                                            }
+                                            else
+                                            if( value.indexOf( 'reactiv:' ) !== -1 )
+                                            {
+                                                value = value.replace( 'reactiv:', '' );
+                                                chem.BL( $('#'+did+' #reactiv_consume_list').find('[data-reactiv_hash="'+value+'"]').stop(), 15, 'blred' );
+                                            }
+                                            else
+                                            {
+                                                chem.BL( $('#'+did+'').find('[name="'+value+'"]'), 15, 'blred' );
+                                            }
                                         } );
                                     }
                                 }
