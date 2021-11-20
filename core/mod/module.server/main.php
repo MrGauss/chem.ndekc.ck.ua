@@ -11,6 +11,8 @@
     $i = 0;
     $cols = 2;
 
+
+
     foreach( get_loaded_extensions() as $extension )
     {
         if( $i > $cols ){ $i = 0; }
@@ -27,6 +29,8 @@
     $extensions = preg_replace( '!\{tag_(\d+?):(name|value)\}!i', '', $extensions );
 
     $tpl->clean( $skin );
+
+     //echo $extensions;exit;
 
     $tpl->load( 'server/main' );
 
@@ -56,7 +60,7 @@
         $tpl->set( '{tag:server_'.strtolower($k).'}', common::db2html( $v ) );
     }
 
-    foreach( array( 'nginx_access', 'nginx_error', 'php_error', 'postgresql', 'sql' ) as $log_file )
+    foreach( array( 'nginx_access', 'nginx_error', 'php_error', 'postgresql' ) as $log_file )
     {
         $log_file = LOGS_DIR.DS.$log_file.'.log';
 
@@ -72,7 +76,7 @@
         }
 
         $fopen   =   fopen( $log_file, 'rb' );
-        $tpl->set( '{log:'. basename($log_file) .'}', common::db2html( fread( $fopen, $file_size ) ) );
+        $tpl->set( '{log:'. basename($log_file) .'}', common::db2html( mb_convert_encoding( fread( $fopen, $file_size ), 'CP1251', 'UTF8' ) ) );
                      fclose($fopen);
 
         $tpl->set( '{log:'. basename($log_file) .':mod}', date( 'Y.m.d H:i:s', filemtime($log_file) ) );
@@ -80,8 +84,10 @@
         $tpl->set_block( '!\[log:'. basename($log_file) .'\](.+?)\[\/log\]!is', '$1' );
     }
 
+
     $tpl->set_block( '!\{log:(.+?)\}!i', '' );
 
     $tpl->compile( 'server/main' );
     $tpl->ins( 'main', $tpl->result( 'server/main' ) );
     $tpl->clean( 'server/main' );
+

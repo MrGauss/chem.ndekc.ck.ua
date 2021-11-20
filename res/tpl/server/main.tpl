@@ -80,6 +80,7 @@
             <pre>{log:postgresql.log}</pre>
         </div>
         [/log]
+        <!--
         [log:sql.log]
         <div class="logs_viewer">
             <h3>sql.log</h3>
@@ -88,6 +89,7 @@
             <pre>{log:sql.log}</pre>
         </div>
         [/log]
+        -->
     </div>
 
 

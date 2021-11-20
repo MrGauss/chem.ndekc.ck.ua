@@ -93,8 +93,8 @@ trait login
 
         $FROM['users'] = 'users as users';
 
-        if( $filters['user.id'] !== false )         { $WHERE['user.id'] = 'users.id = '.$filters['user.id'].''; }
-        if( $filters['user.region_id'] !== false )  { $WHERE['user.region_id'] = 'users.region_id = '.$filters['user.region_id'].''; }
+        if( $filters['user.id']        !== false ){ $WHERE['user.id'] = 'users.id = '.$filters['user.id'].''; }
+        if( $filters['user.region_id'] !== false ){ $WHERE['user.region_id'] = 'users.region_id = '.$filters['user.region_id'].''; }
 
         foreach( $SELECT as $k=>&$v ){ $v = ''.$k.' as "'.$v.'"'; }
         $SQL = 'SELECT '."\n\t".implode( ','."\n\t", $SELECT )."\n".'FROM '.implode(' ', $FROM ).' '.(count($WHERE)?"\n".'WHERE '.implode( $WHERE, ' AND ' ):'')."\n".'ORDER by users.id;'.QUERY_CACHABLE;

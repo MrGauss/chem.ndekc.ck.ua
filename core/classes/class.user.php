@@ -138,7 +138,7 @@ class user
         if( isset($ins2db['surname']) && strlen($ins2db['surname']) < 3 )   { return self::error( 'Прізвище занадто коротке! Може варто його змінити?', 'surname' ); }
         if( isset($ins2db['surname']) && strlen($ins2db['surname']) > 24 )  { return self::error( 'Прізвище занадто довге! Може варто його змінити?', 'surname' ); }
 
-        if( isset($ins2db['phname']) && strlen($ins2db['phname']) < 3 )   { return self::error( 'Ім\'я по батькові занадто коротке!', 'phname' ); }
+        if( isset($ins2db['phname']) && strlen($ins2db['phname']) < 2 )   { return self::error( 'Ім\'я по батькові занадто коротке!', 'phname' ); }
         if( isset($ins2db['phname']) && strlen($ins2db['phname']) > 24 )  { return self::error( 'Ім\'я по батькові занадто довге!', 'phname' ); }
 
         if( !$ins2db['access_id'] )  { return self::error( 'Не зазначено рівень доступу!', 'access_id' ); }

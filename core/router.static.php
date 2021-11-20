@@ -23,7 +23,10 @@ foreach( $_needed_files as $_file )
         {
             mkdir( dirname( $_file ) );
         }
+        chmod( dirname( $_file ), 0750 );
         fclose( fopen( $_file, 'w' ) );
+
+        chmod(  $_file, 0640 );
     }
 }
 
