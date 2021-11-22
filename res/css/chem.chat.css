@@ -1,0 +1,7 @@
+#chat_frame{ height: 100%; overflow: hidden; }
+#chat_frame #chat_messages{  }
+#chat_frame #chat_textbox{  }
+#chat_frame #chat_textbox table{  }
+#chat_frame #chat_textbox table td.textbox{  }
+#chat_frame #chat_textbox table td.send_button{  }
+#chat_frame #chat_textbox table td.send_button button{  }
