@@ -83,7 +83,7 @@ class access
                 WHERE
                     access.id > 0
                     AND
-                    expert.id = '.$user_id.'
+                    expert.id = \''.common::integer( $user_id ).'\'::INTEGER
                 ORDER by spr_access_actions.label ASC; '.QUERY_CACHABLE;   
 
         $cache_var = 'access-user-'.md5( $SQL ).'-raw';

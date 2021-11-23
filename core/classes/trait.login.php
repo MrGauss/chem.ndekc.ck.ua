@@ -37,6 +37,7 @@ trait login
 			define( 'CURRENT_USER_ID', false );
 			define( 'CURRENT_REGION_ID', false );
 			define( 'CURRENT_GROUP_ID', false );
+			define( 'CURRENT_UNREAD_MESSAGES', false );
 			return false;
 		}
 
@@ -68,6 +69,7 @@ trait login
 			define( 'CURRENT_USER_ID', false );
 			define( 'CURRENT_REGION_ID', false );
 			define( 'CURRENT_GROUP_ID', false );
+			define( 'CURRENT_UNREAD_MESSAGES', false );
 		}
         return false;
 	}
@@ -141,7 +143,8 @@ trait login
                     expert.login,
                     expert.last_ip,
                     groups.region_id,
-                    expert.group_id
+                    expert.group_id,
+                    expert.unread_messages
                 FROM
                     expert
                     LEFT JOIN groups ON( groups.id = expert.group_id )
@@ -159,6 +162,7 @@ trait login
 			define( 'CURRENT_USER_LOGIN',   $id['login'] );
 			define( 'CURRENT_REGION_ID',    abs(intval($id['region_id'])) );
             define( 'CURRENT_GROUP_ID',     self::integer( $id['group_id'] ) );
+            define( 'CURRENT_UNREAD_MESSAGES', self::integer( $id['unread_messages'] ) );
 
 			$SQL = 'UPDATE expert SET last_ip=\''.USER_IP.'\', ts=NOW() WHERE id = '.abs(intval(CURRENT_USER_ID)).';';
 			$this->db->query( $SQL );
@@ -169,6 +173,7 @@ trait login
 			define( 'CURRENT_USER_LOGIN', false );
 			define( 'CURRENT_REGION_ID', false );
 			define( 'CURRENT_GROUP_ID', false );
+			define( 'CURRENT_UNREAD_MESSAGES', false );
 		}
 
 		return CURRENT_USER_ID?true:false;
@@ -187,7 +192,8 @@ trait login
                     expert.login,
                     expert.last_ip,
                     groups.region_id,
-                    expert.group_id
+                    expert.group_id,
+                    expert.unread_messages
                 FROM
                     expert
                     LEFT JOIN groups ON( groups.id = expert.group_id )
@@ -206,6 +212,7 @@ trait login
             define( 'CURRENT_USER_LOGIN', $id['login'] );
 			define( 'CURRENT_REGION_ID', abs(intval($id['region_id'])) );
 			define( 'CURRENT_GROUP_ID', self::integer( $id['group_id'] ) );
+			define( 'CURRENT_UNREAD_MESSAGES', self::integer( $id['unread_messages'] ) );
 		}
 		else
 		{
@@ -213,6 +220,7 @@ trait login
 			define( 'CURRENT_USER_LOGIN', false );
 			define( 'CURRENT_REGION_ID', false );
             define( 'CURRENT_GROUP_ID', false );
+            define( 'CURRENT_UNREAD_MESSAGES', false );
 		}
 		
 		return CURRENT_USER_ID?true:false;

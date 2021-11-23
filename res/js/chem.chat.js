@@ -1,8 +1,25 @@
 chem['chat'] = new function()
 {
+    this.insertAtCursor = function( ins_filed, ins_text )
+    {
+        var cursorPos = ins_filed.prop('selectionStart');
+        var v = ins_filed.val();
+        var textBefore = v.substring(0,  cursorPos);
+        var textAfter  = v.substring(cursorPos, v.length);
+
+        ins_filed.val( textBefore + ins_text + textAfter );
+    }
+
+
+    this.ins_avtor_tag = function( obj )
+    {
+        var tag = '[@'+obj.attr('data-login')+']';
+        chem.chat.insertAtCursor( $('#chat_textbox_textarea'), tag );
+    }
+
     this.reload = function()
     {
-        console.log( 'interval processed...' );
+
         var post = {};
             post['ajax']        = 1;
             post['action']      = 2;
@@ -17,6 +34,8 @@ chem['chat'] = new function()
             {
                 $('#chat_messages').html( false );
                 $('#chat_messages').html( _r['reslt'] );
+
+                $('#chat_messages .message a[data-login]').off( "click" ).on( 'click', function(){ chem.chat.ins_avtor_tag( $(this) ); } );
             }
             return true;
         });
@@ -60,6 +79,16 @@ chem['chat'] = new function()
 $(document).ready( function()
 {
     $('#chat_frame #chat_send_button').on( 'click', function(){ chem.chat.save( $(this) ); } );
+    $('#chat_frame #chat_messages .message a[data-login]').off( "click" ).on( 'click', function(){ chem.chat.ins_avtor_tag( $(this) ); } );
 
-    setInterval( function(){ chem.chat.reload() }, 15000);
+    $('#chat_textbox_textarea').bind('keypress', function(e)
+    {
+        alert( e.keyCode );
+
+        // if(e.keyCode==13){ }
+    });
+
+    chem.update_unread_messages();
+
+    setInterval( function(){ chem.chat.reload() }, 5000);
 });

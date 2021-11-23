@@ -18,6 +18,10 @@ switch ( _ACTION_ )
         ajax::set_data( 'reslt', (new chat) -> get_html() );
     break;
 
+    case 3:
+        ajax::set_data( 'unread', CURRENT_UNREAD_MESSAGES );
+    break;
+
     default:
         common::err( 'Дія невідома!' );
 }

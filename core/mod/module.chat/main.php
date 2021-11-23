@@ -3,7 +3,7 @@
 if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 if( !defined('_MOD_NAME_') ){ define('_MOD_NAME_', '×àò' ); }
 
-// access::check( 'admin', 'access' );
+access::check( 'chat', 'view' );
 
 $tpl->load( _MOD_.'/main' );
 

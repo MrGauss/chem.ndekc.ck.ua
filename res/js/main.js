@@ -23,6 +23,26 @@ var chem = new function()
 $('.ui-dialog-content').dialog("option", "position", {my: "center", at: "center", of: window});
 */
 
+    this.update_unread_messages = function()
+    {
+        var post = {};
+            post['ajax']        = 1;
+            post['action']      = 3;
+            post['mod']         = 'chat';
+
+        $.ajax({ data: post }).done(function( _r )
+        {
+            try{ _r = jQuery.parseJSON( _r ); }catch(err)
+            {
+                return false;
+            }
+
+            $('body').find('[data-unread]').attr( 'data-unread', parseInt( _r['unread'] ) );
+
+            return false;
+        });
+    }
+
     this.single_open = function( obj )
     {
         if( obj.hasClass('dialog_action') ){ return false; }
@@ -447,6 +467,13 @@ $(document).ready( function()
         if( obj.hasClass( 'dnone' ) ){ obj.removeClass('dnone'); }
         else{ obj.addClass('dnone'); }
     });
+
+    if( parseInt( $('body').attr('data-allow_chat') ) > 0 )
+    {
+        setInterval( function(){ chem.update_unread_messages() }, 15000);
+    }
+
+
 
 
 
