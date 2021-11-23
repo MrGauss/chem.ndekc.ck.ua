@@ -23,6 +23,7 @@
     [access:server:stats]
     <div class="hr_vertval"></div><div class="element i91"><a href="/index.php?mod=server"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Статистика<br>серверу</span></a></div>
     <div class="hr_vertval"></div><div class="element i13"><a href="/index.php?mod=pink_shkurdoda"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Пофарбуй<br>Шкурдоду</span></a></div>
+    <div class="hr_vertval"></div><div class="element i13"><a href="/index.php?mod=chat"><img src="{SKINDIR}/img/spacer.png" alt=""><span>Чат</span></a></div>
     [/access]
 
     [access:spr:edit]

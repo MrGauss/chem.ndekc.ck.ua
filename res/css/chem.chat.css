@@ -1,7 +1,33 @@
 #chat_frame{ height: 100%; overflow: hidden; }
-#chat_frame #chat_messages{  }
-#chat_frame #chat_textbox{  }
-#chat_frame #chat_textbox table{  }
-#chat_frame #chat_textbox table td.textbox{  }
-#chat_frame #chat_textbox table td.send_button{  }
-#chat_frame #chat_textbox table td.send_button button{  }
+#chat_frame #chat_messages{ height: calc( 100% - 100px ); overflow: scroll; overflow-x: hidden; padding: 5px; border-bottom: 1px solid rgba(68, 68, 68, 1.0); }
+#chat_frame #chat_textbox{ height: 100px; }
+#chat_frame #chat_textbox table{ width: 100%; }
+#chat_frame #chat_textbox table td.textbox{ width: calc( 100% - 160px ); padding: 5px; }
+#chat_frame #chat_textbox table td.textbox textarea
+{
+    height: calc( 100px - 10px );
+    width: 100%;
+    resize: none;
+    padding: 5px 5px 5px 5px;
+    text-align: justify;
+    outline: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    font-size: 1.2em;
+}
+#chat_frame #chat_textbox table td.send_button{ width: 160px; }
+#chat_frame #chat_textbox table td.send_button button{ width: 140px; height: 60px; background-color: rgba(0, 51, 102, 1); }
+
+#chat_frame #chat_messages .message{ border: 1px solid rgba(168, 222, 255, 1); background: rgba(168, 222, 255, 0.5); font-size: 1.2em; position: relative; padding: 0px; margin-bottom: 3px; }
+#chat_frame #chat_messages .message table{ height: 100%; width: 100%; }
+#chat_frame #chat_messages .message table td{ padding: 5px; }
+#chat_frame #chat_messages .message .message_avtor{ width: 200px; font-weight: bold; color: rgba(68, 68, 68, 0.8); font-style: italic; text-align: right; }
+#chat_frame #chat_messages .message .message_avtor span{ text-transform: uppercase; }
+#chat_frame #chat_messages .message .message_text { width: auto; }
+#chat_frame #chat_messages .message .message_text div{ font-size: 1.0em; font-style: italic; white-space: pre-wrap; word-wrap: break-word; }
+#chat_frame #chat_messages .message .message_time { width: 140px; font-size: 0.7em; text-align: right; color: rgba(68, 68, 68, 0.7); }
+#chat_frame #chat_messages .message[data-access_id="1"] .message_avtor{ color: #750000; }
+#chat_frame #chat_messages .message[data-access_id="2"] .message_avtor{ color: #FF0033; }
+#chat_frame #chat_messages .message[data-access_id="3"] .message_avtor{ color: #009900; }
+#chat_frame #chat_messages .message[data-access_id="4"] .message_avtor{ color: #222222; }

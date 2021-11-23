@@ -41,6 +41,7 @@ require( CLASSES_DIR.DS.'class.consume.php' );
 require( CLASSES_DIR.DS.'class.stats.php' );
 require( CLASSES_DIR.DS.'class.reactiv_consume.php' );
 require( CLASSES_DIR.DS.'class.autocomplete.php' );
+require( CLASSES_DIR.DS.'class.chat.php' );
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
