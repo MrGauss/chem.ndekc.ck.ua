@@ -81,11 +81,12 @@ $(document).ready( function()
     $('#chat_frame #chat_send_button').on( 'click', function(){ chem.chat.save( $(this) ); } );
     $('#chat_frame #chat_messages .message a[data-login]').off( "click" ).on( 'click', function(){ chem.chat.ins_avtor_tag( $(this) ); } );
 
-    $('#chat_textbox_textarea').bind('keypress', function(e)
+    $('#chat_textbox_textarea').on('keydown', function( event )
     {
-        alert( e.keyCode );
+        if (!event.ctrlKey){ return true; }
 
-        // if(e.keyCode==13){ }
+        //console.log( 'KEY: '+event.which+'; CTRL: '+event.ctrlKey );
+        if( event.which == 13 && event.ctrlKey ){ $('#chat_frame #chat_send_button').click(); }
     });
 
     chem.update_unread_messages();

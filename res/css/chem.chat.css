@@ -1,6 +1,6 @@
 #chat_frame{ height: 100%; overflow: hidden; }
 #chat_frame #chat_messages{ height: calc( 100% - 100px ); overflow: scroll; overflow-x: hidden; padding: 5px; border-bottom: 1px solid rgba(68, 68, 68, 1.0); }
-#chat_frame #chat_textbox{ height: 100px; }
+#chat_frame #chat_textbox{ height: 100px; background: #EEEEEE; }
 #chat_frame #chat_textbox table{ width: 100%; }
 #chat_frame #chat_textbox table td.textbox{ width: calc( 100% - 160px ); padding: 5px; }
 #chat_frame #chat_textbox table td.textbox textarea
@@ -15,9 +15,11 @@
     -moz-box-shadow: none;
     box-shadow: none;
     font-size: 1.2em;
+    background-color: #FFFFFF;
 }
 #chat_frame #chat_textbox table td.send_button{ width: 160px; }
-#chat_frame #chat_textbox table td.send_button button{ width: 140px; height: 60px; background-color: rgba(0, 51, 102, 1); }
+#chat_frame #chat_textbox table td.send_button button{ width: 140px; height: 90px; background-color: rgba(0, 51, 102, 1); letter-spacing: 0.08em; font-size: 0.9em; }
+#chat_frame #chat_textbox table td.send_button button span{ font-size: 0.65em; opacity: 0.7; letter-spacing: 0.15em; }
 
 #chat_frame #chat_messages .message{ border: 1px solid rgba(168, 222, 255, 1); background: rgba(168, 222, 255, 0.5); font-size: 1.2em; position: relative; padding: 0px; margin-bottom: 3px; }
 #chat_frame #chat_messages .message table{ height: 100%; width: 100%; }

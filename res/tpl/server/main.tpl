@@ -48,6 +48,7 @@
             </tbody>
         </table>
 
+        <!--
         [log:nginx_access.log]
         <div class="logs_viewer">
             <h3>nginx_access.log</h3>
@@ -80,7 +81,6 @@
             <pre>{log:postgresql.log}</pre>
         </div>
         [/log]
-        <!--
         [log:sql.log]
         <div class="logs_viewer">
             <h3>sql.log</h3>

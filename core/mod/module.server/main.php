@@ -60,7 +60,7 @@
         $tpl->set( '{tag:server_'.strtolower($k).'}', common::db2html( $v ) );
     }
 
-    foreach( array( 'nginx_access', 'nginx_error', 'php_error', 'postgresql' ) as $log_file )
+    /*foreach( array( 'nginx_error', 'php_error', 'postgresql' ) as $log_file )
     {
         $log_file = LOGS_DIR.DS.$log_file.'.log';
 
@@ -82,7 +82,7 @@
         $tpl->set( '{log:'. basename($log_file) .':mod}', date( 'Y.m.d H:i:s', filemtime($log_file) ) );
         $tpl->set( '{log:'. basename($log_file) .':size}', round( $file_size / 1024, 1 ).' kb' );
         $tpl->set_block( '!\[log:'. basename($log_file) .'\](.+?)\[\/log\]!is', '$1' );
-    }
+    }  */
 
 
     $tpl->set_block( '!\{log:(.+?)\}!i', '' );

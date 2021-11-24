@@ -10,7 +10,7 @@
         <table>
             <tr>
                 <td class="textbox"><textarea id="chat_textbox_textarea" class="input textarea"></textarea></td>
-                <td class="send_button"><button id="chat_send_button" type="button">Відправити</button></td>
+                <td class="send_button"><button id="chat_send_button" type="button">Відправити<br><span>CTRL+ENTER</span></button></td>
             </tr>
         </table>
     </div>

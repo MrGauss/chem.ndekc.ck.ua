@@ -54,7 +54,7 @@ $('.ui-dialog-content').dialog("option", "position", {my: "center", at: "center"
     }
     this.txt2json = function( _r )
     {
-        try{ _r = jQuery.parseJSON( _r ); }catch(err){ chem.err( 'ERROR: '+err+"\n\n"+_r ); return false; }
+        try{ _r = jQuery.parseJSON( _r ); }catch(err){ console.log( 'ERROR: '+err+"\n\n"+_r ); return false; }
 
         _r['error'] = parseInt(_r['error']);
 
@@ -417,7 +417,7 @@ $(document).ready( function()
                                             console.timeEnd("AJAX UNIQ_ID: "+jqXHR['uniq']);
                                             chem._AJAX = false;
                                         },
-        "error":        function( jqXHRo, err_type ){ alert( 'AJAX ERROR: '+err_type ); }
+        "error":        function( jqXHRo, err_type ){ console.log( 'AJAX ERROR: '+err_type ); }
     });
     /////////////////////////////////////////////////////////////////////////
 
