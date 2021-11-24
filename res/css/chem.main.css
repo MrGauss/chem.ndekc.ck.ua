@@ -1,5 +1,6 @@
 #content{ overflow: auto; }
 
+#main_frame #page_frame #mainlist .element{ transition: opacity 0.2s ease; }
 #main_frame #page_frame #mainlist .element.i01 a img{ background-image: url(../img/icon_01.png); }
 #main_frame #page_frame #mainlist .element.i02 a img{ background-image: url(../img/icon_02.png); }
 #main_frame #page_frame #mainlist .element.i03 a img{ background-image: url(../img/icon_03.png); }
@@ -23,3 +24,8 @@
 #main_frame #page_frame #mainlist .element.i21 a img{ background-image: url(../img/icon_access.png); }
 #main_frame #page_frame #mainlist .element.i91 a img{ background-image: url(../img/icon_91.png); }
 #main_frame #page_frame #mainlist .element.filter_hr1 a img{ filter: hue-rotate(45deg); }
+
+
+[data-user="root"] #main_frame #page_frame #mainlist .element.i13{ opacity: 0.1; transition: opacity 0.2s ease; }
+[data-user="root"] #main_frame #page_frame #mainlist .element.i13:hover{ opacity: 0.95; }
+[data-user="shkurdoda"] #main_frame #page_frame #mainlist .element.i13{ display: none; }
