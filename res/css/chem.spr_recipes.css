@@ -5,6 +5,7 @@
 #main_frame #page_frame #list_frame .line table td.ingredients_html span[data-available_in_lab=""],
 #main_frame #page_frame #list_frame .line table td.ingredients_html span[data-available_in_lab="0"]{ border-color: #6F6F6F; color: #4F4F4F; background-color: #CFCFCF; opacity: 0.9; }
 #main_frame #page_frame #list_frame .line table td.ingredients_html span:hover{ opacity: 1.0; }
+#main_frame #page_frame #list_frame .line table td.comment{ width: auto; padding-left: 5px; }
 #main_frame #page_frame #list_frame .line[data-all_available="0"]{ background-color: #E1FFDB }
 
 .default_editor .leftside { width: 50%; float: left; }

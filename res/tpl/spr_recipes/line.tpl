@@ -4,6 +4,7 @@
             <td class="numi">{tag:numi}</td>
             <td class="name">{tag:name}</td>
             <td class="ingredients_html">{tag:ingredients_html}</td>
+            <td class="comment">{tag:comment}</td>
             <td></td>
         </tr>
     </table>
