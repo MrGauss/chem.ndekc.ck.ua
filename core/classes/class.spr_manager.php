@@ -208,12 +208,23 @@ class spr_manager
         if( !$error && isset($data4save['full_name']) && common::strlen( $data4save['full_name'] ) < 3 )      { $error = 'Повна назва занадто коротка!'; $error_area = 'full_name'; }
 
 
-        if( !$error && !isset($data4save['name']) && isset($original_data['name']) )                { $error = 'Назва не визначена!'; $error_area = 'name'; }
+        if( !$error && !isset($data4save['name'])      && isset($original_data['name']) )           { $error = 'Назва не визначена!'; $error_area = 'name'; }
         if( !$error && !isset($data4save['full_name']) && isset($original_data['full_name']) )      { $error = 'Повна назва не визначена!'; $error_area = 'full_name'; }
-        if( !$error && !isset($data4save['units_id']) && isset($original_data['units_id']) )        { $error = 'Одиниця виміру не визначена!'; $error_area = 'units'; }
+        if( !$error && !isset($data4save['units_id'])  && isset($original_data['units_id']) )       { $error = 'Одиниця виміру не визначена!'; $error_area = 'units'; }
 
         ///////////
-        $SQL = 'SELECT count(id) as count FROM '.$this->table.' WHERE lower("name") = lower(\''.$this->db->safesql($data4save['name']).'\'::text) '. ( isset($original_data['id']) ? ' AND id != '.common::integer($original_data['id']) : ''  ) .';';
+        $SQL = '
+                SELECT
+                    count(id) as count
+                FROM
+                    '.$this->table.'
+                WHERE
+                    lower("name") = lower(\''.$this->db->safesql($data4save['name']).'\'::text) '
+                    .( isset($original_data['id']) ? ' AND id != '.common::integer($original_data['id']) : ''  )
+                    .( array_key_exists( 'group_id', $this->table_info ) ? ('AND group_id = '.CURRENT_GROUP_ID.'') : '' )
+                    .';';
+
+
         if( $this->db->super_query( $SQL )['count'] > 0 )
         {
             $error = 'Такий запис вже існує!'; $error_area = 'name';
@@ -257,6 +268,8 @@ class spr_manager
 
             $SQL[$arg] = $this->db->safesql( common::filter($value) );
         }
+
+        //var_export($data); exit;
 
         if( array_key_exists( 'created_by_expert_id', $this->table_info ) ) { $SQL['created_by_expert_id'] = CURRENT_USER_ID;   }
         if( array_key_exists( 'group_id', $this->table_info ) )             { $SQL['group_id'] = CURRENT_GROUP_ID;              }

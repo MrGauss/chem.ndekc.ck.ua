@@ -71,6 +71,8 @@ class chat
         $text = preg_replace( '!\[(b|i|u)\](.+?)\[\/\1\]!is', '<$1>$2</$1>', $text );
         $text = preg_replace( '!\[(red|green|blue|yellow|pink|black)\](.+?)\[\/\1\]!is', '<span data-color="$1">$2</span>', $text );
         $text = preg_replace( '!\[(left|center|right|justify)\](.+?)\[\/\1\]!is', '<div class="align_$1">$2</div>', $text );
+        $text = preg_replace( '!\[(a)\](.+?)\[\/\1\]!i', '<a href="$2" target="_blank">$2</a>', $text );
+        $text = preg_replace( '!\[(a)=(\S+?)\](.+?)\[\/\1\]!i', '<a href="$2" target="_blank">$3</a>', $text );
         return $text;
     }
 
@@ -157,7 +159,6 @@ class chat
                 LEFT JOIN expert as to_expert   ON( to_expert.id = chat.to_expert_id )
                 LEFT JOIN groups ON( from_expert.group_id = groups.id )
                 LEFT JOIN region ON( groups.region_id = region.id )
-           WHERE chat.ts > ( NOW() - INTERVAL \'7 DAYS\' )
            ORDER BY chat.ts DESC
            OFFSET 0
            LIMIT 300;';
