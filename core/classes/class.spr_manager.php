@@ -9,6 +9,7 @@ if( !defined('MRGAUSS') ){ echo basename(__FILE__); exit; }
 if( !trait_exists( 'basic' ) )      { require( CLASSES_DIR.DS.'trait.basic.php' ); }
 if( !trait_exists( 'spr' ) )        { require( CLASSES_DIR.DS.'trait.spr.php' ); }
 if( !trait_exists( 'db_connect' ) ) { require( CLASSES_DIR.DS.'trait.db_connect.php' ); }
+if( !class_exists( 'tags' ) )       { require( CLASSES_DIR.DS.'class.tags.php' ); }
 
 class spr_manager
 {
@@ -49,7 +50,6 @@ class spr_manager
             $this->table_info = $this->get_table_info();
         }
     }
-
 
     public final function editor( $line_id = 0, $skin = false )
     {
@@ -111,9 +111,12 @@ class spr_manager
 
             $line = common::db2html( $line );
 
+
+
             foreach( $line as $key => $value )
             {
                 if( is_array($value) ){ continue; }
+
                 $tpl->set( '{tag:'.$key.'}', $value );
             }
 

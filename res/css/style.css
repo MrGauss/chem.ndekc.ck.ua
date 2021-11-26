@@ -2,7 +2,7 @@
 article,aside,figcaption,figure,footer,header,main,hgroup,nav,section,time,ul,ol,h1,h2,h3{ display: block; -moz-box-sizing: border-box; box-sizing: border-box; -webkit-box-sizing: border-box; }
 html,body,div,main,ul,ol,li,dl,dt,dd,h1,h2,h3,h4,h5,h6,pre,form,p,blockquote,fieldset,input,textarea,span{margin: 0; padding: 0; -moz-box-sizing: border-box; box-sizing: border-box; }
 table, tr, tr{ -moz-box-sizing: border-box; box-sizing: border-box; -webkit-box-sizing: border-box; }
-input, textarea, select, button, body{  }
+input, textarea, select, button, body{ outline: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; }
 body{ color: #222222; background: #FFFFFF; overflow-y: hidden; overflow-x: hidden; }
 *{
     font-kerning: normal;
@@ -283,8 +283,8 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 
 #main_frame #page_frame #list_frame #list{ position: relative; box-sizing: border-box; height: calc(100% - 45px); width: 100%; background: #FFFFFF; z-index: 14; overflow: scroll; overflow-x: hidden; padding: 5px 5px 5px 5px; margin-top: 45px; }
 
-#main_frame #page_frame #list_frame .line{ position: relative; z-index: 15; padding: 5px 5px 8px 5px; border: 1px solid #39A331; background: #CAFFC7; margin: 5px 5px 0px 5px; cursor: pointer; opacity: 0.8; }
-#main_frame #page_frame #list_frame .line.blink{ border-color: #2E9900; background-color: #A6FF8F; opacity: 1.0; }
+#main_frame #page_frame #list_frame .line      { --background-color: #CAFFC7; --border-color: #39A331; position: relative; z-index: 15; padding: 5px 5px 8px 5px; border: 1px solid var(--border-color); background: var(--background-color); margin: 5px 5px 0px 5px; cursor: pointer; opacity: 0.8; }
+#main_frame #page_frame #list_frame .line.blink{ --background-color: #A6FF8F; --border-color: #2E9900; border-color: var(--border-color); background-color: var(--background-color); opacity: 1.0; }
 #main_frame #page_frame #list_frame .line:hover{ opacity: 1.0; }
 #main_frame #page_frame #list_frame .line table{ width: 100%;  border-collapse: collapse; vertical-align: middle; }
 #main_frame #page_frame #list_frame .line table td{ width: auto; padding: 10px 0px 10px 0px; border-collapse: collapse; vertical-align: middle; }
@@ -297,13 +297,13 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 
 #main_frame #page_frame #list_frame .line .precursor_label,
 #main_frame #page_frame #list_frame .line .using_perc{ display: none; position: absolute; bottom: 0px; left: 0px; height: 14px; padding: 1px 0px 0px 0px; width: 140px; overflow: hidden; background: #39A331; opacity: 0.8; text-align: center; font-size: 0.7em; letter-spacing: 0.05em; text-transform: uppercase; color: #FFFFFF; font-weight: bold; }
-#main_frame #page_frame #list_frame .line.fully_used  .using_perc.fully_used{ display: block; background-color: #5F5F5F; }
-#main_frame #page_frame #list_frame .line.almost_used .using_perc.almost_used{ display: block; background-color: #8A0000; }
+#main_frame #page_frame #list_frame .line.fully_used  .using_perc.fully_used{ display: block;  --background-color: #5F5F5F; background-color: var(--background-color); }
+#main_frame #page_frame #list_frame .line.almost_used .using_perc.almost_used{ display: block; --background-color: #8A0000; background-color: var(--background-color); }
 #main_frame #page_frame #list_frame .line.half_used   .using_perc.half_used{ display: block; }
 #main_frame #page_frame #list_frame .line.not_used    .using_perc.not_used{ display: block; }
 
-#main_frame #page_frame #list_frame .line[data-is_precursor="1"]{ border-color: #FF0099; background-color: #FFDBF1; }
-#main_frame #page_frame #list_frame .line .precursor_label{ left: calc( 50% - 70px ); top: 0px; bottom: auto; border-color: #FF0099; background-color: #FF0099; }
+#main_frame #page_frame #list_frame .line[data-is_precursor="1"]{ --background-color: #FFDBF1; --border-color: #FF0099; border-color: var(--border-color); background-color: var(--background-color); }
+#main_frame #page_frame #list_frame .line .precursor_label{ left: calc( 50% - 70px ); top: 0px; bottom: auto; border-color: var(--border-color); background-color: var(--border-color); }
 #main_frame #page_frame #list_frame .line[data-is_precursor="1"] .precursor_label{ display: block; }
 
 #main_frame #page_frame #list_frame{ padding-top: var(--list-filters-area-height); }
@@ -343,7 +343,7 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 #main_frame #page_frame #list_frame #list .line[data-lifetime="4"],
 #main_frame #page_frame #list_frame #list .line[data-lifetime="5"],
 #main_frame #page_frame #list_frame #list .line[data-lifetime="6"],
-#main_frame #page_frame #list_frame #list .line[data-lifetime="7"]{ background-color: #FFF6C7; border-color: #E09600; }
+#main_frame #page_frame #list_frame #list .line[data-lifetime="7"]{ --background-color: #FFF6C7; --border-color: #E09600; background-color: var(--background-color); border-color: var(--border-color); }
 #main_frame #page_frame #list_frame #list .line[data-lifetime="1"] .lifetime_label.lf_1day,
 #main_frame #page_frame #list_frame #list .line[data-lifetime="2"] .lifetime_label.lf_1day,
 #main_frame #page_frame #list_frame #list .line[data-lifetime="3"] .lifetime_label.lf_1day,
@@ -401,6 +401,8 @@ body{ background: #1C1C1C url(../img/bg.png) no-repeat 50% 30%; position: relati
 
 #main_frame #page_frame #list_frame #list .line.fully_used{ border-color: #3F3F3F; background-color: #EFEFEF; filter: grayscale(100%); }
 #main_frame #page_frame #list_frame #list .line.almost_used{ background-color: #FFDBDB; border-color: #8A0000;  }
+
+#main_frame #page_frame #list_frame #list .line a.hashtag{ display: inline-block; padding: 5px; border: 1px solid var(--border-color); color: var(--border-color); border-radius: 5px; filter: grayscale(30%); }
 
 .default_editor                 { position: relative; min-height: 200px; width: 100%; padding: 0px; margin: 0px; font-size: 1.0em;   }
 .default_editor select          { text-transform: uppercase; letter-spacing: 1px; }

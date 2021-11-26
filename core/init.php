@@ -31,6 +31,7 @@ require( CLASSES_DIR.DS.'class.ajax.php' );
 require( CLASSES_DIR.DS.'class.tpl.php' );
 require( CLASSES_DIR.DS.'class.access.php' );
 require( CLASSES_DIR.DS.'class.user.php' );
+require( CLASSES_DIR.DS.'class.tags.php' );  
 require( CLASSES_DIR.DS.'class.spr_manager.php' );
 require( CLASSES_DIR.DS.'class.stock.php' );
 require( CLASSES_DIR.DS.'class.dispersion.php' );

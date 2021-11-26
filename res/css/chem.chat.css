@@ -10,10 +10,7 @@
     resize: none;
     padding: 5px 5px 5px 5px;
     text-align: justify;
-    outline: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    box-shadow: none;
+    outline: none; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none;
     font-size: 1.2em;
     background-color: #FFFFFF;
 }

@@ -277,6 +277,8 @@ class recipes
 
             $line = common::db2html( $line );
 
+            //$line['comment'] = tags::hash_tags_2_urls_html( $line['comment'] );
+
             foreach( $line as $key => $value )
             {
                 if( is_array($value) ){ continue; }

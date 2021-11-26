@@ -25,6 +25,13 @@
 
     <div class="clear"></div>
 
+    <div class="elem comment">
+        <label class="label">Коментар</label>
+        <textarea class="input textarea" name="comment" data-important="0" data-save="1">{tag:comment}</textarea>
+    </div>
+
+    <div class="clear"></div>
+
     <div class="edit_info">
         Будьте уважними!<br>Даний довідник є глобальним, його редагування спричинить внесення змін в програмний засіб загалом!
     </div>
