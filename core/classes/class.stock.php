@@ -85,19 +85,19 @@ class stock
 
         ///////////
 
-        if( !$error && common::strlen($data4save['creator']) > 0 && common::strlen($data4save['creator']) <= 3 )      { $error = 'Зазначте виробника!'; $error_area = 'creator'; }
+        if( !$error && common::strlen($data4save['creator']) > 0 && common::strlen($data4save['creator']) <= 1 )      { $error = 'Зазначте виробника!'; $error_area = 'creator'; }
         if( !$error && common::strlen($data4save['creator']) > 0 && common::strlen($data4save['creator']) >= 250 )    { $error = 'Назва виробника занадто довга! До 250 символів будь ласка!'; $error_area = 'creator'; }
 
-        if( !$error && common::strlen($data4save['provider']) <= 3 )        { $error = 'Зазначте постачальник!'; $error_area = 'provider'; }
+        if( !$error && common::strlen($data4save['provider']) <= 1 )        { $error = 'Зазначте постачальника!'; $error_area = 'provider'; }
         if( !$error && common::strlen($data4save['provider']) >= 250 )      { $error = 'Назва постачальник занадто довга! До 250 символів будь ласка!'; $error_area = 'provider'; }
 
-        if( !$error && common::strlen($data4save['safe_place']) <= 3 )      { $error = 'Зазначте місце зберігання!'; $error_area = 'safe_place'; }
+        if( !$error && common::strlen($data4save['safe_place']) <= 1 )      { $error = 'Зазначте місце зберігання!'; $error_area = 'safe_place'; }
         if( !$error && common::strlen($data4save['safe_place']) >= 250 )    { $error = 'Місце зберігання занадто довге! До 250 символів будь ласка!'; $error_area = 'safe_place'; }
 
-        if( !$error && common::strlen($data4save['safe_needs']) <= 3 )      { $error = 'Зазначте умови зберігання!'; $error_area = 'safe_needs'; }
+        if( !$error && common::strlen($data4save['safe_needs']) <= 1 )      { $error = 'Зазначте умови зберігання!'; $error_area = 'safe_needs'; }
         if( !$error && common::strlen($data4save['safe_needs']) >= 250 )    { $error = 'Умови зберігання занадто довгі! До 250 символів будь ласка!'; $error_area = 'safe_needs'; }
 
-        if( !$error && common::strlen($data4save['nakladna_num']) <= 3 )    { $error = 'Зазначте номер накладної!'; $error_area = 'nakladna_num'; }
+        if( !$error && common::strlen($data4save['nakladna_num']) <= 1 )    { $error = 'Зазначте номер накладної!'; $error_area = 'nakladna_num'; }
         if( !$error && common::strlen($data4save['nakladna_num']) >= 32 )   { $error = 'Номер накладної занадто довгий! До 32 символів будь ласка!'; $error_area = 'nakladna_num'; }
 
         ///////////
