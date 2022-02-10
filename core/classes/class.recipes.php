@@ -103,7 +103,7 @@ class recipes
         if( !$error && isset($data4save['name']) && common::strlen( $data4save['name'] ) > 64 )     { $error = 'Назва занадто довга!'; $error_area = 'name'; }
         if( !$error && isset($data4save['name']) && common::strlen( $data4save['name'] ) < 3 )      { $error = 'Назва занадто коротка!'; $error_area = 'name'; }
         ///////////
-        $SQL = 'SELECT count(id) as count FROM reactiv_menu WHERE lower("name") = lower(\''.$this->db->safesql($data4save['name']).'\'::text) '. ( isset($original_data['id']) ? ' AND id != '.common::integer($original_data['id']) : ''  ) .';';
+        $SQL = 'SELECT count(id) as count FROM reactiv_menu WHERE group_id='.CURRENT_GROUP_ID.' AND lower("name") = lower(\''.$this->db->safesql($data4save['name']).'\'::text) '. ( isset($original_data['id']) ? ' AND id != '.common::integer($original_data['id']) : ''  ) .';';
         if( $this->db->super_query( $SQL )['count'] > 0 )
         {
             $error = 'Такий запис вже існує!'; $error_area = 'name';
